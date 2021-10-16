@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:contentPadding="5dp"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cardViewFilm1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <ImageView
+                android:id="@+id/imageFilm1"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/spider_man"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                 />
+
+            <TextView
+                android:id="@+id/tvFilm1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:text="@string/film_name_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm1"
+                app:layout_constraintTop_toBottomOf="@+id/imageFilm1" />
+
+            <CheckBox
+                android:id="@+id/checkBoxLike1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/like_text"
+                android:clickable="false"
+                android:background="@color/background_like"
+                android:textColor="@color/like_text_color"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm1"
+                app:layout_constraintBottom_toBottomOf="@+id/imageFilm1"
+                 />
+            <TextView
+                android:id="@+id/tvCommentHeader1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="@string/comment_header"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm1"
+                app:layout_constraintTop_toBottomOf="@id/tvFilm1"/>
+
+            <TextView
+                android:id="@+id/tvComment1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCommentHeader1"
+                tools:text="@tools:sample/lorem" />
+
+            <ImageButton
+                android:id="@+id/btnDetail1"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/button_detail_description"
+                app:layout_constraintBottom_toBottomOf="@+id/imageFilm1"
+                app:layout_constraintEnd_toEndOf="@id/imageFilm1"
+                app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:contentPadding="5dp"
+            app:cardBackgroundColor="@color/cardview_light_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cardViewFilm2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <ImageView
+                android:id="@+id/imageFilm2"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/venom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tvFilm2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textSize="24sp"
+                android:text="@string/film_name_2"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm2"
+                app:layout_constraintTop_toBottomOf="@+id/imageFilm2" />
+
+            <CheckBox
+                android:id="@+id/checkBoxLike2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/like_text"
+                android:clickable="false"
+                android:background="@color/background_like"
+                android:textColor="@color/like_text_color"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm2"
+                app:layout_constraintBottom_toBottomOf="@+id/imageFilm2"
+                />
+            <TextView
+                android:id="@+id/tvCommentHeader2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/comment_header"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/imageFilm2"
+                app:layout_constraintTop_toBottomOf="@id/tvFilm2"/>
+
+            <TextView
+                android:id="@+id/tvComment2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCommentHeader2"
+                tools:text="@tools:sample/lorem" />
+
+            <ImageButton
+                android:id="@+id/btnDetail2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/button_detail_description"
+                app:layout_constraintBottom_toBottomOf="@+id/imageFilm2"
+                app:layout_constraintEnd_toEndOf="@id/imageFilm2"
+                app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

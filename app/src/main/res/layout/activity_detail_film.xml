@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailFilmActivity">
+
+    <ImageView
+        android:id="@+id/imageDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/tvNameFilm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_horizontal"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageDetail"
+        app:layout_constraintTop_toBottomOf="@+id/imageDetail"
+        tools:text="Человек Паук" />
+
+    <EditText
+        android:id="@+id/editTextComment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/hint_comment_edit"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnSendComment"
+        app:layout_constraintStart_toStartOf="@+id/tvNameFilm"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameFilm" />
+
+    <ImageButton
+        android:id="@+id/btnSendComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/button_send_comment_description"
+        app:layout_constraintEnd_toEndOf="@+id/tvNameFilm"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameFilm"
+        app:srcCompat="@android:drawable/ic_menu_send" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btnSendComment,editTextComment" />
+
+    <CheckBox
+        android:id="@+id/checkboxLikeSend"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:checked="false"
+        android:text="@string/like_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrierComment"
+        app:layout_constraintBottom_toTopOf="@id/btnInviteFriend"/>
+
+    <Button
+        android:id="@+id/btnInviteFriend"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/invite_friend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkboxLikeSend"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

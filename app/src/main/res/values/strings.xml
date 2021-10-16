@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Films</string>
+    <string name="comment_header">Комментарий:</string>
+    <string name="like_text">Нравится</string>
+    <string name="button_detail_description">детали</string>
+    <string name="hint_comment_edit">Оставьте свой комментарий</string>
+    <string name="button_send_comment_description">опубликовать</string>
+    <string name="film_name_1">Человек Паук</string>
+    <string name="film_name_2">Веном</string>
+    <string name="invite_friend">Пригласить друга</string>
+</resources>
