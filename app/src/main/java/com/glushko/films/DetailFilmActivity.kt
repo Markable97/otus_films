@@ -44,6 +44,8 @@ class DetailFilmActivity : AppCompatActivity() {
             try {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")
+                val mailBody = "Пойдешь со мнйо на фильм \"$filmName\"?"
+                intent.putExtra(Intent.EXTRA_TEXT, mailBody)
                 if(intent.resolveActivity(packageManager) != null){
                     startActivity(intent)
                 }else {
