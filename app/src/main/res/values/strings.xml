@@ -8,4 +8,6 @@
     <string name="film_name_1">Человек Паук</string>
     <string name="film_name_2">Веном</string>
     <string name="invite_friend">Пригласить друга</string>
+    <string name="invite_message">Пойдешь со мной на фильм \"%s\"</string>>
+    <string name="not_find_app">Не найдено приложение</string>
 </resources>

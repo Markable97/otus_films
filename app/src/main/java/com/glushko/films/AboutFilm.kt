@@ -11,5 +11,5 @@ data class AboutFilm(
     val name: String,
     val comment: String,
     val like: Boolean,
-    val color: String
+    val isSelected: Boolean
 ): Parcelable
