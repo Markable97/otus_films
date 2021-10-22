@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class AdapterFilms(val films: List<AboutFilm> = listOf(), val callback: Callback) :
+class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
 
 
@@ -16,6 +16,12 @@ class AdapterFilms(val films: List<AboutFilm> = listOf(), val callback: Callback
         return FilmViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_film, parent, false)
         )
+    }
+
+    fun update(filmsRestore: List<AboutFilm>){
+        films = filmsRestore
+        //при повороте сначала вызывается метод update, а потом onBindViewHolder
+        //То есть при вызову onBindViewHolder films будет уже новый
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {

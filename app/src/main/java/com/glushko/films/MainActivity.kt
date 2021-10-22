@@ -13,25 +13,35 @@ class MainActivity : AppCompatActivity() {
 
     private val favoriteFilms = hashMapOf<String, AboutFilm>()
 
-    private val films = mutableListOf(
-        AboutFilm(
-            name = "Человек Паук",
-            img = R.drawable.spider_man,
-            img_like = R.drawable.ic_not_like
-        ),
+    private var films = mutableListOf(
+        AboutFilm(name = "Человек Паук", img = R.drawable.spider_man, img_like = R.drawable.ic_not_like),
         AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(
-            name = "Марсианин",
-            img = R.drawable.marsianin,
-            img_like = R.drawable.ic_not_like
-        ),
+        AboutFilm(name = "Марсианин", img = R.drawable.marsianin, img_like = R.drawable.ic_not_like),
+        AboutFilm(name = "Мстители: Финал", img = R.drawable.avengers , img_like = R.drawable.ic_not_like),
     )
 
     private val recycler: RecyclerView by lazy { findViewById(R.id.recyclerFilm) }
+    private val adapter by lazy {
+        AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
+            override fun onClickDetail(film: AboutFilm, position: Int) {
+                startForResultDetail.launch(
+                    Intent(
+                        this@MainActivity,
+                        DetailFilmActivity::class.java
+                    ).apply {
+                        putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
+                        putExtra(DetailFilmActivity.EXTRA_POSITION, position)
+                    })
+            }
 
+            override fun onClickLike(film: AboutFilm, position: Int) {
+                actionWithFilm(film, position)
+            }
+
+        })
+    }
     companion object {
-        const val EXTRA_SAVE_STATE_FIRST = "save first"
-        const val EXTRA_SAVE_STATE_SECOND = "save second"
+        const val EXTRA_SAVE_STATE = "restore_activity"
     }
 
     private val startForResultDetail =
@@ -75,19 +85,7 @@ class MainActivity : AppCompatActivity() {
 
 
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
-            override fun onClickDetail(film: AboutFilm, position: Int) {
-                startForResultDetail.launch(Intent(context, DetailFilmActivity::class.java).apply {
-                    putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
-                    putExtra(DetailFilmActivity.EXTRA_POSITION, position)
-                })
-            }
-
-            override fun onClickLike(film: AboutFilm, position: Int) {
-                actionWithFilm(film, position)
-            }
-
-        })
+        recycler.adapter = adapter
 
         findViewById<Button>(R.id.btnFavorite).setOnClickListener {
             startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
@@ -114,13 +112,24 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter?.notifyItemChanged(position)
     }
 
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        //А здесь высстонавливаем массив и обновляем адаптер
+        val list = savedInstanceState.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
+        list?.let {
+            films = it
+            adapter.update(films) //Почему то только так обновляется
+            //То есть сначала recycler присваивается новый адаптер
+            //но при повороте сначала вызывается метод update, а потом onBindViewHolder
+            //То есть при вызову onBindViewHolder films будет уже новый
+            films.forEach(){film ->
+                if(film.like) favoriteFilms[film.name] = film
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //Здесь сохраняем массив фильмов
+        outState.putParcelableArrayList(EXTRA_SAVE_STATE, ArrayList(films))
     }
 }
