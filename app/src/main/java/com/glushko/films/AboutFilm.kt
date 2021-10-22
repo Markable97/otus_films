@@ -9,7 +9,9 @@ import java.io.Serializable
 @Parcelize
 data class AboutFilm(
     val name: String,
-    val comment: String,
-    val like: Boolean,
-    val isSelected: Boolean
+    var comment: String = "",
+    var like: Boolean = false,
+    val img: Int,
+    var img_like: Int,
+    var isSelected: Boolean = false
 ): Parcelable

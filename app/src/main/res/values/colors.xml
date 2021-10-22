@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="like_text_color">#f00</color>
-    <color name="background_film_card">#FFF9C4</color>
+    <color name="background_film_card_check">#FFF9C4</color>
+    <color name="background_card_view">#C5CAE9</color>
     <color name="background_like">#A1FCE4EC</color>
 </resources>

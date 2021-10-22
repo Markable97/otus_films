@@ -4,53 +4,38 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var cardViewFilm1: ConstraintLayout
-    private lateinit var checkBoxLike1: CheckBox
-    private lateinit var btnDetail1: ImageButton
-    private lateinit var imgFilm1: ImageView
-    private lateinit var tvFilm1: TextView
-    private lateinit var tvComment1: TextView
-    private lateinit var cardViewFilm2: ConstraintLayout
-    private lateinit var checkBoxLike2: CheckBox
-    private lateinit var btnDetail2: ImageButton
-    private lateinit var imgFilm2: ImageView
-    private lateinit var tvFilm2: TextView
-    private lateinit var tvComment2: TextView
+    private val films = mutableListOf(
+        AboutFilm(name = "Человек Паук", img = R.drawable.spider_man, img_like = R.drawable.ic_not_like),
+        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
+        AboutFilm(name = "Марсианин", img = R.drawable.marsianin, img_like = R.drawable.ic_not_like),
+    )
+
+    private val recycler: RecyclerView by lazy { findViewById(R.id.recycler_film) }
 
     companion object {
         const val EXTRA_SAVE_STATE_FIRST = "save first"
         const val EXTRA_SAVE_STATE_SECOND = "save second"
     }
 
-    private val startForResult1 =
+    private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
-                    val comment = values.getStringExtra(DetailFilmActivity.EXTRA_COMMENT)
-                    val like = values.getBooleanExtra(DetailFilmActivity.EXTRA_LIKE, false)
-                    tvComment1.text = comment
-                    checkBoxLike1.isChecked = like
-                }
-            }
-        }
-    private val startForResult2 =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                it.data?.let { values ->
-                    val comment = values.getStringExtra(DetailFilmActivity.EXTRA_COMMENT)
-                    val like = values.getBooleanExtra(DetailFilmActivity.EXTRA_LIKE, false)
-                    tvComment2.text = comment
-                    checkBoxLike2.isChecked = like
+                    val film = values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
+                    val position = values.getIntExtra(DetailFilmActivity.EXTRA_POSITION, -1)
+                    if(film != null && position != -1) {
+                        films[position] = film
+                        recycler.adapter?.notifyItemChanged(position)
+                    }
                 }
             }
         }
@@ -59,106 +44,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        cardViewFilm1 = findViewById(R.id.cardViewFilm1)
-        imgFilm1 = findViewById(R.id.imageFilm1)
-        checkBoxLike1 = findViewById(R.id.checkBoxLike1)
-        tvFilm1 = findViewById(R.id.tvFilm1)
-        tvComment1 = findViewById(R.id.tvComment1)
-        btnDetail1 = findViewById(R.id.btnDetail1)
-        btnDetail1.setOnClickListener {
-            val filmName = tvFilm1.text.toString()
-            val comment = tvComment1.text.toString()
-            val like = checkBoxLike1.isChecked
-            cardViewFilm1.setBackgroundColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.background_film_card
-                )
-            )
-            cardViewFilm1.tag = true
-            cardViewFilm2.setBackgroundColor(Color.WHITE)
-            cardViewFilm2.tag = false
-            startForResult1.launch(Intent(this, DetailFilmActivity::class.java).apply {
-                putExtra(DetailFilmActivity.EXTRA_FILM_NAME, filmName)
-                putExtra(DetailFilmActivity.EXTRA_COMMENT, comment)
-                putExtra(DetailFilmActivity.EXTRA_LIKE, like)
-            })
+        val context = applicationContext
 
-        }
-        cardViewFilm2 = findViewById(R.id.cardViewFilm2)
-        imgFilm2 = findViewById(R.id.imageFilm2)
-        checkBoxLike2 = findViewById(R.id.checkBoxLike2)
-        tvFilm2 = findViewById(R.id.tvFilm2)
-        tvComment2 = findViewById(R.id.tvComment2)
-        btnDetail2 = findViewById(R.id.btnDetail2)
-        btnDetail2.setOnClickListener {
-            val filmName = tvFilm2.text.toString()
-            val comment = tvComment2.text.toString()
-            val like = checkBoxLike2.isChecked
-            cardViewFilm1.setBackgroundColor(Color.WHITE)
-            cardViewFilm1.tag = false
-            cardViewFilm2.setBackgroundColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.background_film_card
-                )
-            )
-            cardViewFilm2.tag = true
-            startForResult2.launch(Intent(this, DetailFilmActivity::class.java).apply {
-                putExtra(DetailFilmActivity.EXTRA_FILM_NAME, filmName)
-                putExtra(DetailFilmActivity.EXTRA_COMMENT, comment)
-                putExtra(DetailFilmActivity.EXTRA_LIKE, like)
-            })
 
-        }
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = AdapterFilms(films = films,callback = object : AdapterFilms.Callback{
+            override fun onClickDetail(film: AboutFilm, position: Int) {
+                startForResult.launch(Intent(context, DetailFilmActivity::class.java).apply {
+                    putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
+                    putExtra(DetailFilmActivity.EXTRA_POSITION, position)
+                })
+            }
+
+            override fun onClickLike(film: AboutFilm, position: Int) {
+                Toast.makeText(this@MainActivity, "Нажали лайк", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
 
 
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val filmFirst = savedInstanceState.getParcelable<AboutFilm>(EXTRA_SAVE_STATE_FIRST)
-        val filmSecond = savedInstanceState.getParcelable<AboutFilm>(EXTRA_SAVE_STATE_SECOND)
-        filmFirst?.let {
-            tvComment1.text = it.comment
-            checkBoxLike1.isChecked = it.like
-            cardViewFilm1.setBackgroundColor(
-                if (it.isSelected) {
-                    ContextCompat.getColor(this, R.color.background_film_card)
-                } else {
-                    Color.WHITE
-                }
-            )
-        }
-        filmSecond?.let {
-            tvComment2.text = it.comment
-            checkBoxLike2.isChecked = it.like
-            cardViewFilm2.setBackgroundColor(
-                if (it.isSelected) {
-                    ContextCompat.getColor(this, R.color.background_film_card)
-                } else {
-                    Color.WHITE
-                }
-            )
-        }
+        //А здесь высстонавливаем массив и обновляем адаптер
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val filmFirst = AboutFilm(
-            name = tvFilm1.text.toString(),
-            comment = tvComment1.text.toString(),
-            like = checkBoxLike1.isChecked,
-            isSelected = cardViewFilm1.tag as Boolean
-        )
-        val filmSecond = AboutFilm(
-            name = tvFilm2.text.toString(),
-            comment = tvComment2.text.toString(),
-            like = checkBoxLike2.isChecked,
-            isSelected = cardViewFilm2.tag as Boolean
-        )
-        outState.putParcelable(EXTRA_SAVE_STATE_FIRST, filmFirst)
-        outState.putParcelable(EXTRA_SAVE_STATE_SECOND, filmSecond)
-
+        //Здесь сохраняем массив фильмов
     }
 }

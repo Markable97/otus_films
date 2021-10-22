@@ -1,7 +1,6 @@
 package com.glushko.films
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -11,32 +10,39 @@ import android.widget.*
 class DetailFilmActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_FILM_NAME = "name"
-        const val EXTRA_COMMENT = "comment"
-        const val EXTRA_LIKE = "like"
+        const val EXTRA_POSITION = "position"
+        const val EXTRA_FILM_INFO = "film_info"
     }
 
+
     private lateinit var editTextComment: EditText
-    private lateinit var checkBoxLike: CheckBox
+    private lateinit var btnLike: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_film)
-        val filmName = intent.getStringExtra(EXTRA_FILM_NAME)
-        val comment = intent.getStringExtra(EXTRA_COMMENT)
-        val like = intent.getBooleanExtra(EXTRA_LIKE, false)
-        val image = findViewById<ImageView>(R.id.imageDetail)
-        image.setImageResource(FilmImageProvider.getNameFilm(filmName ?: ""))
+        val film = intent.getParcelableExtra(EXTRA_FILM_INFO) ?: AboutFilm(
+            name = getString(R.string.default_value),
+            img = R.drawable.ic_launcher_foreground,
+            img_like = R.drawable.ic_not_like
+        )
+        val position = intent.getIntExtra(EXTRA_POSITION, -1)
+        findViewById<ImageView>(R.id.imageDetail).setImageResource(film.img )
+        findViewById<TextView>(R.id.tvNameFilm).text = film.name
         editTextComment = findViewById(R.id.editTextComment)
-        editTextComment.setText(comment ?: "")
-        checkBoxLike = findViewById(R.id.checkboxLikeSend)
-        checkBoxLike.isChecked = like
-        findViewById<TextView>(R.id.tvNameFilm).text = filmName
+        editTextComment.setText(film.comment)
+        btnLike = findViewById(R.id.btnLikeDetail)
+        btnLike.setImageResource(film.img_like )
+        btnLike.setOnClickListener {
+            film.like = !film.like
+            film.img_like = if (film.like) R.drawable.ic_like else R.drawable.ic_not_like
+            btnLike.setImageResource(film.img_like)
+        }
+
         findViewById<ImageButton>(R.id.btnSendComment).setOnClickListener {
-            val newComment = editTextComment.text.toString()
-            val newLike = checkBoxLike.isChecked
+            film.comment = editTextComment.text.toString()
             setResult(RESULT_OK, Intent().apply {
-                putExtra(EXTRA_COMMENT, newComment)
-                putExtra(EXTRA_LIKE, newLike)
+                putExtra(EXTRA_FILM_INFO, film)
+                putExtra(EXTRA_POSITION, position)
             })
             finish()
         }
@@ -44,7 +50,7 @@ class DetailFilmActivity : AppCompatActivity() {
             try {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")
-                val mailBody = getString(R.string.invite_message, filmName)
+                val mailBody = getString(R.string.invite_message, film.name)
                 intent.putExtra(Intent.EXTRA_TEXT, mailBody)
                 startActivity(intent)
             } catch (ex: ActivityNotFoundException) {

@@ -10,4 +10,6 @@
     <string name="invite_friend">Пригласить друга</string>
     <string name="invite_message">Пойдешь со мной на фильм \"%s\"</string>>
     <string name="not_find_app">Не найдено приложение</string>
+    <string name="btn_favorite">Избранное</string>
+    <string name="default_value">Значения По умолчанию</string>
 </resources>

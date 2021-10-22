@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/imageDetail"
         app:layout_constraintTop_toBottomOf="@+id/imageDetail"
-        tools:text="Человек Паук" />
+        tools:text="@string/app_name" />
 
     <EditText
         android:id="@+id/editTextComment"
@@ -35,6 +35,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/hint_comment_edit"
+        android:maxLines="6"
         android:inputType="textMultiLine"
         android:minHeight="48dp"
         app:layout_constraintEnd_toStartOf="@+id/btnSendComment"
@@ -57,28 +58,27 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="btnSendComment,editTextComment" />
 
-    <CheckBox
-        android:id="@+id/checkboxLikeSend"
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/btnLikeDetail"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:checked="false"
-        android:text="@string/like_text"
+        tools:srcCompat="@tools:sample/avatars"
+        android:background="@color/white"
+        android:contentDescription="@string/like_text"
+        app:layout_constraintBottom_toTopOf="@+id/btnInviteFriend"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrierComment"
-        app:layout_constraintBottom_toTopOf="@id/btnInviteFriend"/>
+        app:layout_constraintTop_toBottomOf="@id/barrierComment" />
 
     <Button
         android:id="@+id/btnInviteFriend"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/invite_friend"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkboxLikeSend"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
