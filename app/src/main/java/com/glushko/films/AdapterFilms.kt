@@ -40,7 +40,10 @@ class AdapterFilms(val films: List<AboutFilm> = listOf(), val callback: Callback
                 callback.onClickDetail(item, adapterPosition)
             }
             btnLike.setOnClickListener {
+                item.like = !item.like
+                item.img_like = if(item.like) R.drawable.ic_like else R.drawable.ic_not_like
                 callback.onClickLike(item, adapterPosition)
+
             }
         }
     }

@@ -1,25 +1,34 @@
 package com.glushko.films
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.glushko.films.favorite.FavoriteFilmActivity
+import java.util.stream.Collectors
 
 class MainActivity : AppCompatActivity() {
 
+    private val favoriteFilms = hashMapOf<String, AboutFilm>()
+
     private val films = mutableListOf(
-        AboutFilm(name = "Человек Паук", img = R.drawable.spider_man, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Человек Паук",
+            img = R.drawable.spider_man,
+            img_like = R.drawable.ic_not_like
+        ),
         AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(name = "Марсианин", img = R.drawable.marsianin, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Марсианин",
+            img = R.drawable.marsianin,
+            img_like = R.drawable.ic_not_like
+        ),
     )
 
-    private val recycler: RecyclerView by lazy { findViewById(R.id.recycler_film) }
+    private val recycler: RecyclerView by lazy { findViewById(R.id.recyclerFilm) }
 
     companion object {
         const val EXTRA_SAVE_STATE_FIRST = "save first"
@@ -30,11 +39,11 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
-                    val film = values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
+                    val film =
+                        values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
                     val position = values.getIntExtra(DetailFilmActivity.EXTRA_POSITION, -1)
-                    if(film != null && position != -1) {
-                        films[position] = film
-                        recycler.adapter?.notifyItemChanged(position)
+                    if (film != null && position != -1) {
+                        actionWithFilm(film, position)
                     }
                 }
             }
@@ -48,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
 
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = AdapterFilms(films = films,callback = object : AdapterFilms.Callback{
+        recycler.adapter = AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
                 startForResult.launch(Intent(context, DetailFilmActivity::class.java).apply {
                     putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
@@ -57,13 +66,35 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onClickLike(film: AboutFilm, position: Int) {
-                Toast.makeText(this@MainActivity, "Нажали лайк", Toast.LENGTH_SHORT).show()
+                actionWithFilm(film, position)
             }
 
         })
 
+        findViewById<Button>(R.id.btnFavorite).setOnClickListener {
+            startActivity(Intent(this, FavoriteFilmActivity::class.java).apply {
+                if(favoriteFilms.size > 0){
+                    val list = ArrayList(favoriteFilms.values.toList())
+                    putParcelableArrayListExtra(
+                        FavoriteFilmActivity.EXTRA_FAVORITE,
+                        list
+                    )
+                }
+            })
+        }
 
 
+    }
+
+    private fun actionWithFilm(film: AboutFilm, position: Int) {
+        if (film.like){
+            favoriteFilms[film.name] = film
+        }else{
+            favoriteFilms.remove(film.name)
+        }
+        //favoriteFilms[film.name] = film
+        films[position] = film
+        recycler.adapter?.notifyItemChanged(position)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Films</string>
+    <string name="comment_header">Comment</string>
+    <string name="like_text">Like</string>
+    <string name="button_detail_description">Details</string>
+    <string name="hint_comment_edit">Leave your comment</string>
+    <string name="button_send_comment_description">Post</string>
+    <string name="invite_friend">Invite a friend</string>
+    <string name="invite_message">Will you come to the movie \"%s\" with me ?</string>>
+    <string name="not_find_app">Not found app</string>
+    <string name="btn_favorite">Favourites</string>
+    <string name="default_value">Default values</string>
+    <string name="title_favorite_film">Favourites</string>
+    <string name="empty_favorite">The favorites list is empty</string>
+</resources>

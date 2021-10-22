@@ -8,8 +8,10 @@
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_like.xml" value="0.3769230769230769" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_not_like.xml" value="0.3769230769230769" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_detail_film.xml" value="0.36666666666666664" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_favorite_film.xml" value="0.36666666666666664" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_film.xml" value="0.32041343669250644" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_film_favorite.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
