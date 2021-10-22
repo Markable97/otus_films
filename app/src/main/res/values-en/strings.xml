@@ -13,4 +13,5 @@
     <string name="default_value">Default values</string>
     <string name="title_favorite_film">Favourites</string>
     <string name="empty_favorite">The favorites list is empty</string>
+    <string name="close_app_body">Close app?</string>
 </resources>

@@ -12,4 +12,5 @@
     <string name="default_value">Значения По умолчанию</string>
     <string name="title_favorite_film">Избранное</string>
     <string name="empty_favorite">Список избранного пуст</string>
+    <string name="close_app_body">Закрыть приложение?</string>
 </resources>

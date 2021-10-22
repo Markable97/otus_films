@@ -9,15 +9,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.favorite.FavoriteFilmActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
 
     private val favoriteFilms = hashMapOf<String, AboutFilm>()
 
     private var films = mutableListOf(
-        AboutFilm(name = "Человек Паук", img = R.drawable.spider_man, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Человек Паук",
+            img = R.drawable.spider_man,
+            img_like = R.drawable.ic_not_like
+        ),
         AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(name = "Марсианин", img = R.drawable.marsianin, img_like = R.drawable.ic_not_like),
-        AboutFilm(name = "Мстители: Финал", img = R.drawable.avengers , img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Марсианин",
+            img = R.drawable.marsianin,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(
+            name = "Мстители: Финал",
+            img = R.drawable.avengers,
+            img_like = R.drawable.ic_not_like
+        ),
     )
 
     private val recycler: RecyclerView by lazy { findViewById(R.id.recyclerFilm) }
@@ -40,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         })
     }
+
     companion object {
         const val EXTRA_SAVE_STATE = "restore_activity"
     }
@@ -62,7 +75,8 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
-                    val filmsDeleteFavorite = values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
+                    val filmsDeleteFavorite =
+                        values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
                     filmsDeleteFavorite?.let { filmsDelete ->
                         filmsDelete.forEach { film ->
                             favoriteFilms.remove(film.name)
@@ -89,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnFavorite).setOnClickListener {
             startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
-                if(favoriteFilms.size > 0){
+                if (favoriteFilms.size > 0) {
                     putParcelableArrayListExtra(
                         FavoriteFilmActivity.EXTRA_FAVORITE,
                         ArrayList(favoriteFilms.values.toList())
@@ -102,9 +116,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun actionWithFilm(film: AboutFilm, position: Int) {
-        if (film.like){
+        if (film.like) {
             favoriteFilms[film.name] = film
-        }else{
+        } else {
             favoriteFilms.remove(film.name)
         }
         //favoriteFilms[film.name] = film
@@ -122,8 +136,8 @@ class MainActivity : AppCompatActivity() {
             //То есть сначала recycler присваивается новый адаптер
             //но при повороте сначала вызывается метод update, а потом onBindViewHolder
             //То есть при вызову onBindViewHolder films будет уже новый
-            films.forEach(){film ->
-                if(film.like) favoriteFilms[film.name] = film
+            films.forEach() { film ->
+                if (film.like) favoriteFilms[film.name] = film
             }
         }
     }
@@ -131,5 +145,13 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(EXTRA_SAVE_STATE, ArrayList(films))
+    }
+
+    override fun onBackPressed() {
+        ExitDialog().show(supportFragmentManager, "ExitDialog")
+    }
+
+    override fun onClickDialog(exit: Boolean) {
+        if (exit) finish()
     }
 }
