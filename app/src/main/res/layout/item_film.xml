@@ -7,7 +7,7 @@
 
 
     <androidx.cardview.widget.CardView
-
+        android:id="@+id/cardViewFilm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cardViewFilm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background_card_view">

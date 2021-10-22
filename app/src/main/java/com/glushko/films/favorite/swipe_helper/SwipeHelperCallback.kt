@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.favorite.FavoriteAdapter
 
-class SwipeHelperCallback(val adapter: FavoriteAdapter): ItemTouchHelper.Callback() {
+class SwipeHelperCallback(private val adapter: FavoriteAdapter): ItemTouchHelper.Callback() {
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -23,7 +23,7 @@ class SwipeHelperCallback(val adapter: FavoriteAdapter): ItemTouchHelper.Callbac
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        adapter.onItemDelete(viewHolder.layoutPosition)
+        adapter.onItemDelete(viewHolder.adapterPosition)
     }
 
 }
