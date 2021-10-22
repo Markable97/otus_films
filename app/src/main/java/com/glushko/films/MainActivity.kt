@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.favorite.FavoriteFilmActivity
-import java.util.stream.Collectors
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_SAVE_STATE_SECOND = "save second"
     }
 
-    private val startForResult =
+    private val startForResultDetail =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
@@ -49,6 +48,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private val startForResultFavorite =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.let { values ->
+                    val filmsDeleteFavorite = values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
+                    filmsDeleteFavorite?.let { filmsDelete ->
+                        filmsDelete.forEach { film ->
+                            favoriteFilms.remove(film.name)
+                            val position = films.indexOf(film)
+                            films[position].apply {
+                                like = false
+                                img_like = R.drawable.ic_not_like
+                            }
+                            recycler.adapter?.notifyItemChanged(position)
+                        }
+                    }
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
-                startForResult.launch(Intent(context, DetailFilmActivity::class.java).apply {
+                startForResultDetail.launch(Intent(context, DetailFilmActivity::class.java).apply {
                     putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
                     putExtra(DetailFilmActivity.EXTRA_POSITION, position)
                 })
@@ -72,12 +90,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         findViewById<Button>(R.id.btnFavorite).setOnClickListener {
-            startActivity(Intent(this, FavoriteFilmActivity::class.java).apply {
+            startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
                 if(favoriteFilms.size > 0){
-                    val list = ArrayList(favoriteFilms.values.toList())
                     putParcelableArrayListExtra(
                         FavoriteFilmActivity.EXTRA_FAVORITE,
-                        list
+                        ArrayList(favoriteFilms.values.toList())
                     )
                 }
             })

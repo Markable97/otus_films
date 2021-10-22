@@ -7,9 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.AboutFilm
 import com.glushko.films.R
+import com.glushko.films.favorite.swipe_helper.SwipeHelperAdapter
+import com.glushko.films.favorite.swipe_helper.SwipeHelperCallback
 
-class FavoriteAdapter(val films: List<AboutFilm> = mutableListOf()) :
-    RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
+class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
+    RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>(), SwipeHelperAdapter{
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
         return FavoriteViewHolder(
@@ -23,6 +27,12 @@ class FavoriteAdapter(val films: List<AboutFilm> = mutableListOf()) :
 
     override fun getItemCount() = films.size
 
+    override fun onItemDelete(position: Int) {
+        callback.onDeleteSwipe(films[position])
+        films.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val tvNameFilm: TextView = itemView.findViewById(R.id.tvFilmNameFavorite)
@@ -30,6 +40,10 @@ class FavoriteAdapter(val films: List<AboutFilm> = mutableListOf()) :
         fun bind(item: AboutFilm) {
             tvNameFilm.text = item.name
         }
+    }
+
+    interface Callback{
+        fun onDeleteSwipe(film: AboutFilm)
     }
 
 
