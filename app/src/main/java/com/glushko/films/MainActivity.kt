@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.glushko.films.anim.FilmsItemAnimate
 import com.glushko.films.favorite.FavoriteFilmActivity
 
 class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
@@ -29,7 +30,52 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
             name = "Мстители: Финал",
             img = R.drawable.avengers,
             img_like = R.drawable.ic_not_like
+        ),AboutFilm(
+            name = "Человек Паук",
+            img = R.drawable.spider_man,
+            img_like = R.drawable.ic_not_like
         ),
+        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Марсианин",
+            img = R.drawable.marsianin,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(
+            name = "Мстители: Финал",
+            img = R.drawable.avengers,
+            img_like = R.drawable.ic_not_like
+        ),AboutFilm(
+            name = "Человек Паук",
+            img = R.drawable.spider_man,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Марсианин",
+            img = R.drawable.marsianin,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(
+            name = "Мстители: Финал",
+            img = R.drawable.avengers,
+            img_like = R.drawable.ic_not_like
+        ),AboutFilm(
+            name = "Человек Паук",
+            img = R.drawable.spider_man,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
+        AboutFilm(
+            name = "Марсианин",
+            img = R.drawable.marsianin,
+            img_like = R.drawable.ic_not_like
+        ),
+        AboutFilm(
+            name = "Мстители: Финал",
+            img = R.drawable.avengers,
+            img_like = R.drawable.ic_not_like
+        )
     )
 
     private val recycler: RecyclerView by lazy { findViewById(R.id.recyclerFilm) }
@@ -100,6 +146,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
 
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
+        recycler.itemAnimator = FilmsItemAnimate()
 
         findViewById<Button>(R.id.btnFavorite).setOnClickListener {
             startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
@@ -123,7 +170,11 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
         }
         //favoriteFilms[film.name] = film
         films[position] = film
-        recycler.adapter?.notifyItemChanged(position)
+        if(film.like){
+            recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
+        }else{
+            recycler.adapter?.notifyItemChanged(position)
+        }
     }
 
 

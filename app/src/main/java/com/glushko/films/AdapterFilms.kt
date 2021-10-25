@@ -3,14 +3,19 @@ package com.glushko.films
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
 
+    companion object{
+        const val ACTION_CLICK_LIKE = "click like"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
         return FilmViewHolder(
@@ -31,6 +36,8 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
     override fun getItemCount() = films.size
 
     inner class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imgAnimate = itemView.findViewById<ImageView>(R.id.imgAnimate)
+        private val cardViewFilm = itemView.findViewById<CardView>(R.id.cardViewFilm)
         private val imgFilm = itemView.findViewById<ImageView>(R.id.imageFilm)
         private val btnLike = itemView.findViewById<ImageButton>(R.id.btnLike)
         private val btnDetail = itemView.findViewById<ImageButton>(R.id.btnDetail)
@@ -38,6 +45,8 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
         private val tvComment = itemView.findViewById<TextView>(R.id.tvComment)
 
         fun bind(item: AboutFilm) {
+            //cardViewFilm.animation =
+            //    AnimationUtils.loadAnimation(itemView.context, R.anim.anim_film_list)
             imgFilm.setImageResource(item.img)
             btnLike.setImageResource(item.img_like)
             tvFilmName.text = item.name
