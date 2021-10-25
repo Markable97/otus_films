@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.AboutFilm
 import com.glushko.films.DetailFilmActivity
 import com.glushko.films.R
+import com.glushko.films.favorite.decorate.FavoriteItemDecoration
 import com.glushko.films.favorite.swipe_helper.SwipeHelperAdapter
 import com.glushko.films.favorite.swipe_helper.SwipeHelperCallback
 
@@ -51,6 +52,7 @@ class FavoriteFilmActivity : AppCompatActivity(), SwipeHelperAdapter {
                     if (orientation == Configuration.ORIENTATION_PORTRAIT) LinearLayoutManager(this@FavoriteFilmActivity) else
                         GridLayoutManager(this@FavoriteFilmActivity, 2)
                 this.adapter = adapter
+                addItemDecoration(FavoriteItemDecoration(this@FavoriteFilmActivity))
             }
             val swiperCallback = SwipeHelperCallback(adapter)
             ItemTouchHelper(swiperCallback).attachToRecyclerView(recycler)
