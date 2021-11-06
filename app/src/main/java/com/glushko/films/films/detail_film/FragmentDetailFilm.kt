@@ -6,15 +6,30 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.AboutFilm
 import com.glushko.films.R
-import java.text.FieldPosition
+import com.glushko.films.Users
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class FragmentDetailFilm: Fragment(R.layout.activity_detail_film) {
+class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
+
+    private val comments = listOf(
+        Users("Users 1", "qwhjqwrbqwhrjqwrb"),
+        Users("Users 2", "safasfasfasfasfsnmaf \n ashfjajshfjasfha"),
+        Users("Users 3", "qwhjqwrbqwhrjqwrb\n\n\nasdasdasdsad as"),
+        Users("Users 4", "qwhjqwrbqwhrjqwrb sadasdsadasdsa Ad asfa s SAf SA"),
+        Users("Users 5", "qwhjqwrbqwhrjqwrb ASF ASf ASfA Sf"),
+        Users("Users 6", "qwhjqwrbqwhrjqwrb As FAs FAs fAS fAs"),
+        Users("Users 7", "qwhjqwrbqwhrjqwrb Asf ASf ASf as wqf w E JH as"),
+        Users("Users 8", "qwhjqwrbqwhrjqwrb"),
+        Users("Users 9", "qwhjqwrbqwhrjqwrb"),
+
+    )
 
     companion object {
         const val KEY_RETURN = "return info detail"
@@ -32,7 +47,7 @@ class FragmentDetailFilm: Fragment(R.layout.activity_detail_film) {
     }
 
     private lateinit var editTextComment: EditText
-    private lateinit var btnLike: ImageButton
+    //private lateinit var btnLike: ImageButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,31 +57,34 @@ class FragmentDetailFilm: Fragment(R.layout.activity_detail_film) {
             img_like = R.drawable.ic_not_like
         )
         val position = arguments?.getInt(EXTRA_POSITION, -1)
-        view.findViewById<ImageView>(R.id.imageDetail).setImageResource(film.img )
-        view.findViewById<TextView>(R.id.tvNameFilm).text = film.name
-        editTextComment = view.findViewById(R.id.editTextComment)
-        editTextComment.setText(film.comment)
-        btnLike = view.findViewById(R.id.btnLikeDetail)
-        btnLike.setImageResource(film.img_like )
+        val btnLike = view.findViewById<FloatingActionButton>(R.id.btnLikeDetail)
+        btnLike.setImageResource(film.img_like)
         btnLike.setOnClickListener {
             film.like = !film.like
             film.img_like = if (film.like) R.drawable.ic_like else R.drawable.ic_not_like
             btnLike.setImageResource(film.img_like)
         }
-
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar_detail_film)
+        toolbar.title = film.name
+        editTextComment = view.findViewById(R.id.editTextComment)
+        editTextComment.setText(film.comment)
         view.findViewById<ImageButton>(R.id.btnSendComment).setOnClickListener {
             film.comment = editTextComment.text.toString()
             setFragmentResult(KEY_RETURN, Bundle().apply {
                 putParcelable(EXTRA_FILM_INFO, film)
                 putInt(EXTRA_POSITION, position?:-1)
             })
-            /*setResult(AppCompatActivity.RESULT_OK, Intent().apply {
-                putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
-                putExtra(DetailFilmActivity.EXTRA_POSITION, position)
-            })*/
             parentFragmentManager.popBackStack()
         }
-        view.findViewById<Button>(R.id.btnInviteFriend).setOnClickListener {
+
+        view.findViewById<ImageView>(R.id.backdrop_detail_film).setImageResource(film.img)
+
+        val recycler = view.findViewById<RecyclerView>(R.id.recycler_comment_film)
+        recycler.layoutManager = LinearLayoutManager(requireActivity())
+        recycler.adapter = AdapterDetailFilm(comments)
+
+        val btnInviteFriend = view.findViewById<FloatingActionButton>(R.id.btnInviteFriend)
+        btnInviteFriend.setOnClickListener {
             try {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse("mailto:")

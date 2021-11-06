@@ -98,16 +98,16 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             }
         }
         selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?:R.id.menu_films
-        container = findViewById(R.id.main_comtainer)
+        container = findViewById(R.id.main_container)
         //supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
         bottomNavigate = findViewById(R.id.nav_bottom_main)
         bottomNavigate.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.menu_films -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.main_container, FragmentFilms.newInstance(films)).commit()
                 }
                 R.id.menu_favorite_films -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_comtainer,
+                    supportFragmentManager.beginTransaction().replace(R.id.main_container,
                         FragmentFavorites.newInstance(favoriteFilms.values.toMutableList())).commit()
                 }
             }

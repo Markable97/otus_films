@@ -3,7 +3,6 @@ package com.glushko.films.films
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -70,7 +69,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.main_comtainer, FragmentDetailFilm.newInstance(position, film))
+                    .replace(R.id.main_container, FragmentDetailFilm.newInstance(position, film))
                     .addToBackStack("films")
                     .commit()
                 /*startForResultDetail.launch(
@@ -116,7 +115,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
             if (film != null && position != -1) {
-                actionWithFilm(film, position)
+                actionWithFilm(film, position, false)
                 //callback?.actionWithMovie(position, film)
             }
         }

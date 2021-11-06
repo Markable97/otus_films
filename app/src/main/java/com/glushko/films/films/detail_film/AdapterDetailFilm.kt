@@ -1,0 +1,36 @@
+package com.glushko.films.films.detail_film
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.glushko.films.R
+import com.glushko.films.Users
+
+class AdapterDetailFilm(val comments: List<Users> = listOf()) : RecyclerView.Adapter<AdapterDetailFilm.DetailFilmViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailFilmViewHolder {
+        return DetailFilmViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+        )
+    }
+
+    override fun onBindViewHolder(holder: DetailFilmViewHolder, position: Int) {
+        holder.bind(comments[position])
+    }
+
+    override fun getItemCount(): Int {
+        return comments.size
+    }
+
+    inner class DetailFilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val commentName: TextView = itemView.findViewById(R.id.commentName)
+        private val commentText: TextView = itemView.findViewById(R.id.commentText)
+
+        fun bind(item: Users){
+            commentName.text = item.name
+            commentText.text = item.textComment
+        }
+    }
+}
