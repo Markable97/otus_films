@@ -1,10 +1,12 @@
 package com.glushko.films.films
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.AboutFilm
@@ -25,8 +27,43 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         }
     }
 
-    private var films: List<AboutFilm> = listOf()
+    /*private val startForResultDetail =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            it.data?.let { values ->
+                val film =
+                    values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
+                val position = values.getIntExtra(DetailFilmActivity.EXTRA_POSITION, -1)
+                if (film != null && position != -1) {
+                    actionWithFilm(film, position)
+                }
+            }
+        }
+    }*/
 
+    /*private val startForResultFavorite =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.let { values ->
+                    val filmsDeleteFavorite =
+                        values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
+                    filmsDeleteFavorite?.let { filmsDelete ->
+                        filmsDelete.forEach { film ->
+                            favoriteFilms.remove(film.name)
+                            val position = films.indexOf(film)
+                            films[position].apply {
+                                like = false
+                                img_like = R.drawable.ic_not_like
+                            }
+                            recycler.adapter?.notifyItemChanged(position)
+                        }
+                    }
+                }
+            }
+        }*/
+
+    private var films: List<AboutFilm> = listOf()
+    private var callback: CallbackFragmentFilms? = null
     private lateinit var recycler: RecyclerView
     private val adapter by lazy {
         AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
@@ -46,12 +83,22 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
             }
 
             override fun onClickLike(film: AboutFilm, position: Int) {
-                /*actionWithFilm(film, position)*/
+                callback?.actionWithMovie(position, film)//*actionWithFilm(film, position)*/
+                actionWithFilm(film, position)
             }
 
         })
     }
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try{
+            callback = context as CallbackFragmentFilms
+        }catch(ex: Exception){
+            println("Bad callback fragment")
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,15 +110,27 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
 
-        view.findViewById<Button>(R.id.btnFavorite).setOnClickListener {
-            /*startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
-                if (favoriteFilms.size > 0) {
-                    putParcelableArrayListExtra(
-                        FavoriteFilmActivity.EXTRA_FAVORITE,
-                        ArrayList(favoriteFilms.values.toList())
-                    )
-                }
-            })*/
+        setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){_, bundle ->
+            val film =
+                bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
+            val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
+            if (film != null && position != -1) {
+                actionWithFilm(film, position)
+                callback?.actionWithMovie(position, film)
+            }
         }
+
+    }
+
+    private fun actionWithFilm(film: AboutFilm, position: Int) {
+        if(film.like){
+            recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
+        }else{
+            recycler.adapter?.notifyItemChanged(position)
+        }
+    }
+
+    interface CallbackFragmentFilms{
+        fun actionWithMovie(position: Int, film: AboutFilm)
     }
 }

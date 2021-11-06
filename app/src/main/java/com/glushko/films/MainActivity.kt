@@ -7,7 +7,7 @@ import com.glushko.films.favorite.FragmentFavorites
 import com.glushko.films.films.FragmentFilms
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
+class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentFilms.CallbackFragmentFilms, FragmentFavorites.CallbackFavoritesFilms {
 
     private val favoriteFilms = hashMapOf<String, AboutFilm>()
 
@@ -78,51 +78,28 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView
 
+    private var selectMenu:Int = R.id.menu_films
+
     companion object {
         const val EXTRA_SAVE_STATE = "restore_activity"
+        const val EXTRA_SAVE_STATE_TAB = "id_menu_bottom"
     }
 
-    /*private val startForResultDetail =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                it.data?.let { values ->
-                    val film =
-                        values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
-                    val position = values.getIntExtra(DetailFilmActivity.EXTRA_POSITION, -1)
-                    if (film != null && position != -1) {
-                        actionWithFilm(film, position)
-                    }
-                }
-            }
-        }*/
 
-    /*private val startForResultFavorite =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                it.data?.let { values ->
-                    val filmsDeleteFavorite =
-                        values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
-                    filmsDeleteFavorite?.let { filmsDelete ->
-                        filmsDelete.forEach { film ->
-                            favoriteFilms.remove(film.name)
-                            val position = films.indexOf(film)
-                            films[position].apply {
-                                like = false
-                                img_like = R.drawable.ic_not_like
-                            }
-                            recycler.adapter?.notifyItemChanged(position)
-                        }
-                    }
-                }
-            }
-        }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_main)
-        val context = applicationContext
+        val list = savedInstanceState?.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
+        list?.let {
+            films = it
+            films.forEach() { film ->
+                if (film.like) favoriteFilms[film.name] = film
+            }
+        }
+        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?:R.id.menu_films
         container = findViewById(R.id.main_comtainer)
-        supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
+        //supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
         bottomNavigate = findViewById(R.id.nav_bottom_main)
         bottomNavigate.setOnItemSelectedListener {
             when(it.itemId){
@@ -131,63 +108,24 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
                 }
                 R.id.menu_favorite_films -> {
                     supportFragmentManager.beginTransaction().replace(R.id.main_comtainer,
-                        FragmentFavorites.newInstance(favoriteFilms.values.toList())).commit()
+                        FragmentFavorites.newInstance(favoriteFilms.values.toMutableList())).commit()
                 }
             }
             true
         }
-        /*recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = adapter
-        recycler.itemAnimator = FilmsItemAnimate()
-
-        findViewById<Button>(R.id.btnFavorite).setOnClickListener {
-            startForResultFavorite.launch(Intent(this, FavoriteFilmActivity::class.java).apply {
-                if (favoriteFilms.size > 0) {
-                    putParcelableArrayListExtra(
-                        FavoriteFilmActivity.EXTRA_FAVORITE,
-                        ArrayList(favoriteFilms.values.toList())
-                    )
-                }
-            })
-        }*/
-
+        bottomNavigate.selectedItemId = selectMenu
 
     }
 
-    /*private fun actionWithFilm(film: AboutFilm, position: Int) {
-        if (film.like) {
-            favoriteFilms[film.name] = film
-        } else {
-            favoriteFilms.remove(film.name)
-        }
-        //favoriteFilms[film.name] = film
-        films[position] = film
-        if(film.like){
-            recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
-        }else{
-            recycler.adapter?.notifyItemChanged(position)
-        }
-    }*/
 
 
-    /*override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val list = savedInstanceState.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
-        list?.let {
-            films = it
-            adapter.update(films) //Почему то только так обновляется
-            //То есть сначала recycler присваивается новый адаптер
-            //но при повороте сначала вызывается метод update, а потом onBindViewHolder
-            //То есть при вызову onBindViewHolder films будет уже новый
-            films.forEach() { film ->
-                if (film.like) favoriteFilms[film.name] = film
-            }
-        }
-    }*/
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(EXTRA_SAVE_STATE, ArrayList(films))
+        outState.putInt(EXTRA_SAVE_STATE_TAB, bottomNavigate.selectedItemId)
+
     }
 
     override fun onBackPressed() {
@@ -196,5 +134,23 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
 
     override fun onClickDialog(exit: Boolean) {
         if (exit) finish()
+    }
+
+    override fun actionWithMovie(position: Int, film: AboutFilm) {
+        if (film.like) {
+            favoriteFilms[film.name] = film
+        } else {
+            favoriteFilms.remove(film.name)
+        }
+        films[position] = film
+    }
+
+    override fun actionInFavoriteMovies(film: AboutFilm) {
+        favoriteFilms.remove(film.name)
+        val position = films.indexOf(film)
+        films[position].apply {
+            like = false
+            img_like = R.drawable.ic_not_like
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import com.glushko.films.AboutFilm
 import com.glushko.films.R
 import java.text.FieldPosition
@@ -16,7 +17,8 @@ import java.text.FieldPosition
 class FragmentDetailFilm: Fragment(R.layout.activity_detail_film) {
 
     companion object {
-        private const val EXTRA_POSITION = "position"
+        const val KEY_RETURN = "return info detail"
+        const val EXTRA_POSITION = "position"
         const val EXTRA_FILM_INFO = "film_info"
 
         fun newInstance(position: Int, film: AboutFilm): FragmentDetailFilm{
@@ -54,6 +56,10 @@ class FragmentDetailFilm: Fragment(R.layout.activity_detail_film) {
 
         view.findViewById<ImageButton>(R.id.btnSendComment).setOnClickListener {
             film.comment = editTextComment.text.toString()
+            setFragmentResult(KEY_RETURN, Bundle().apply {
+                putParcelable(EXTRA_FILM_INFO, film)
+                putInt(EXTRA_POSITION, position?:-1)
+            })
             /*setResult(AppCompatActivity.RESULT_OK, Intent().apply {
                 putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
                 putExtra(DetailFilmActivity.EXTRA_POSITION, position)
