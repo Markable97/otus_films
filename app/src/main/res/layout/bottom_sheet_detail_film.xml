@@ -21,6 +21,9 @@
         android:id="@+id/editTextComment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/teal_700"
+        android:textColorHint="@color/teal_700"
+        android:hint="@string/hint_comment_edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSendComment"
         app:layout_constraintStart_toStartOf="parent" />
