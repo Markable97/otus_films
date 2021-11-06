@@ -9,7 +9,7 @@ import com.google.android.material.animation.AnimationUtils.DECELERATE_INTERPOLA
 import android.animation.PropertyValuesHolder
 
 import android.animation.ObjectAnimator
-import com.glushko.films.AdapterFilms
+import com.glushko.films.films.AdapterFilms
 
 
 class FilmsItemAnimate : DefaultItemAnimator() {

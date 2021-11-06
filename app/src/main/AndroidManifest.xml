@@ -16,12 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Films">
         <activity
-            android:name=".favorite.FavoriteFilmActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DetailFilmActivity"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -1,14 +1,11 @@
 package com.glushko.films
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.anim.FilmsItemAnimate
-import com.glushko.films.favorite.FavoriteFilmActivity
+import androidx.fragment.app.FragmentContainerView
+import com.glushko.films.favorite.FragmentFavorites
+import com.glushko.films.films.FragmentFilms
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
 
@@ -78,32 +75,14 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
         )
     )
 
-    private val recycler: RecyclerView by lazy { findViewById(R.id.recyclerFilm) }
-    private val adapter by lazy {
-        AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
-            override fun onClickDetail(film: AboutFilm, position: Int) {
-                startForResultDetail.launch(
-                    Intent(
-                        this@MainActivity,
-                        DetailFilmActivity::class.java
-                    ).apply {
-                        putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
-                        putExtra(DetailFilmActivity.EXTRA_POSITION, position)
-                    })
-            }
-
-            override fun onClickLike(film: AboutFilm, position: Int) {
-                actionWithFilm(film, position)
-            }
-
-        })
-    }
+    private lateinit var container: FragmentContainerView
+    private lateinit var bottomNavigate: BottomNavigationView
 
     companion object {
         const val EXTRA_SAVE_STATE = "restore_activity"
     }
 
-    private val startForResultDetail =
+    /*private val startForResultDetail =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
@@ -115,9 +94,9 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
                     }
                 }
             }
-        }
+        }*/
 
-    private val startForResultFavorite =
+    /*private val startForResultFavorite =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 it.data?.let { values ->
@@ -136,15 +115,28 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
                     }
                 }
             }
-        }
+        }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_single_main)
         val context = applicationContext
-
-
-        recycler.layoutManager = LinearLayoutManager(this)
+        container = findViewById(R.id.main_comtainer)
+        supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
+        bottomNavigate = findViewById(R.id.nav_bottom_main)
+        bottomNavigate.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.menu_films -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
+                }
+                R.id.menu_favorite_films -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.main_comtainer,
+                        FragmentFavorites.newInstance(favoriteFilms.values.toList())).commit()
+                }
+            }
+            true
+        }
+        /*recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
 
@@ -157,12 +149,12 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
                     )
                 }
             })
-        }
+        }*/
 
 
     }
 
-    private fun actionWithFilm(film: AboutFilm, position: Int) {
+    /*private fun actionWithFilm(film: AboutFilm, position: Int) {
         if (film.like) {
             favoriteFilms[film.name] = film
         } else {
@@ -175,10 +167,10 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
         }else{
             recycler.adapter?.notifyItemChanged(position)
         }
-    }
+    }*/
 
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    /*override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val list = savedInstanceState.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
         list?.let {
@@ -191,7 +183,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener {
                 if (film.like) favoriteFilms[film.name] = film
             }
         }
-    }
+    }*/
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
