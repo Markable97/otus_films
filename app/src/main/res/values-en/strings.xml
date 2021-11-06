@@ -16,4 +16,7 @@
     <string name="close_app_body">Close app?</string>
     <string name="film_bottom_menu">Films</string>
     <string name="favorite_film_bottom_menu">Favorites</string>
+    <string name="snackbar_action_title">Cancel</string>
+    <string name="snackbat_title_add">Added to favorites</string>
+    <string name="snackbat_title_delete">Removed from favorites</string>
 </resources>

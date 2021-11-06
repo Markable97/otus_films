@@ -28,9 +28,14 @@ class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val c
     override fun getItemCount() = films.size
 
     override fun onItemDelete(position: Int) {
-        callback.onDeleteSwipe(films[position])
+        callback.onDeleteSwipe(films[position], position)
         films.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    fun insertCancelledFilm(position: Int, film: AboutFilm){
+        films.add(position, film)
+        notifyItemInserted(position)
     }
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,7 +48,7 @@ class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val c
     }
 
     interface Callback{
-        fun onDeleteSwipe(film: AboutFilm)
+        fun onDeleteSwipe(film: AboutFilm, position: Int)
     }
 
 

@@ -13,6 +13,7 @@ import com.glushko.films.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.anim.FilmsItemAnimate
 import com.glushko.films.films.detail_film.FragmentDetailFilm
+import com.google.android.material.snackbar.Snackbar
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
 
@@ -83,7 +84,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
             }
 
             override fun onClickLike(film: AboutFilm, position: Int) {
-                callback?.actionWithMovie(position, film)//*actionWithFilm(film, position)*/
+                //callback?.actionWithMovie(position, film)//*actionWithFilm(film, position)*/
                 actionWithFilm(film, position)
             }
 
@@ -116,17 +117,41 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
             if (film != null && position != -1) {
                 actionWithFilm(film, position)
-                callback?.actionWithMovie(position, film)
+                //callback?.actionWithMovie(position, film)
             }
         }
 
     }
 
-    private fun actionWithFilm(film: AboutFilm, position: Int) {
+    private fun actionWithFilm(film: AboutFilm, position: Int, showSnackBar: Boolean = true) {
+        var titleSnackBar = ""
+
         if(film.like){
             recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
+            if(showSnackBar){
+                titleSnackBar = getString(R.string.snackbat_title_add)
+            }
         }else{
             recycler.adapter?.notifyItemChanged(position)
+            if(showSnackBar){
+                titleSnackBar = getString(R.string.snackbat_title_delete)
+            }
+        }
+        callback?.actionWithMovie(position, film)
+        if(showSnackBar){
+            val actionSnackBar: (film: AboutFilm)->Unit = {
+                val filmCanceled = it.apply {
+                    like = !like
+                    img_like = if(like) R.drawable.ic_like else R.drawable.ic_not_like
+                }
+                actionWithFilm(filmCanceled, position, false)
+                callback?.actionWithMovie(position, filmCanceled)
+            }
+            view?.let {
+                Snackbar.make(it, titleSnackBar, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.snackbar_action_title){actionSnackBar(film)}
+                    .show()
+            }
         }
     }
 

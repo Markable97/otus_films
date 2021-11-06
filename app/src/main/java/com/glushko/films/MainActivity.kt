@@ -145,12 +145,22 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         films[position] = film
     }
 
-    override fun actionInFavoriteMovies(film: AboutFilm) {
-        favoriteFilms.remove(film.name)
-        val position = films.indexOf(film)
-        films[position].apply {
-            like = false
-            img_like = R.drawable.ic_not_like
+    override fun actionInFavoriteMovies(film: AboutFilm, isDelete: Boolean) {
+        if(isDelete){
+            favoriteFilms.remove(film.name)
+            val position = films.indexOf(film)
+            films[position].apply {
+                like = false
+                img_like = R.drawable.ic_not_like
+            }
+        }else{
+            val position = films.indexOf(film)
+            films[position].apply {
+                like = true
+                img_like = R.drawable.ic_like
+            }
+            favoriteFilms[film.name] = film
         }
+
     }
 }

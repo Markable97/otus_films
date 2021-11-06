@@ -15,4 +15,7 @@
     <string name="close_app_body">Закрыть приложение?</string>
     <string name="film_bottom_menu">Фильмы</string>
     <string name="favorite_film_bottom_menu">Избранное</string>
+    <string name="snackbar_action_title">Отмена</string>
+    <string name="snackbat_title_add">Добавлено в избранное</string>
+    <string name="snackbat_title_delete">Удалено из избранного</string>
 </resources>
