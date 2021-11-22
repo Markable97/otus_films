@@ -1,4 +1,4 @@
-package com.glushko.films.favorite.decorate
+package com.glushko.films.presentation_layer.ui.favorite.decorate
 
 import android.content.Context
 import android.graphics.Canvas

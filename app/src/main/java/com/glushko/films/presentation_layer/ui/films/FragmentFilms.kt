@@ -1,4 +1,4 @@
-package com.glushko.films.films
+package com.glushko.films.presentation_layer.ui.films
 
 import android.content.Context
 import android.os.Bundle
@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.AboutFilm
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.anim.FilmsItemAnimate
-import com.glushko.films.films.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation_layer.ui.films.detail_film.FragmentDetailFilm
 import com.google.android.material.snackbar.Snackbar
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
@@ -20,7 +20,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
         private const val kEY_FILMS = "list films"
 
-        fun newInstance(films: List<AboutFilm>): FragmentFilms{
+        fun newInstance(films: List<AboutFilm>): FragmentFilms {
             return FragmentFilms().apply {
                 arguments = bundleOf(kEY_FILMS to films)
             }
@@ -110,7 +110,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
 
-        setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){_, bundle ->
+        setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){ _, bundle ->
             val film =
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)

@@ -1,4 +1,4 @@
-package com.glushko.films.films
+package com.glushko.films.presentation_layer.ui.films
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.AboutFilm
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
 import com.glushko.films.R
 
 class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :

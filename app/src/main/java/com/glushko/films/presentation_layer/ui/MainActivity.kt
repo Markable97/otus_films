@@ -1,10 +1,13 @@
-package com.glushko.films
+package com.glushko.films.presentation_layer.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentContainerView
-import com.glushko.films.favorite.FragmentFavorites
-import com.glushko.films.films.FragmentFilms
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
+import com.glushko.films.R
+import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
+import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentFilms.CallbackFragmentFilms, FragmentFavorites.CallbackFavoritesFilms {
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             name = "Мстители: Финал",
             img = R.drawable.avengers,
             img_like = R.drawable.ic_not_like
-        ),AboutFilm(
+        ), AboutFilm(
             name = "Человек Паук",
             img = R.drawable.spider_man,
             img_like = R.drawable.ic_not_like
@@ -42,7 +45,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             name = "Мстители: Финал",
             img = R.drawable.avengers,
             img_like = R.drawable.ic_not_like
-        ),AboutFilm(
+        ), AboutFilm(
             name = "Человек Паук",
             img = R.drawable.spider_man,
             img_like = R.drawable.ic_not_like
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             name = "Мстители: Финал",
             img = R.drawable.avengers,
             img_like = R.drawable.ic_not_like
-        ),AboutFilm(
+        ), AboutFilm(
             name = "Человек Паук",
             img = R.drawable.spider_man,
             img_like = R.drawable.ic_not_like
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
                 if (film.like) favoriteFilms[film.name] = film
             }
         }
-        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?:R.id.menu_films
+        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
         container = findViewById(R.id.main_container)
         //supportFragmentManager.beginTransaction().replace(R.id.main_comtainer, FragmentFilms.newInstance(films)).commit()
         bottomNavigate = findViewById(R.id.nav_bottom_main)
@@ -107,7 +110,8 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
                     supportFragmentManager.beginTransaction().replace(R.id.main_container, FragmentFilms.newInstance(films)).commit()
                 }
                 R.id.menu_favorite_films -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_container,
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.main_container,
                         FragmentFavorites.newInstance(favoriteFilms.values.toMutableList())).commit()
                 }
             }

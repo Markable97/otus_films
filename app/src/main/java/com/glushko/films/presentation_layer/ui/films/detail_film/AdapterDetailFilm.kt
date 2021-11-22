@@ -1,4 +1,4 @@
-package com.glushko.films.films.detail_film
+package com.glushko.films.presentation_layer.ui.films.detail_film
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.R
-import com.glushko.films.Users
+import com.glushko.films.business_logic_layer.domain.Users
 
 class AdapterDetailFilm(val comments: List<Users> = listOf()) : RecyclerView.Adapter<AdapterDetailFilm.DetailFilmViewHolder>() {
 

@@ -1,21 +1,19 @@
-package com.glushko.films.favorite
+package com.glushko.films.presentation_layer.ui.favorite
 
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.AboutFilm
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.favorite.decorate.FavoriteItemDecoration
-import com.glushko.films.favorite.swipe_helper.SwipeHelperCallback
+import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
+import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperCallback
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -75,7 +73,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
                 adapter = _adapter
                 addItemDecoration(FavoriteItemDecoration(requireActivity()))
             }
-            val swiperCallback = SwipeHelperCallback(_adapter)
+            val swiperCallback = FavoriteSwipeHelperCallback(_adapter)
             ItemTouchHelper(swiperCallback).attachToRecyclerView(recycler)
         }
 

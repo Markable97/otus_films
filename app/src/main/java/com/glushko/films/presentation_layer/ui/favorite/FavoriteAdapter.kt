@@ -1,17 +1,16 @@
-package com.glushko.films.favorite
+package com.glushko.films.presentation_layer.ui.favorite
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.AboutFilm
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.favorite.swipe_helper.SwipeHelperAdapter
-import com.glushko.films.favorite.swipe_helper.SwipeHelperCallback
+import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperAdapter
 
 class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
-    RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>(), SwipeHelperAdapter{
+    RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>(), FavoriteSwipeHelperAdapter {
 
 
 

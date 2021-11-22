@@ -1,4 +1,4 @@
-package com.glushko.films
+package com.glushko.films.presentation_layer.ui.about_film
 
 import android.content.res.ColorStateList
 import android.graphics.Bitmap

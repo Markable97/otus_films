@@ -1,4 +1,4 @@
-package com.glushko.films.films.detail_film
+package com.glushko.films.presentation_layer.ui.films.detail_film
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.AboutFilm
+import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.Users
+import com.glushko.films.business_logic_layer.domain.Users
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
@@ -36,7 +36,7 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
         const val EXTRA_POSITION = "position"
         const val EXTRA_FILM_INFO = "film_info"
 
-        fun newInstance(position: Int, film: AboutFilm): FragmentDetailFilm{
+        fun newInstance(position: Int, film: AboutFilm): FragmentDetailFilm {
             return FragmentDetailFilm().apply {
                 arguments = Bundle().apply {
                     putInt(EXTRA_POSITION, position)

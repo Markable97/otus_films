@@ -1,10 +1,11 @@
-package com.glushko.films
+package com.glushko.films.presentation_layer.ui.exit_dialog
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.glushko.films.R
 import java.lang.ClassCastException
 
 class ExitDialog: DialogFragment() {
