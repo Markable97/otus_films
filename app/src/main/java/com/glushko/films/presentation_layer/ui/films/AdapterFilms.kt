@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
+import com.glushko.films.business_logic_layer.interactor.MyGlideApp
 
 class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
@@ -40,7 +42,6 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
 
     inner class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgAnimate = itemView.findViewById<ImageView>(R.id.imgAnimate)
-        private val cardViewFilm = itemView.findViewById<CardView>(R.id.cardViewFilm)
         private val imgFilm = itemView.findViewById<ImageView>(R.id.imageFilm)
         private val btnLike = itemView.findViewById<ImageButton>(R.id.btnLike)
         private val btnDetail = itemView.findViewById<ImageButton>(R.id.btnDetail)
@@ -48,9 +49,7 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
         private val tvComment = itemView.findViewById<TextView>(R.id.tvComment)
 
         fun bind(item: AboutFilm) {
-            //cardViewFilm.animation =
-            //    AnimationUtils.loadAnimation(itemView.context, R.anim.anim_film_list)
-            //imgFilm.setImageResource(item.img)
+            Glide.with(itemView.context).load(item.img).error(R.drawable.ic_avatar_unknow).into(imgFilm)
             btnLike.setImageResource(if(item.imgLike == 0) R.drawable.ic_not_like else item.imgLike)
             tvFilmName.text = item.name
             tvComment.text = item.comment

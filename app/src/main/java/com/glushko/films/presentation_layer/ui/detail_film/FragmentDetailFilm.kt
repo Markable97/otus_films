@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.Users
@@ -51,7 +52,9 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.getParcelable(EXTRA_FILM_INFO) ?: AboutFilm(
+        val film = arguments?.getParcelable<AboutFilm>(EXTRA_FILM_INFO)?.apply {
+            imgLike = if(imgLike==0) R.drawable.ic_not_like else imgLike
+        } ?: AboutFilm(
             name = getString(R.string.default_value),
             img = "",
             imgLike = R.drawable.ic_not_like
@@ -77,8 +80,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             parentFragmentManager.popBackStack()
         }
 
-        //ToDO Заменить на Глайд
-        //view.findViewById<ImageView>(R.id.backdrop_detail_film).setImageResource(film.img)
+        Glide.with(requireContext()).load(film.img).error(R.drawable.ic_avatar_unknow)
+            .into(view.findViewById(R.id.backdrop_detail_film))
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_comment_film)
         recycler.layoutManager = LinearLayoutManager(requireActivity())
