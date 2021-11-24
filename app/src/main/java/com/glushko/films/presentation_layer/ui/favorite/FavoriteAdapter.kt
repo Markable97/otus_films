@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperAdapter
 

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperCallback
@@ -86,7 +86,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
                     _adapter.insertCancelledFilm(position, film)
                     callback?.actionInFavoriteMovies(film.apply {
                         like = false
-                        img_like = R.drawable.ic_not_like
+                        imgLike = R.drawable.ic_not_like
                     }, false)
                 }
                 .show()

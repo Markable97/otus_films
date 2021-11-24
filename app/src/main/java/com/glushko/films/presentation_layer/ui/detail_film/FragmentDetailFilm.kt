@@ -1,4 +1,4 @@
-package com.glushko.films.presentation_layer.ui.films.detail_film
+package com.glushko.films.presentation_layer.ui.detail_film
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.Users
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,16 +53,16 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.getParcelable(EXTRA_FILM_INFO) ?: AboutFilm(
             name = getString(R.string.default_value),
-            img = R.drawable.ic_launcher_foreground,
-            img_like = R.drawable.ic_not_like
+            img = "",
+            imgLike = R.drawable.ic_not_like
         )
         val position = arguments?.getInt(EXTRA_POSITION, -1)
         val btnLike = view.findViewById<FloatingActionButton>(R.id.btnLikeDetail)
-        btnLike.setImageResource(film.img_like)
+        btnLike.setImageResource(film.imgLike)
         btnLike.setOnClickListener {
             film.like = !film.like
-            film.img_like = if (film.like) R.drawable.ic_like else R.drawable.ic_not_like
-            btnLike.setImageResource(film.img_like)
+            film.imgLike = if (film.like) R.drawable.ic_like else R.drawable.ic_not_like
+            btnLike.setImageResource(film.imgLike)
         }
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar_detail_film)
         toolbar.title = film.name
@@ -77,7 +77,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             parentFragmentManager.popBackStack()
         }
 
-        view.findViewById<ImageView>(R.id.backdrop_detail_film).setImageResource(film.img)
+        //ToDO Заменить на Глайд
+        //view.findViewById<ImageView>(R.id.backdrop_detail_film).setImageResource(film.img)
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_comment_film)
         recycler.layoutManager = LinearLayoutManager(requireActivity())

@@ -1,4 +1,4 @@
-package com.glushko.films.anim
+package com.glushko.films.presentation_layer.ui.films.anim
 
 import android.animation.AnimatorSet
 import android.view.View

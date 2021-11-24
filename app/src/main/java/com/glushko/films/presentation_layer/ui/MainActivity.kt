@@ -3,84 +3,24 @@ package com.glushko.films.presentation_layer.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentContainerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import androidx.lifecycle.ViewModelProvider
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
+import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentFilms.CallbackFragmentFilms, FragmentFavorites.CallbackFavoritesFilms {
 
     private val favoriteFilms = hashMapOf<String, AboutFilm>()
 
-    private var films = mutableListOf(
-        AboutFilm(
-            name = "Человек Паук",
-            img = R.drawable.spider_man,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(
-            name = "Марсианин",
-            img = R.drawable.marsianin,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(
-            name = "Мстители: Финал",
-            img = R.drawable.avengers,
-            img_like = R.drawable.ic_not_like
-        ), AboutFilm(
-            name = "Человек Паук",
-            img = R.drawable.spider_man,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(
-            name = "Марсианин",
-            img = R.drawable.marsianin,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(
-            name = "Мстители: Финал",
-            img = R.drawable.avengers,
-            img_like = R.drawable.ic_not_like
-        ), AboutFilm(
-            name = "Человек Паук",
-            img = R.drawable.spider_man,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(
-            name = "Марсианин",
-            img = R.drawable.marsianin,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(
-            name = "Мстители: Финал",
-            img = R.drawable.avengers,
-            img_like = R.drawable.ic_not_like
-        ), AboutFilm(
-            name = "Человек Паук",
-            img = R.drawable.spider_man,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(name = "Веном", img = R.drawable.venom, img_like = R.drawable.ic_not_like),
-        AboutFilm(
-            name = "Марсианин",
-            img = R.drawable.marsianin,
-            img_like = R.drawable.ic_not_like
-        ),
-        AboutFilm(
-            name = "Мстители: Финал",
-            img = R.drawable.avengers,
-            img_like = R.drawable.ic_not_like
-        )
-    )
+    private var films = mutableListOf<AboutFilm>()
 
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView
-
+    private lateinit var model: ViewModelFilms
     private var selectMenu:Int = R.id.menu_films
 
     companion object {
@@ -93,6 +33,8 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_main)
+        model = ViewModelProvider(this).get(ViewModelFilms::class.java)
+        model.getFilms()
         val list = savedInstanceState?.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
         list?.let {
             films = it
@@ -155,13 +97,13 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             val position = films.indexOf(film)
             films[position].apply {
                 like = false
-                img_like = R.drawable.ic_not_like
+                imgLike = R.drawable.ic_not_like
             }
         }else{
             val position = films.indexOf(film)
             films[position].apply {
                 like = true
-                img_like = R.drawable.ic_like
+                imgLike = R.drawable.ic_like
             }
             favoriteFilms[film.name] = film
         }

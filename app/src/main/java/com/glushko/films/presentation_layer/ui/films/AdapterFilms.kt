@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 
 class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :
@@ -24,8 +24,10 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
         )
     }
 
-    fun update(filmsRestore: List<AboutFilm>){
+    fun update(filmsRestore: List<AboutFilm>, count: Int){
+        val beforeCount = films.size
         films = filmsRestore
+        notifyItemRangeInserted(beforeCount, count)
         //при повороте сначала вызывается метод update, а потом onBindViewHolder
         //То есть при вызову onBindViewHolder films будет уже новый
     }
@@ -48,8 +50,8 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
         fun bind(item: AboutFilm) {
             //cardViewFilm.animation =
             //    AnimationUtils.loadAnimation(itemView.context, R.anim.anim_film_list)
-            imgFilm.setImageResource(item.img)
-            btnLike.setImageResource(item.img_like)
+            //imgFilm.setImageResource(item.img)
+            btnLike.setImageResource(if(item.imgLike == 0) R.drawable.ic_not_like else item.imgLike)
             tvFilmName.text = item.name
             tvComment.text = item.comment
             btnDetail.setOnClickListener {
@@ -57,7 +59,7 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
             }
             btnLike.setOnClickListener {
                 item.like = !item.like
-                item.img_like = if(item.like) R.drawable.ic_like else R.drawable.ic_not_like
+                item.imgLike = if(item.like) R.drawable.ic_like else R.drawable.ic_not_like
                 callback.onClickLike(item, adapterPosition)
 
             }

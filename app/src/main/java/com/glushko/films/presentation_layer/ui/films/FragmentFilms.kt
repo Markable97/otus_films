@@ -6,12 +6,15 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.presentation_layer.ui.about_film.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.anim.FilmsItemAnimate
-import com.glushko.films.presentation_layer.ui.films.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
+import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.google.android.material.snackbar.Snackbar
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
@@ -27,63 +30,20 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         }
     }
 
-    /*private val startForResultDetail =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            it.data?.let { values ->
-                val film =
-                    values.getParcelableExtra<AboutFilm>(DetailFilmActivity.EXTRA_FILM_INFO)
-                val position = values.getIntExtra(DetailFilmActivity.EXTRA_POSITION, -1)
-                if (film != null && position != -1) {
-                    actionWithFilm(film, position)
-                }
-            }
-        }
-    }*/
-
-    /*private val startForResultFavorite =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                it.data?.let { values ->
-                    val filmsDeleteFavorite =
-                        values.getParcelableArrayListExtra<AboutFilm>(FavoriteFilmActivity.EXTRA_DELETE)
-                    filmsDeleteFavorite?.let { filmsDelete ->
-                        filmsDelete.forEach { film ->
-                            favoriteFilms.remove(film.name)
-                            val position = films.indexOf(film)
-                            films[position].apply {
-                                like = false
-                                img_like = R.drawable.ic_not_like
-                            }
-                            recycler.adapter?.notifyItemChanged(position)
-                        }
-                    }
-                }
-            }
-        }*/
-
-    private var films: List<AboutFilm> = listOf()
+    private lateinit var model: ViewModelFilms
+    //private var films: List<AboutFilm> = listOf()
     private var callback: CallbackFragmentFilms? = null
     private lateinit var recycler: RecyclerView
     private val adapter by lazy {
-        AdapterFilms(films = films, callback = object : AdapterFilms.Callback {
+        AdapterFilms(callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.main_container, FragmentDetailFilm.newInstance(position, film))
                     .addToBackStack("films")
                     .commit()
-                /*startForResultDetail.launch(
-                    Intent(
-                        this@MainActivity,
-                        DetailFilmActivity::class.java
-                    ).apply {
-                        putExtra(DetailFilmActivity.EXTRA_FILM_INFO, film)
-                        putExtra(DetailFilmActivity.EXTRA_POSITION, position)
-                    })*/
             }
 
             override fun onClickLike(film: AboutFilm, position: Int) {
-                //callback?.actionWithMovie(position, film)//*actionWithFilm(film, position)*/
                 actionWithFilm(film, position)
             }
 
@@ -100,10 +60,15 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        model = ViewModelProvider(requireActivity()).get(ViewModelFilms::class.java)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        films = arguments?.getParcelableArrayList<AboutFilm>(kEY_FILMS) as List<AboutFilm>
+        //films = arguments?.getParcelableArrayList<AboutFilm>(kEY_FILMS) as List<AboutFilm>
 
         recycler = view.findViewById(R.id.recyclerFilm)
         recycler.layoutManager = LinearLayoutManager(requireActivity())
@@ -116,9 +81,15 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
             if (film != null && position != -1) {
                 actionWithFilm(film, position, false)
-                //callback?.actionWithMovie(position, film)
             }
         }
+
+        model.liveDataFilm.observe(viewLifecycleOwner, Observer {
+            if(it.isSuccess){
+                println("Live Data isSuccess = ${it.isSuccess} = ${it.films}")
+                adapter.update(it.films, it.pagesCount)
+            }
+        })
 
     }
 
@@ -141,7 +112,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
             val actionSnackBar: (film: AboutFilm)->Unit = {
                 val filmCanceled = it.apply {
                     like = !like
-                    img_like = if(like) R.drawable.ic_like else R.drawable.ic_not_like
+                    imgLike = if(like) R.drawable.ic_like else R.drawable.ic_not_like
                 }
                 actionWithFilm(filmCanceled, position, false)
                 callback?.actionWithMovie(position, filmCanceled)

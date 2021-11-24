@@ -1,4 +1,4 @@
-package com.glushko.films.presentation_layer.ui.films.detail_film
+package com.glushko.films.presentation_layer.ui.detail_film
 
 import android.view.LayoutInflater
 import android.view.View
