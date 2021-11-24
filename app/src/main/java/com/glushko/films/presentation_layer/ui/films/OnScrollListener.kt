@@ -2,12 +2,12 @@ package com.glushko.films.presentation_layer.ui.films
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 
 class OnScrollListener(
     private val layoutManager: LinearLayoutManager,
-    private val model: ViewModelFilms
+    private val model: ViewModelFilms,
+    private val callback: FragmentFilms.CallbackFragmentFilms?
 ) : RecyclerView.OnScrollListener() {
     private var previousTotal = 0
     private var loading = true
@@ -30,8 +30,13 @@ class OnScrollListener(
 
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
             println("подгрузка данных")
+            callback?.showProgressbar()
             model.getFilms()
             loading = true
         }
     }
+
+    /*interface CallbackScroll{
+        fun showToolbar()
+    }*/
 }

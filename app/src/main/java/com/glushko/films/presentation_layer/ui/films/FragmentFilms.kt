@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.business_logic_layer.domain.AboutFilm
@@ -73,7 +72,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
-        recycler.addOnScrollListener(OnScrollListener(layoutManager, model ))
+        recycler.addOnScrollListener(OnScrollListener(layoutManager, model, callback))
         setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){ _, bundle ->
             val film =
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
@@ -126,5 +125,6 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
     interface CallbackFragmentFilms{
         fun actionWithMovie(position: Int, film: AboutFilm)
+        fun showProgressbar()
     }
 }

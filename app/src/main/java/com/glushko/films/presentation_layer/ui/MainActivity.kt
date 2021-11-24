@@ -2,7 +2,11 @@ package com.glushko.films.presentation_layer.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
@@ -20,6 +24,8 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
 
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView
+    private lateinit var toolbar: Toolbar
+    private lateinit var progressBar: ProgressBar
     private lateinit var model: ViewModelFilms
     private var selectMenu:Int = R.id.menu_films
 
@@ -33,6 +39,9 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_main)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        progressBar = findViewById(R.id.toolbar_progress_bar)
         model = ViewModelProvider(this).get(ViewModelFilms::class.java)
         //model.getFilms()
         val list = savedInstanceState?.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
@@ -49,6 +58,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         bottomNavigate.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.menu_films -> {
+                    progressBar.visibility = View.VISIBLE
                     model.clearFilms()
                     model.getFilms(1)
                     supportFragmentManager.beginTransaction().replace(R.id.main_container, FragmentFilms.newInstance(films)).commit()
@@ -62,7 +72,9 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             true
         }
         bottomNavigate.selectedItemId = selectMenu
-
+        model.liveDataFilm.observe(this, Observer {
+            progressBar.visibility = View.INVISIBLE
+        })
     }
 
 
@@ -95,6 +107,10 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             favoriteFilms.remove(film.name)
         }
         films[position] = film
+    }
+
+    override fun showProgressbar() {
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun actionInFavoriteMovies(film: AboutFilm, isDelete: Boolean) {
