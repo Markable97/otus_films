@@ -1,23 +1,33 @@
 package com.glushko.films.presentation_layer.vm
 
-import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import kotlinx.coroutines.*
 
 class ViewModelFilms: ViewModel() {
-    var job: Job = Job()
     private val useCase = UseCaseRepository()
+    private var _page: Int = 0
     private var _liveDataFilm: MutableLiveData<ResponseFilm> = MutableLiveData()
     val liveDataFilm: LiveData<ResponseFilm> = _liveDataFilm
 
-    fun getFilms(page:Int = 1){
+    fun clearFilms() {
+        _liveDataFilm.value?.films = listOf()
+    }
+
+
+    fun getFilms(page:Int = 0){
         viewModelScope.launch {
-            useCase.getFilm(page, _liveDataFilm)
+            val curPage = if(page > 0) {
+                _page = page
+                page
+            }
+            else ++_page
+            useCase.getFilm(curPage, _liveDataFilm)
         }
 
     }
@@ -25,11 +35,7 @@ class ViewModelFilms: ViewModel() {
     fun cancelDownloading(){
         println("ViewModelScope  -  ${viewModelScope.isActive}")
         println("ViewModelScope Context  -  ${viewModelScope.coroutineContext.isActive}")
-        println("ViewModelScope Job - ${job.isActive}")
-        if(job.isActive){
-            job.cancel()
-        }
-        println("ViewModelScope Job - ${job.isActive}")
+       viewModelScope.cancel()
         println("ViewModelScope  Context-  ${viewModelScope.coroutineContext.isActive}")
         println("ViewModelScope  -  ${viewModelScope.isActive}")
 
@@ -37,9 +43,6 @@ class ViewModelFilms: ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        if(job.isActive){
-            job.cancel()
-        }
+        viewModelScope.cancel()
     }
-
 }

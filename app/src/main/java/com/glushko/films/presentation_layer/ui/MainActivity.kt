@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_main)
         model = ViewModelProvider(this).get(ViewModelFilms::class.java)
-        model.getFilms()
+        //model.getFilms()
         val list = savedInstanceState?.getParcelableArrayList<AboutFilm>(EXTRA_SAVE_STATE)
         list?.let {
             films = it
@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         bottomNavigate.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.menu_films -> {
+                    model.clearFilms()
+                    model.getFilms(1)
                     supportFragmentManager.beginTransaction().replace(R.id.main_container, FragmentFilms.newInstance(films)).commit()
                 }
                 R.id.menu_favorite_films -> {
@@ -75,7 +77,11 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
     }
 
     override fun onBackPressed() {
-        ExitDialog().show(supportFragmentManager, "ExitDialog")
+        if(supportFragmentManager.backStackEntryCount > 0){
+            supportFragmentManager.popBackStack()
+        }else{
+            ExitDialog().show(supportFragmentManager, "ExitDialog")
+        }
     }
 
     override fun onClickDialog(exit: Boolean) {

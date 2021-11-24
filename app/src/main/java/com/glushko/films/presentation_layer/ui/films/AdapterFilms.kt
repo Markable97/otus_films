@@ -13,7 +13,7 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.interactor.MyGlideApp
 
-class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: Callback) :
+class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
 
     companion object{
@@ -28,7 +28,8 @@ class AdapterFilms(private var films: List<AboutFilm> = listOf(), val callback: 
 
     fun update(filmsRestore: List<AboutFilm>, count: Int){
         val beforeCount = films.size
-        films = filmsRestore
+        films.addAll(filmsRestore)
+        println("Фильмы для обеовления = $filmsRestore")
         notifyItemRangeInserted(beforeCount, count)
         //при повороте сначала вызывается метод update, а потом onBindViewHolder
         //То есть при вызову onBindViewHolder films будет уже новый

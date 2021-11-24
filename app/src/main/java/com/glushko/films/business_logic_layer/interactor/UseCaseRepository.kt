@@ -2,6 +2,7 @@ package com.glushko.films.business_logic_layer.interactor
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import retrofit2.Call
@@ -20,5 +21,14 @@ class UseCaseRepository {
         }else{
             liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false))
         }
+    }
+
+    suspend fun getNextFilm(page: Int): Collection<AboutFilm> {
+        val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
+        var films: List<AboutFilm> = listOf()
+        if(response.isSuccessful){
+            films = response.body()?.films?: listOf()
+        }
+        return films
     }
 }

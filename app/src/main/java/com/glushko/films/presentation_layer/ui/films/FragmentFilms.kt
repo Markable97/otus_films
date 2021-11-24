@@ -39,7 +39,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         AdapterFilms(callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, FragmentDetailFilm.newInstance(position, film))
+                    .add(R.id.main_container, FragmentDetailFilm.newInstance(position, film))
                     .addToBackStack("films")
                     .commit()
             }
@@ -68,14 +68,12 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //films = arguments?.getParcelableArrayList<AboutFilm>(kEY_FILMS) as List<AboutFilm>
-
+        val layoutManager = LinearLayoutManager(requireActivity())
         recycler = view.findViewById(R.id.recyclerFilm)
-        recycler.layoutManager = LinearLayoutManager(requireActivity())
+        recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
-
+        recycler.addOnScrollListener(OnScrollListener(layoutManager, model ))
         setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){ _, bundle ->
             val film =
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
@@ -87,7 +85,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
         model.liveDataFilm.observe(viewLifecycleOwner, Observer {
             if(it.isSuccess){
-                println("Live Data isSuccess = ${it.isSuccess} = ${it.films}")
+                println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount}")
                 adapter.update(it.films, it.pagesCount)
             }
         })
