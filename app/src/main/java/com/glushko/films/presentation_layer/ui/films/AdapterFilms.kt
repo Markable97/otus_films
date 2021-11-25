@@ -26,11 +26,21 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         )
     }
 
-    fun update(filmsRestore: List<AboutFilm>, count: Int){
-        val beforeCount = films.size
-        films.addAll(filmsRestore)
-        println("Фильмы для обеовления = $filmsRestore")
-        notifyItemRangeInserted(beforeCount, count)
+    fun update(filmsRestore: List<AboutFilm>, count: Int, type: Int = 1 /*0-DB, 1 API*/){
+        if (type == 0){
+            val beforeCount = films.size
+            films.addAll(filmsRestore)
+            println("Фильмы для обеовления = $filmsRestore")
+
+            notifyItemRangeInserted(beforeCount, count)
+        }else{
+            val beforeCount = if (films.size == 0 ){
+                0
+            }else{
+                films.size - count
+            }
+            notifyItemRangeInserted(beforeCount, count)
+        }
         //при повороте сначала вызывается метод update, а потом onBindViewHolder
         //То есть при вызову onBindViewHolder films будет уже новый
     }
@@ -58,8 +68,8 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
                 callback.onClickDetail(item, adapterPosition)
             }
             btnLike.setOnClickListener {
-                item.like = !item.like
-                item.imgLike = if(item.like) R.drawable.ic_like else R.drawable.ic_not_like
+                item.like = if(item.like == 1) 0 else 0
+                item.imgLike = if(item.like == 1) R.drawable.ic_like else R.drawable.ic_not_like
                 callback.onClickLike(item, adapterPosition)
 
             }

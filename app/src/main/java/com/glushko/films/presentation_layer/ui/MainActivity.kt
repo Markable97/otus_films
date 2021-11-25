@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         list?.let {
             films = it
             films.forEach() { film ->
-                if (film.like) favoriteFilms[film.name] = film
+                if (film.like == 1) favoriteFilms[film.name] = film
             }
         }
         selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
     }
 
     override fun actionWithMovie(position: Int, film: AboutFilm) {
-        if (film.like) {
+        if (film.like == 1) {
             favoriteFilms[film.name] = film
         } else {
             favoriteFilms.remove(film.name)
@@ -118,13 +118,13 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
             favoriteFilms.remove(film.name)
             val position = films.indexOf(film)
             films[position].apply {
-                like = false
+                like = 0
                 imgLike = R.drawable.ic_not_like
             }
         }else{
             val position = films.indexOf(film)
             films[position].apply {
-                like = true
+                like = 1
                 imgLike = R.drawable.ic_like
             }
             favoriteFilms[film.name] = film

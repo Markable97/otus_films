@@ -63,8 +63,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
         val btnLike = view.findViewById<FloatingActionButton>(R.id.btnLikeDetail)
         btnLike.setImageResource(film.imgLike)
         btnLike.setOnClickListener {
-            film.like = !film.like
-            film.imgLike = if (film.like) R.drawable.ic_like else R.drawable.ic_not_like
+            film.like = if(film.like == 1) 0 else 1
+            film.imgLike = if (film.like == 1) R.drawable.ic_like else R.drawable.ic_not_like
             btnLike.setImageResource(film.imgLike)
         }
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar_detail_film)

@@ -94,7 +94,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
     private fun actionWithFilm(film: AboutFilm, position: Int, showSnackBar: Boolean = true) {
         var titleSnackBar = ""
 
-        if(film.like){
+        if(film.like == 1){
             recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
             if(showSnackBar){
                 titleSnackBar = getString(R.string.snackbat_title_add)
@@ -109,8 +109,8 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         if(showSnackBar){
             val actionSnackBar: (film: AboutFilm)->Unit = {
                 val filmCanceled = it.apply {
-                    like = !like
-                    imgLike = if(like) R.drawable.ic_like else R.drawable.ic_not_like
+                    like = if(like == 1) 0 else 1
+                    imgLike = if(like == 1) R.drawable.ic_like else R.drawable.ic_not_like
                 }
                 actionWithFilm(filmCanceled, position, false)
                 callback?.actionWithMovie(position, filmCanceled)

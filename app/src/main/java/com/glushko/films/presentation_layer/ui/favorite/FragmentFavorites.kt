@@ -85,7 +85,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
                 .setAction(getString(R.string.snackbar_action_title)) {
                     _adapter.insertCancelledFilm(position, film)
                     callback?.actionInFavoriteMovies(film.apply {
-                        like = false
+                        like = 0
                         imgLike = R.drawable.ic_not_like
                     }, false)
                 }
