@@ -5,5 +5,6 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 data class ResponseFilm(
     val pagesCount: Int,
     var isSuccess: Boolean,
+    var isUpdateDB: Boolean,
     var films: List<AboutFilm> = listOf()
 )

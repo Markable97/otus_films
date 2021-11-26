@@ -26,19 +26,23 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         )
     }
 
-    fun update(filmsRestore: List<AboutFilm>, count: Int, type: Int = 1 /*0-DB, 1 API*/){
-        if (type == 0){
-            val beforeCount = films.size
-            films.addAll(filmsRestore)
-            println("Фильмы для обеовления = $filmsRestore")
-
-            notifyItemRangeInserted(beforeCount, count)
+    fun update(filmsRestore: List<AboutFilm>, count: Int, isUpdateDB: Boolean){
+        println("Обновить $filmsRestore ${filmsRestore.size}")
+        if (isUpdateDB){
+            if(filmsRestore.isNotEmpty()){
+                val beforeCount = films.size
+                films.addAll(filmsRestore)
+                println("Обнова из БД 0т $beforeCount размер $count")
+                notifyItemRangeInserted(beforeCount, count)
+            }
         }else{
             val beforeCount = if (films.size == 0 ){
                 0
             }else{
-                films.size - count
+                films.size
             }
+            films.addAll(filmsRestore)
+            println("Обнова c сервера от $beforeCount размер $count")
             notifyItemRangeInserted(beforeCount, count)
         }
         //при повороте сначала вызывается метод update, а потом onBindViewHolder

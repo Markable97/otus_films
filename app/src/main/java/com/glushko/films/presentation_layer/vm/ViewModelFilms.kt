@@ -22,7 +22,6 @@ class ViewModelFilms: ViewModel() {
 
     fun getFilms(page:Int = 0){
         viewModelScope.launch {
-            delay(4000L)
             val curPage = if(page > 0) {
                 _page = page
                 page

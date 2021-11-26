@@ -84,8 +84,8 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
         model.liveDataFilm.observe(viewLifecycleOwner, Observer {
             if(it.isSuccess){
-                println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount}")
-                adapter.update(it.films, it.pagesCount)
+                println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount} isUpdate = ${it.isUpdateDB}")
+                adapter.update(it.films, it.pagesCount, it.isUpdateDB)
             }
         })
 
