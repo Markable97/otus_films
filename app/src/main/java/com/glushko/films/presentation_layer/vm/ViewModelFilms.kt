@@ -19,6 +19,15 @@ class ViewModelFilms: ViewModel() {
         _liveDataFilm.value?.films = listOf()
     }
 
+    /*fun getAllFilmsCash(){
+        viewModelScope.launch {
+            val list = useCase.getAllFilmsCash()
+            println("Все фильмы из кешв")
+            list.forEach {
+                println(it)
+            }
+        }
+    }*/
 
     fun getFilms(page:Int = 0){
         viewModelScope.launch {

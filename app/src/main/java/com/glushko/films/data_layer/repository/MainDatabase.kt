@@ -39,10 +39,12 @@ interface FilmsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilms(films: List<AboutFilm>)
 
-    @Query("select * from films_table f  order by position  limit 13 offset 13*(:page-1)")
+    @Query("select * from films_table f  order by position  limit 20 offset 20*(:page-1)")
     suspend fun getFilms(page: Int): List<AboutFilm>
+    @Query("select count(1) from films_table")
+    suspend fun getCntFilm(): Int
 
-    @Query("select * from films_table")
+    @Query("select * from films_table order by position")
     suspend fun getAllFilms(): List<AboutFilm>
 
     @Query("select * from films_table f limit 13 offset 0")
