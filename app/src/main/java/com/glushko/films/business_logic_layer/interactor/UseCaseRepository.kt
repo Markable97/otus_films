@@ -8,6 +8,7 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import kotlinx.coroutines.delay
 import retrofit2.awaitResponse
 
 class UseCaseRepository {
@@ -23,14 +24,18 @@ class UseCaseRepository {
         //обновить данные
         println("Загрузка данных")
         delay(10000L)*/
-        val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
-        if(response.isSuccessful){
-            liveData.postValue(response.body()?.apply {
-                isSuccess = true
-                isUpdateDB = false
-            })
-            insertDB(response.body()?.films, page)
-        }else{
+        try {
+            val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
+            if(response.isSuccessful){
+                liveData.postValue(response.body()?.apply {
+                    isSuccess = true
+                    isUpdateDB = false
+                })
+                insertDB(response.body()?.films, page)
+            }else{
+                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false))
+            }
+        }catch (e: Exception){
             liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false))
         }
     }

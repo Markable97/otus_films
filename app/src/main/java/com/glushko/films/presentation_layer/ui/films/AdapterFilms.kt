@@ -26,6 +26,12 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         )
     }
 
+    fun removeAll(){
+        val cntAll = films.size
+        films.clear()
+        notifyItemRangeRemoved(0, cntAll)
+    }
+
     fun update(filmsRestore: List<AboutFilm>, count: Int, isUpdateDB: Boolean){
         println("Обновить рамзер = ${filmsRestore.size} \n данные $filmsRestore ")
         val beforeCount = films.size

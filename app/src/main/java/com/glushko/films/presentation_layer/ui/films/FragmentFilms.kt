@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
@@ -26,6 +27,7 @@ companion object{
     //private var films: List<AboutFilm> = listOf()
     private var callback: CallbackFragmentFilms? = null
     private lateinit var recycler: RecyclerView
+    private lateinit var swiper: SwipeRefreshLayout
     private val adapter by lazy {
         AdapterFilms(callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
@@ -60,6 +62,11 @@ companion object{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val layoutManager = LinearLayoutManager(requireActivity())
+        swiper = view.findViewById(R.id.swiper_films)
+        swiper.setOnRefreshListener {
+            adapter.removeAll()
+            model.getFilms(page = 1)
+        }
         recycler = view.findViewById(R.id.recyclerFilm)
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
@@ -75,6 +82,7 @@ companion object{
         }
 
         model.liveDataFilm.observe(viewLifecycleOwner, Observer {
+            swiper.isRefreshing = false
             if(it.isSuccess){
                 println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount} isUpdate = ${it.isUpdateDB}")
                 adapter.update(it.films, it.films.size, it.isUpdateDB)
