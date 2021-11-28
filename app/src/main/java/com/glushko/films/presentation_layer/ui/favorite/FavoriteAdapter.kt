@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
+import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperAdapter
 
-class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
+class FavoriteAdapter(private val films: MutableList<FavoriteFilm> = mutableListOf(), val callback: Callback) :
     RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>(), FavoriteSwipeHelperAdapter {
 
 
@@ -27,12 +28,18 @@ class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val c
     override fun getItemCount() = films.size
 
     override fun onItemDelete(position: Int) {
-        callback.onDeleteSwipe(films[position], position)
+        val film = films[position]
         films.removeAt(position)
         notifyItemRemoved(position)
+        callback.onDeleteSwipe(film, position)
     }
 
-    fun insertCancelledFilm(position: Int, film: AboutFilm){
+    fun updateFilm(favoriteFilms: List<FavoriteFilm>){
+        this.films.addAll(favoriteFilms)
+        notifyItemRangeInserted(0, films.size)
+    }
+
+    fun insertCancelledFilm(position: Int, film: FavoriteFilm){
         films.add(position, film)
         notifyItemInserted(position)
     }
@@ -41,13 +48,13 @@ class FavoriteAdapter(val films: MutableList<AboutFilm> = mutableListOf(), val c
 
         private val tvNameFilm: TextView = itemView.findViewById(R.id.tvFilmNameFavorite)
 
-        fun bind(item: AboutFilm) {
+        fun bind(item: FavoriteFilm) {
             tvNameFilm.text = item.name
         }
     }
 
     interface Callback{
-        fun onDeleteSwipe(film: AboutFilm, position: Int)
+        fun onDeleteSwipe(film: FavoriteFilm, position: Int)
     }
 
 

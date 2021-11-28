@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.glushko.films.business_logic_layer.domain.AboutFilm
+import com.glushko.films.App
+import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import kotlinx.coroutines.*
@@ -14,7 +15,8 @@ class ViewModelFilms: ViewModel() {
     private var _page: Int = 0
     private var _liveDataFilm: MutableLiveData<ResponseFilm> = MutableLiveData()
     val liveDataFilm: LiveData<ResponseFilm> = _liveDataFilm
-
+    private val _liveDataFavoriteFilms: MutableLiveData<List<FavoriteFilm>> = MutableLiveData()
+    val liveDataFavoriteFilms: LiveData<List<FavoriteFilm>> = _liveDataFavoriteFilms
     fun clearFilms() {
         _liveDataFilm.value?.films = listOf()
     }
@@ -41,6 +43,21 @@ class ViewModelFilms: ViewModel() {
 
     }
 
+    fun addFavoriteFilm(film: FavoriteFilm){
+        viewModelScope.launch {
+            useCase.addFavoriteFilm(film)
+        }
+    }
+    fun deleteFavoriteFilm(film: FavoriteFilm){
+        viewModelScope.launch {
+            useCase.deleteFavoriteFilm(film)
+        }
+    }
+    fun getFavoriteFilms(){
+        viewModelScope.launch {
+            useCase.getFavoriteFilms(_liveDataFavoriteFilms)
+        }
+    }
     fun cancelDownloading(){
         println("ViewModelScope  -  ${viewModelScope.isActive}")
         println("ViewModelScope Context  -  ${viewModelScope.coroutineContext.isActive}")

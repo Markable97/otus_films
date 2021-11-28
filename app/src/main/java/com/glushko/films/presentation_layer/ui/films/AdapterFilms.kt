@@ -59,7 +59,7 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
                 callback.onClickDetail(item, adapterPosition)
             }
             btnLike.setOnClickListener {
-                item.like = if(item.like == 1) 0 else 0
+                item.like = if(item.like == 1) 0 else 1
                 item.imgLike = if(item.like == 1) R.drawable.ic_like else R.drawable.ic_not_like
                 callback.onClickLike(item, adapterPosition)
 

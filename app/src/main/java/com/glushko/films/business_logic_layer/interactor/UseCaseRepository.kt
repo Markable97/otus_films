@@ -5,15 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
+import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
-import kotlinx.coroutines.delay
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.awaitResponse
 
 class UseCaseRepository {
+
+    private val dao = App.instance.db.filmsDao()
 
     suspend fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>) {
         /*
@@ -50,6 +49,17 @@ class UseCaseRepository {
             App.instance.db.filmsDao().insertFilms(films)
         }
         println("кол-во фильтмов в бд = ${App.instance.db.filmsDao().getCntFilm()}")
+    }
+
+    suspend fun addFavoriteFilm(film: FavoriteFilm){
+        dao.insertFavoriteFilm(film)
+    }
+    suspend fun deleteFavoriteFilm(film: FavoriteFilm){
+        dao.deleteFavoriteFilm(film)
+    }
+    suspend fun getFavoriteFilms(liveData: MutableLiveData<List<FavoriteFilm>>){
+        val list = dao.getFavoriteFilms()
+        liveData.postValue(list)
     }
 
 }

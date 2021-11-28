@@ -19,15 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
 
-    companion object{
-
-        private const val kEY_FILMS = "list films"
-
-        fun newInstance(films: List<AboutFilm>): FragmentFilms {
-            return FragmentFilms().apply {
-                arguments = bundleOf(kEY_FILMS to films)
-            }
-        }
+companion object{
     }
 
     private lateinit var model: ViewModelFilms

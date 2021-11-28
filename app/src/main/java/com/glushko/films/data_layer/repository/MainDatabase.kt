@@ -49,8 +49,8 @@ interface FilmsDao {
 
     @Query("select * from films_table f limit 13 offset 0")
     fun getFilmsStart(): LiveData<List<AboutFilm>>
-    //@Query("select * from favorite_films_table")
-    //suspend fun getFavoriteFilms(): LiveData<List<FavoriteFilm>>
+    @Query("select * from favorite_films_table")
+    suspend fun getFavoriteFilms(): List<FavoriteFilm>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavoriteFilm(film: FavoriteFilm)
