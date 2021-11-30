@@ -75,7 +75,7 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
 
         fun bind(item: AboutFilm) {
             Glide.with(itemView.context).load(item.img).error(R.drawable.ic_avatar_unknow).into(imgFilm)
-            btnLike.setImageResource(if(item.imgLike == 0) R.drawable.ic_not_like else item.imgLike)
+            btnLike.setImageResource(if(item.like == 0) R.drawable.ic_not_like else R.drawable.ic_like)
             tvFilmName.text = item.name
             tvComment.text = item.comment
             btnDetail.setOnClickListener {

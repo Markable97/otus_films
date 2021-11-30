@@ -38,7 +38,21 @@ interface FilmsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilms(films: List<AboutFilm>)
 
-    @Query("select * from films_table f  order by position  limit :count offset :count*(:page-1)")
+    @Query("""
+        select f.id, 
+               f.name, 
+               f.comment, 
+               case when ff.id is not null 
+                    then 1 
+                    else  0 
+               end  as `like`, 
+               f.img, 
+               f.imgLike, 
+               f.position 
+        from films_table f
+        left join favorite_films_table ff on f.id = ff.id
+        order by position  limit :count offset :count*(:page-1)
+        """ )
     suspend fun getFilms(page: Int, count: Int): List<AboutFilm>
     @Query("select count(1) from films_table")
     suspend fun getCntFilm(): Int
@@ -56,4 +70,8 @@ interface FilmsDao {
 
     @Delete
     suspend fun deleteFavoriteFilm(film: FavoriteFilm)
+
+    @Query("select count(1) from favorite_films_table t where t.id = :filmID")
+    suspend fun isInFavorite(filmID: Int): Int
+
 }

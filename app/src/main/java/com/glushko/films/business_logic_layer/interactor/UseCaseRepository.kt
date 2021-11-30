@@ -18,7 +18,7 @@ class UseCaseRepository {
     suspend fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>) {
         println("Загрузка данных страница = $page")
         //пока грузятся данные взять из бд
-        val list = App.instance.db.filmsDao().getFilms(page, ResponseFilm.PAGE_COUNT)
+        val list = dao.getFilms(page, ResponseFilm.PAGE_COUNT)
         //Передать LiveData
         liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page, err = ResponseFilm.ERROR_NO))
         //обновить данные
@@ -27,13 +27,25 @@ class UseCaseRepository {
         try {
             val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
             if(response.isSuccessful){
+                val filmsFromServer = response.body()?.films
+                filmsFromServer?.forEach {
+                    if(isInFavorite(it.id) == 1){
+                        it.like = 1
+                        it.imgLike = R.drawable.ic_like
+                    }else{
+                        it.like = 0
+                        it.imgLike = R.drawable.ic_not_like
+                    }
+                }
+
                 liveData.postValue(response.body()?.apply {
+                    this.films = filmsFromServer?: listOf()
                     isSuccess = true
                     isUpdateDB = false
                     this.page = page
                     err = ResponseFilm.ERROR_NO
                 })
-                insertDB(response.body()?.films, page)
+                insertDB(filmsFromServer, page)
             }else{
                 val error = when(response.code()){
                     401 -> ResponseFilm.ERROR_SERVER_TOKEN
@@ -55,12 +67,15 @@ class UseCaseRepository {
 
             it.forEachIndexed {index, film ->
                 film.comment = ""
-                film.imgLike = R.drawable.ic_not_like
                 film.position = it.size * (page - 1) + index + 1
             }
             App.instance.db.filmsDao().insertFilms(films)
         }
         println("кол-во фильтмов в бд = ${App.instance.db.filmsDao().getCntFilm()}")
+    }
+
+    private suspend fun isInFavorite(id: Int): Int{
+        return dao.isInFavorite(id)
     }
 
     suspend fun addFavoriteFilm(film: FavoriteFilm){

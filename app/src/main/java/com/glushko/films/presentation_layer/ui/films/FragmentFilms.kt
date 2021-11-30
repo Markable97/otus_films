@@ -64,7 +64,6 @@ companion object{
         val layoutManager = LinearLayoutManager(requireActivity())
         swiper = view.findViewById(R.id.swiper_films)
         swiper.setOnRefreshListener {
-            adapter.removeAll()
             model.getFilms(page = 1)
         }
         recycler = view.findViewById(R.id.recyclerFilm)
