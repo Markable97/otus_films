@@ -35,12 +35,11 @@ abstract class MainDatabase : RoomDatabase() {
 
 @Dao
 interface FilmsDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilms(films: List<AboutFilm>)
 
-    @Query("select * from films_table f  order by position  limit 20 offset 20*(:page-1)")
-    suspend fun getFilms(page: Int): List<AboutFilm>
+    @Query("select * from films_table f  order by position  limit :count offset :count*(:page-1)")
+    suspend fun getFilms(page: Int, count: Int): List<AboutFilm>
     @Query("select count(1) from films_table")
     suspend fun getCntFilm(): Int
 

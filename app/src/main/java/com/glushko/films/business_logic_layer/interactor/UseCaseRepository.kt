@@ -16,27 +16,28 @@ class UseCaseRepository {
     private val dao = App.instance.db.filmsDao()
 
     suspend fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>) {
-        /*
+        println("Загрузка данных страница = $page")
         //пока грузятся данные взять из бд
-        val list = App.instance.db.filmsDao().getFilms(page)
+        val list = App.instance.db.filmsDao().getFilms(page, ResponseFilm.PAGE_COUNT)
         //Передать LiveData
-        liveData.postValue(ResponseFilm(13, true, isUpdateDB = true, films = list))
+        liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page))
         //обновить данные
-        println("Загрузка данных")
-        delay(10000L)*/
+
+        delay(10000L)
         try {
             val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
             if(response.isSuccessful){
                 liveData.postValue(response.body()?.apply {
                     isSuccess = true
                     isUpdateDB = false
+                    this.page = page
                 })
                 insertDB(response.body()?.films, page)
             }else{
-                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false))
+                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page))
             }
         }catch (e: Exception){
-            liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false))
+            liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page))
         }
     }
 

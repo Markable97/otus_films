@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.interactor.MyGlideApp
+import com.glushko.films.data_layer.datasource.response.ResponseFilm
 
 class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
@@ -32,18 +33,34 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         notifyItemRangeRemoved(0, cntAll)
     }
 
-    fun update(filmsRestore: List<AboutFilm>, count: Int, isUpdateDB: Boolean){
-        println("Обновить рамзер = ${filmsRestore.size} \n данные $filmsRestore ")
-        val beforeCount = films.size
-        films.addAll(filmsRestore)
-        println("Обнова из БД 0т $beforeCount размер $count")
-        notifyItemRangeInserted(beforeCount, count)
+    fun update(filmsRestore: List<AboutFilm>, count: Int, page: Int){
+        //Проверить, если пришла новая страница, но сток записей нет, то добавить, иначе изменить
+        val sizeBefore = films.size
+        val sizeIn = count * page
+        //Если новые данные умноженыне на страницу > чем размер массива, то добваляем, иначе изменяем
+        val isAdd = sizeIn > sizeBefore
+        if(isAdd){
+            val beforeCount = films.size
+            println("Добавить от = $beforeCount рамзер = $count = ${filmsRestore.size} \n данные $filmsRestore ")
+            films.addAll(filmsRestore)
+            notifyItemRangeInserted(beforeCount, count)
+        }else{
+            val beforeCount = count * (page - 1)
+            println("Обновить от = $beforeCount рамзер = $count = ${filmsRestore.size} \n данные $filmsRestore ")
+            var currentPosition = beforeCount
+            filmsRestore.forEach{
+                films[currentPosition] = it
+                currentPosition++
+            }
+            notifyItemRangeChanged(beforeCount, count)
+        }
         //при повороте сначала вызывается метод update, а потом onBindViewHolder
         //То есть при вызову onBindViewHolder films будет уже новый
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        holder.bind(films[position])
+        holder.bind(films.elementAt(position))
+    //holder.bind(films[position])
     }
 
     override fun getItemCount() = films.size

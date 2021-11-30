@@ -61,7 +61,9 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         }
         bottomNavigate.selectedItemId = selectMenu
         model.liveDataFilm.observe(this, Observer {
-            progressBar.visibility = View.INVISIBLE
+            if(!it.isUpdateDB){
+                progressBar.visibility = View.INVISIBLE
+            }
         })
     }
 
