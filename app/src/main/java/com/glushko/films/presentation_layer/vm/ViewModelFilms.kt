@@ -21,23 +21,19 @@ class ViewModelFilms: ViewModel() {
         _liveDataFilm.value?.films = listOf()
     }
 
-    /*fun getAllFilmsCash(){
-        viewModelScope.launch {
-            val list = useCase.getAllFilmsCash()
-            println("Все фильмы из кешв")
-            list.forEach {
-                println(it)
-            }
-        }
-    }*/
-
-    fun getFilms(page:Int = 0){
+    fun getFilms(page:Int = 0, isNoAddPage: Boolean = false){
         viewModelScope.launch {
             val curPage = if(page > 0) {
                 _page = page
                 page
+            }else{
+                if(isNoAddPage){
+                    _page
+                }else{
+                    ++_page
+                }
             }
-            else ++_page
+
             useCase.getFilm(curPage, _liveDataFilm)
         }
 

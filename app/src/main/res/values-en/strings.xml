@@ -19,4 +19,9 @@
     <string name="snackbar_action_title">Cancel</string>
     <string name="snackbat_title_add">Added to favorites</string>
     <string name="snackbat_title_delete">Removed from favorites</string>
+    <string name="error_network">No internet connection</string>
+    <string name="error_token">Empty or incorrect token</string>
+    <string name="error_limit">Too many requests. Limit of 5 requests per second</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="repeat">Repeat</string>
 </resources>

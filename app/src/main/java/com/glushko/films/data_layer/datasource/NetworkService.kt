@@ -6,6 +6,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.logging.HttpLoggingInterceptor
 
+/**
+https://kinopoiskapiunofficial.tech/documentation/api/#/films/get_api_v2_2_films_top
+ **/
+
 object NetworkService {
     private const val BASE_URL = "https://kinopoiskapiunofficial.tech/api/v2.2/"
     private const val API_KEY = "68171039-847a-4fb3-ae25-b084f1c6e7e"

@@ -20,10 +20,10 @@ class UseCaseRepository {
         //пока грузятся данные взять из бд
         val list = App.instance.db.filmsDao().getFilms(page, ResponseFilm.PAGE_COUNT)
         //Передать LiveData
-        liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page))
+        liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page, err = ResponseFilm.ERROR_NO))
         //обновить данные
 
-        delay(10000L)
+        //delay(10000L)
         try {
             val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
             if(response.isSuccessful){
@@ -31,13 +31,19 @@ class UseCaseRepository {
                     isSuccess = true
                     isUpdateDB = false
                     this.page = page
+                    err = ResponseFilm.ERROR_NO
                 })
                 insertDB(response.body()?.films, page)
             }else{
-                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page))
+                val error = when(response.code()){
+                    401 -> ResponseFilm.ERROR_SERVER_TOKEN
+                    429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
+                    else -> ResponseFilm.ERROR_UNKNOWN
+                }
+                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = error))
             }
         }catch (e: Exception){
-            liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page))
+            liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = ResponseFilm.ERROR_NETWORK))
         }
     }
 

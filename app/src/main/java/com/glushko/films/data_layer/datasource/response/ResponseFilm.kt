@@ -11,9 +11,16 @@ data class ResponseFilm(
     var isSuccess: Boolean,
     var isUpdateDB: Boolean,
     var page: Int,
-    var films: List<AboutFilm> = listOf()
+    var films: List<AboutFilm> = listOf(),
+    var err: Int
 ){
     companion object{
         const val PAGE_COUNT = 20
+        const val ERROR_NETWORK = -100
+        const val ERROR_SERVER_TOKEN = -50
+        const val ERROR_SERVER_TIME_LIMIT = -51
+        const val ERROR_UNKNOWN = -999
+        const val ERROR_NO = 0
+
     }
 }

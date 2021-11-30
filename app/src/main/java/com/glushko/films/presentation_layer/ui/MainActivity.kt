@@ -12,10 +12,12 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
+import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentFilms.CallbackFragmentFilms, FragmentFavorites.CallbackFavoritesFilms {
 
@@ -63,11 +65,27 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         model.liveDataFilm.observe(this, Observer {
             if(!it.isUpdateDB){
                 progressBar.visibility = View.INVISIBLE
+                if(!it.isSuccess){
+                    Snackbar.make(bottomNavigate, getErrorMessage(it.err), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.repeat)) {
+                            model.getFilms(isNoAddPage = true)
+                            progressBar.visibility = View.VISIBLE
+                        }
+                        .show()
+                }
             }
         })
     }
 
 
+    private fun getErrorMessage(error: Int): String{
+        return when(error){
+            ResponseFilm.ERROR_NETWORK -> getString(R.string.error_network)
+            ResponseFilm.ERROR_SERVER_TOKEN -> getString(R.string.error_token)
+            ResponseFilm.ERROR_SERVER_TIME_LIMIT -> getString(R.string.error_limit)
+            else -> getString(R.string.error_unknown)
+        }
+    }
 
 
 
