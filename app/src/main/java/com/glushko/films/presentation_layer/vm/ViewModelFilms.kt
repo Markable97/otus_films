@@ -60,17 +60,12 @@ class ViewModelFilms: ViewModel() {
         }
     }
     fun cancelDownloading(){
-        println("ViewModelScope  -  ${viewModelScope.isActive}")
-        println("ViewModelScope Context  -  ${viewModelScope.coroutineContext.isActive}")
        viewModelScope.cancel()
-        println("ViewModelScope  Context-  ${viewModelScope.coroutineContext.isActive}")
-        println("ViewModelScope  -  ${viewModelScope.isActive}")
 
     }
 
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
-        println("Очистка ViewModel")
     }
 }

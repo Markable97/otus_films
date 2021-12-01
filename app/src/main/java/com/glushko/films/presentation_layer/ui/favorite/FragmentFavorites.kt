@@ -24,17 +24,6 @@ import com.google.android.material.snackbar.Snackbar
 
 class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
 
-    companion object {
-        private const val EXTRA_FAVORITE = "favorite_film"
-        const val EXTRA_DELETE = "delete_film_from_favorite"
-        fun newInstance(favorites_films: MutableList<AboutFilm>): FragmentFavorites {
-            return FragmentFavorites().apply {
-                arguments = Bundle().apply {
-                    putParcelableArrayList(EXTRA_FAVORITE, favorites_films as ArrayList)
-                }
-            }
-        }
-    }
 
     private lateinit var recycler: RecyclerView
     private lateinit var textViewEmpty: TextView
@@ -66,9 +55,6 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         _adapter = FavoriteAdapter(callback = object : FavoriteAdapter.Callback {
             override fun onDeleteSwipe(film: FavoriteFilm, position: Int) {
                 callback?.actionInFavoriteMovies(film, true)
-                /*setResult(AppCompatActivity.RESULT_OK, Intent().apply {
-                    putParcelableArrayListExtra(FavoriteFilmActivity.EXTRA_DELETE, filmsDelete)
-                })*/
                 if(recycler.layoutManager?.itemCount == 0){
                     recycler.visibility = View.INVISIBLE
                     textViewEmpty.visibility = View.VISIBLE
@@ -89,7 +75,6 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         val swiperCallback = FavoriteSwipeHelperCallback(_adapter)
         ItemTouchHelper(swiperCallback).attachToRecyclerView(recycler)
         model.liveDataFavoriteFilms.observe(viewLifecycleOwner, Observer {
-            println("Список избранного = $it")
             if(it.isNotEmpty()){
                 recycler.visibility = View.VISIBLE
                 textViewEmpty.visibility = View.INVISIBLE

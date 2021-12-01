@@ -35,8 +35,4 @@ class OnScrollListener(
             loading = true
         }
     }
-
-    /*interface CallbackScroll{
-        fun showToolbar()
-    }*/
 }

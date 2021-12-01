@@ -3,11 +3,13 @@ package com.glushko.films.data_layer.repository
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
+import com.glushko.films.business_logic_layer.domain.UpdateTime
 
 @Database(
-    entities = [AboutFilm::class, FavoriteFilm::class],
+    entities = [AboutFilm::class, FavoriteFilm::class, UpdateTime::class],
     version = 1, exportSchema = false
 )
 abstract class MainDatabase : RoomDatabase() {
@@ -77,6 +79,12 @@ interface FilmsDao {
     @Update
     suspend fun addComment(film: AboutFilm): Int
     @Query("select comment from films_table where id = :id")
-    suspend fun getCommentForFilm(id: Int): String
+    suspend fun getCommentForFilm(id: Int): String?
+
+    @Insert(onConflict = REPLACE)
+    suspend fun addTimeRefresh(time: UpdateTime)
+
+    @Query("select t.time from refresh_table t")
+    suspend fun getRefreshTime(): Long?
 
 }
