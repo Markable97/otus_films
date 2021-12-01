@@ -74,4 +74,9 @@ interface FilmsDao {
     @Query("select count(1) from favorite_films_table t where t.id = :filmID")
     suspend fun isInFavorite(filmID: Int): Int
 
+    @Update
+    suspend fun addComment(film: AboutFilm): Int
+    @Query("select comment from films_table where id = :id")
+    suspend fun getCommentForFilm(id: Int): String
+
 }

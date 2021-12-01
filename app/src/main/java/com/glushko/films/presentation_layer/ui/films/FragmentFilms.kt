@@ -76,6 +76,7 @@ companion object{
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
             if (film != null && position != -1) {
+                model.addComment(film)
                 actionWithFilm(film, position, false)
             }
         }

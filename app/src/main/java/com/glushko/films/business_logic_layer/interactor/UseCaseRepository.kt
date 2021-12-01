@@ -36,6 +36,7 @@ class UseCaseRepository {
                         it.like = 0
                         it.imgLike = R.drawable.ic_not_like
                     }
+                    it.comment = getComment(it.id)
                 }
 
                 liveData.postValue(response.body()?.apply {
@@ -66,7 +67,6 @@ class UseCaseRepository {
         films?.let{
 
             it.forEachIndexed {index, film ->
-                film.comment = ""
                 film.position = it.size * (page - 1) + index + 1
             }
             App.instance.db.filmsDao().insertFilms(films)
@@ -87,6 +87,16 @@ class UseCaseRepository {
     suspend fun getFavoriteFilms(liveData: MutableLiveData<List<FavoriteFilm>>){
         val list = dao.getFavoriteFilms()
         liveData.postValue(list)
+    }
+
+    private suspend fun getComment(id: Int): String{
+        val str = dao.getCommentForFilm(id)
+        println("получаем коммент $id $str")
+        return dao.getCommentForFilm(id)
+    }
+    suspend fun addComment(film: AboutFilm) {
+        val update = dao.addComment(film)
+        println("Обновилось? $update")
     }
 
 }

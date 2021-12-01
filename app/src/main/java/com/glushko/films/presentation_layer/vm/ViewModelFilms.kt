@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.glushko.films.App
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
@@ -54,6 +54,11 @@ class ViewModelFilms: ViewModel() {
             useCase.getFavoriteFilms(_liveDataFavoriteFilms)
         }
     }
+    fun addComment(film: AboutFilm){
+        viewModelScope.launch {
+            useCase.addComment(film)
+        }
+    }
     fun cancelDownloading(){
         println("ViewModelScope  -  ${viewModelScope.isActive}")
         println("ViewModelScope Context  -  ${viewModelScope.coroutineContext.isActive}")
@@ -66,5 +71,6 @@ class ViewModelFilms: ViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+        println("Очистка ViewModel")
     }
 }

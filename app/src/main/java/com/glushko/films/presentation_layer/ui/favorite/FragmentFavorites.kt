@@ -18,6 +18,7 @@ import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperCallback
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
+import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -53,7 +54,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //передаю this потому что кажжый раз мне нужно нвоое состояние
-        model = ViewModelProvider(this).get(ViewModelFilms::class.java)
+        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
         model.getFavoriteFilms()
     }
 
