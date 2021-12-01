@@ -90,13 +90,10 @@ class UseCaseRepository {
     }
 
     private suspend fun getComment(id: Int): String{
-        val str = dao.getCommentForFilm(id)
-        println("получаем коммент $id $str")
         return dao.getCommentForFilm(id)
     }
     suspend fun addComment(film: AboutFilm) {
-        val update = dao.addComment(film)
-        println("Обновилось? $update")
+        dao.addComment(film)
     }
 
 }

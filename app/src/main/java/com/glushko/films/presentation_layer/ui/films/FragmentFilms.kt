@@ -16,6 +16,7 @@ import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
+import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
@@ -56,7 +57,7 @@ companion object{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(requireActivity()).get(ViewModelFilms::class.java)
+        model = ViewModelProvider(requireActivity(), ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -16,6 +16,7 @@ import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
+import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentF
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         progressBar = findViewById(R.id.toolbar_progress_bar)
-        model = ViewModelProvider(this).get(ViewModelFilms::class.java)
+        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
         selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
         container = findViewById(R.id.main_container)
         bottomNavigate = findViewById(R.id.nav_bottom_main)
