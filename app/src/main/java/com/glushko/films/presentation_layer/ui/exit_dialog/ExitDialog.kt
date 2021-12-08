@@ -29,8 +29,5 @@ class ExitDialog: DialogFragment() {
             .create()
     }
 
-    interface OnDialogListener{
-        fun onClickDialog(exit: Boolean)
-    }
 
 }

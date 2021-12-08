@@ -13,14 +13,18 @@ import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.presentation_layer.ui.exit_dialog.OnDialogListener
+import com.glushko.films.presentation_layer.ui.favorite.CallbackFragmentFavorites
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
+import com.glushko.films.presentation_layer.ui.films.CallbackFragmentFilms
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity(), ExitDialog.OnDialogListener, FragmentFilms.CallbackFragmentFilms, FragmentFavorites.CallbackFavoritesFilms {
+class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilms,
+    CallbackFragmentFavorites {
 
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView

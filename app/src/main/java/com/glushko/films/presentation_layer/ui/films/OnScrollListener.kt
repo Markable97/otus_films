@@ -7,7 +7,7 @@ import com.glushko.films.presentation_layer.vm.ViewModelFilms
 class OnScrollListener(
     private val layoutManager: LinearLayoutManager,
     private val model: ViewModelFilms,
-    private val callback: FragmentFilms.CallbackFragmentFilms?
+    private val callback: CallbackFragmentFilms?
 ) : RecyclerView.OnScrollListener() {
     private var previousTotal = 0
     private var loading = true

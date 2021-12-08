@@ -124,8 +124,4 @@ companion object{
         }
     }
 
-    interface CallbackFragmentFilms{
-        fun actionWithMovie(position: Int, film: AboutFilm)
-        fun showProgressbar()
-    }
 }

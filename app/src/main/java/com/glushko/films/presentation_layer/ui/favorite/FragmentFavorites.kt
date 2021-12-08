@@ -27,14 +27,14 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
 
     private lateinit var recycler: RecyclerView
     private lateinit var textViewEmpty: TextView
-    private var callback: CallbackFavoritesFilms? = null
+    private var callback: CallbackFragmentFavorites? = null
     private lateinit var model: ViewModelFilms
     private lateinit var _adapter: FavoriteAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            callback = context as CallbackFavoritesFilms
+            callback = context as CallbackFragmentFavorites
         } catch (ex: Exception) {
             println("Bad callback fragment")
         }
@@ -99,7 +99,4 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         }
     }
 
-    interface CallbackFavoritesFilms {
-        fun actionInFavoriteMovies(film: FavoriteFilm, isDelete: Boolean)
-    }
 }
