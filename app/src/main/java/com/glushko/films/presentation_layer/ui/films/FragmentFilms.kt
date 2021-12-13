@@ -86,7 +86,9 @@ companion object{
             swiper.isRefreshing = false
             if(it.isSuccess){
                 println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount} isUpdate = ${it.isUpdateDB}")
-                adapter.update(it.films, it.films.size, it.page)
+                if(it.films.isNotEmpty()){
+                    adapter.update(it.films, it.films.size, it.page)
+                }
             }
         })
 

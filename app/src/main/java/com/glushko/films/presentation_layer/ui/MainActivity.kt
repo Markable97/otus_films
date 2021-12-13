@@ -31,10 +31,9 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
     private lateinit var toolbar: Toolbar
     private lateinit var progressBar: ProgressBar
     private lateinit var model: ViewModelFilms
-    private var selectMenu:Int = R.id.menu_films
+    private var selectMenu:Int? = null
 
     companion object {
-        const val EXTRA_SAVE_STATE = "restore_activity"
         const val EXTRA_SAVE_STATE_TAB = "id_menu_bottom"
     }
 
@@ -47,26 +46,33 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
         setSupportActionBar(toolbar)
         progressBar = findViewById(R.id.toolbar_progress_bar)
         model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
-        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
+        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)
         container = findViewById(R.id.main_container)
         bottomNavigate = findViewById(R.id.nav_bottom_main)
         bottomNavigate.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.menu_films -> {
                     progressBar.visibility = View.VISIBLE
-                    model.clearFilms()
+                    //model.clearFilms()
                     model.getFilms(1)
-                    supportFragmentManager.beginTransaction().replace(R.id.main_container, FragmentFilms()).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_container, FragmentFilms()).commit()
                 }
                 R.id.menu_favorite_films -> {
                     supportFragmentManager.beginTransaction().replace(
                         R.id.main_container,
                         FragmentFavorites()).commit()
+
                 }
             }
             true
         }
-        bottomNavigate.selectedItemId = selectMenu
+        bottomNavigate.setOnItemReselectedListener {
+            //Позоволяет не реагировать на повтороное нажатие вкладки
+        }
+        selectMenu?.let {
+            bottomNavigate.selectedItemId = it
+        }
         model.liveDataFilm.observe(this, Observer {
             if(!it.isUpdateDB){
                 progressBar.visibility = View.INVISIBLE
