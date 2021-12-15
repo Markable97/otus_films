@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
         setSupportActionBar(toolbar)
         progressBar = findViewById(R.id.toolbar_progress_bar)
         model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
-        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)
+        selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
         container = findViewById(R.id.main_container)
         bottomNavigate = findViewById(R.id.nav_bottom_main)
         bottomNavigate.setOnItemSelectedListener {
@@ -67,9 +67,9 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
             }
             true
         }
-        bottomNavigate.setOnItemReselectedListener {
+        /*bottomNavigate.setOnItemReselectedListener {
             //Позоволяет не реагировать на повтороное нажатие вкладки
-        }
+        }*/
         selectMenu?.let {
             bottomNavigate.selectedItemId = it
         }
