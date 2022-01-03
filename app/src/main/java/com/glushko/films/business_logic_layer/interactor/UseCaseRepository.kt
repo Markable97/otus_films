@@ -1,13 +1,17 @@
 package com.glushko.films.business_logic_layer.interactor
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutOnceFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
+import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import retrofit2.awaitResponse
 import java.util.concurrent.TimeUnit
 
@@ -111,6 +115,35 @@ class UseCaseRepository {
     }
     suspend fun addComment(film: AboutFilm) {
         dao.addComment(film)
+    }
+
+    suspend fun getFilmWithId(id: Int, liveData: MutableLiveData<ResponseOnceFilm>){
+        try {
+            val response = NetworkService.makeNetworkService().getFilmWithID("$GET_FILMS$id").awaitResponse()
+            if(response.isSuccessful){
+                Log.d("TAG", "${response.body()}")
+                val filmOnce = response.body()!!
+                getFilmWithIdDB(filmOnce.id, liveData)
+            }else{
+                val error = when(response.code()){
+                    401 -> ResponseFilm.ERROR_SERVER_TOKEN
+                    429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
+                    else -> ResponseFilm.ERROR_UNKNOWN
+                }
+                Log.d("TAG", "$error")
+                liveData.postValue(ResponseOnceFilm(error, null))
+                getFilmWithIdDB(id, liveData)
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+            liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NETWORK, null))
+            getFilmWithIdDB(id, liveData)
+        }
+    }
+
+    private suspend fun getFilmWithIdDB(id: Int, liveData: MutableLiveData<ResponseOnceFilm>){
+        val film = dao.getFilm(id)
+        liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NO, film))
     }
 
 }

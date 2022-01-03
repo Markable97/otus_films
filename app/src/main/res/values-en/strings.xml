@@ -24,4 +24,6 @@
     <string name="error_limit">Too many requests. Limit of 5 requests per second</string>
     <string name="error_unknown">Unknown error</string>
     <string name="repeat">Repeat</string>
+    <string name="it_is_time_move_film">It\'s time to watch the movie \"%s\"!</string>
+    <string name="open_film">Open the film</string>
 </resources>

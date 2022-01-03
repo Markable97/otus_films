@@ -23,4 +23,6 @@
     <string name="error_token">Пустой или неправильный токен</string>
     <string name="error_limit">Слишком много запросов. Лимит 5 запроса в секунду</string>
     <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="it_is_time_move_film">Пора смотреть фильм \"%s\"!</string>
+    <string name="open_film">Открыть фильм</string>
 </resources>

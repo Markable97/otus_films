@@ -1,5 +1,7 @@
 package com.glushko.films.presentation_layer.ui.detail_film
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.Users
+import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
@@ -36,6 +40,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
         const val KEY_RETURN = "return info detail"
         const val EXTRA_POSITION = "position"
         const val EXTRA_FILM_INFO = "film_info"
+        const val EXTRA_FILM_ID = "id"
+        const val EXTRA_FILM_NAME = "name"
 
         fun newInstance(position: Int, film: AboutFilm): FragmentDetailFilm {
             return FragmentDetailFilm().apply {
@@ -46,19 +52,20 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             }
         }
     }
-
+    private val filmDefault = AboutFilm(
+        name = "",
+        img = "",
+        imgLike = R.drawable.ic_not_like
+    )
+    var film: AboutFilm = filmDefault
     private lateinit var editTextComment: EditText
     //private lateinit var btnLike: ImageButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.getParcelable<AboutFilm>(EXTRA_FILM_INFO)?.apply {
+        film = arguments?.getParcelable<AboutFilm>(EXTRA_FILM_INFO)?.apply {
             imgLike = if(imgLike==0) R.drawable.ic_not_like else imgLike
-        } ?: AboutFilm(
-            name = getString(R.string.default_value),
-            img = "",
-            imgLike = R.drawable.ic_not_like
-        )
+        } ?: filmDefault
         val position = arguments?.getInt(EXTRA_POSITION, -1)
         val btnLike = view.findViewById<FloatingActionButton>(R.id.btnLikeDetail)
         btnLike.setImageResource(film.imgLike)
@@ -99,6 +106,21 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
                 Toast.makeText(requireContext(), getString(R.string.not_find_app), Toast.LENGTH_LONG).show()
             }
         }
+
+        val btnSeeLater = view.findViewById<FloatingActionButton>(R.id.btnSeeLater)
+        btnSeeLater.setOnClickListener {
+            addNotification()
+        }
+    }
+
+    private fun addNotification(){
+        val context = requireContext()
+        val alarmManager = getSystemService(context, AlarmManager::class.java)
+        val intent = Intent(context, SeeLaterReceiver::class.java)
+        intent.putExtra(EXTRA_FILM_ID, film.id)
+        intent.putExtra(EXTRA_FILM_NAME, film.name)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager?.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000L, pendingIntent)
     }
 
 }

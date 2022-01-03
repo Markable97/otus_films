@@ -34,6 +34,39 @@
                 app:layout_collapseMode="parallax"
                 />
 
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_anchor="@id/appbar_detail_film"
+                android:layout_gravity="end|bottom"
+                app:layout_anchorGravity="bottom|end"
+                >
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnLikeDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_not_like"
+                    android:layout_margin="1dp"
+                    />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnInviteFriend"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:layout_margin="1dp"
+                    />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnSeeLater"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@android:drawable/ic_menu_day"
+                    android:layout_margin="1dp"
+                    />
+            </LinearLayout>
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_detail_film"
                 android:layout_width="match_parent"
@@ -49,22 +82,7 @@
 
    <include layout="@layout/bottom_sheet_detail_film"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnInviteFriend"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_margin="60dp"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_anchor="@id/appbar_detail_film"
-        app:layout_anchorGravity="bottom|right|end"
-        />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnLikeDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_not_like"
-        app:layout_anchor="@id/appbar_detail_film"
-        app:layout_anchorGravity="bottom|right|end" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

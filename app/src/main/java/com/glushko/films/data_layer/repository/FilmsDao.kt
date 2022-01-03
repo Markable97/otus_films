@@ -22,6 +22,23 @@ interface FilmsDao {
                f.img, 
                f.imgLike, 
                f.position 
+        from films_table f 
+        left join favorite_films_table ff on f.id = ff.id  
+        where f.id = :id 
+    """)
+    suspend fun getFilm(id: Int): AboutFilm
+
+    @Query("""
+        select f.id, 
+               f.name, 
+               f.comment, 
+               case when ff.id is not null 
+                    then 1 
+                    else  0 
+               end  as `like`, 
+               f.img, 
+               f.imgLike, 
+               f.position 
         from films_table f
         left join favorite_films_table ff on f.id = ff.id
         order by position  limit :count offset :count*(:page-1)

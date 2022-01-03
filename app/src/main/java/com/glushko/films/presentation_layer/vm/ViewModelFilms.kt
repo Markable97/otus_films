@@ -8,6 +8,7 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import kotlinx.coroutines.*
 
 class ViewModelFilms: ViewModel() {
@@ -17,8 +18,16 @@ class ViewModelFilms: ViewModel() {
     val liveDataFilm: LiveData<ResponseFilm> = _liveDataFilm
     private val _liveDataFavoriteFilms: MutableLiveData<List<FavoriteFilm>> = MutableLiveData()
     val liveDataFavoriteFilms: LiveData<List<FavoriteFilm>> = _liveDataFavoriteFilms
+    private val _liveDataOnceFilm: MutableLiveData<ResponseOnceFilm> = MutableLiveData()
+    val liveDataOnceFilm: LiveData<ResponseOnceFilm> = _liveDataOnceFilm
     fun clearFilms() {
         _liveDataFilm.value?.films = listOf()
+    }
+
+    fun getFilm(id: Int){
+        viewModelScope.launch {
+            useCase.getFilmWithId(id, _liveDataOnceFilm)
+        }
     }
 
     fun getFilms(page:Int = 0, isNoAddPage: Boolean = false){

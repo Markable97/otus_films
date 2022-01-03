@@ -1,7 +1,9 @@
 package com.glushko.films.presentation_layer.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
@@ -13,6 +15,9 @@ import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_ID
+import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_NAME
 import com.glushko.films.presentation_layer.ui.exit_dialog.OnDialogListener
 import com.glushko.films.presentation_layer.ui.favorite.CallbackFragmentFavorites
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
@@ -84,6 +89,24 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
                         }
                         .show()
                 }
+            }
+        })
+
+        Log.d("TAG", "Пришло от уведомления название фильма ${intent.getStringExtra(EXTRA_FILM_NAME)} \n " +
+                "id = ${intent.getIntExtra(EXTRA_FILM_ID, -1)}")
+        val filmId = intent.getIntExtra(EXTRA_FILM_ID, -1)
+        if(filmId > 0){
+            model.getFilm(filmId)
+            progressBar.visibility = View.VISIBLE
+        }
+        model.liveDataOnceFilm.observe(this,{
+            progressBar.visibility = View.INVISIBLE
+            if(it.err == ResponseFilm.ERROR_NO){
+                val film = it.film!!
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.main_container, FragmentDetailFilm.newInstance(film.position, film))
+                    .addToBackStack("films")
+                    .commit()
             }
         })
     }
