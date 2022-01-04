@@ -14,9 +14,7 @@ import com.glushko.films.R
 import com.glushko.films.presentation_layer.ui.MainActivity
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_ID
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_NAME
-
-
-
+import android.media.RingtoneManager
 
 class SeeLaterReceiver : BroadcastReceiver() {
 
@@ -40,8 +38,8 @@ class SeeLaterReceiver : BroadcastReceiver() {
             val builder = NotificationCompat.Builder(_context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_video_library)
                 .setContentTitle("Напоминание")
-                .setContentText("film_id = $filmID")
                 .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(_context.getString(R.string.it_is_time_move_film, film)))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .addAction(R.drawable.ic_video_library, _context.getString(R.string.open_film), pendingIntent)

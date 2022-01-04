@@ -1,7 +1,9 @@
 package com.glushko.films.presentation_layer.ui.detail_film
 
 import android.app.AlarmManager
+import android.app.DatePickerDialog
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -15,11 +17,12 @@ import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.Users
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
 
 class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
@@ -52,6 +55,15 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             }
         }
     }
+
+    private var chooseDate = false
+    private var chooseTime = false
+    private val calendar: Calendar = Calendar.getInstance()
+    private var year = calendar.get(Calendar.YEAR)
+    private var month = calendar.get(Calendar.MONTH)
+    private var day = calendar.get(Calendar.DAY_OF_MONTH)
+    private var hour = calendar.get(Calendar.HOUR_OF_DAY)
+    private var minute = calendar.get(Calendar.MINUTE)
     private val filmDefault = AboutFilm(
         name = "",
         img = "",
@@ -60,6 +72,22 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     var film: AboutFilm = filmDefault
     private lateinit var editTextComment: EditText
     //private lateinit var btnLike: ImageButton
+
+    private val dataListener =
+        DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            chooseDate = true
+            this.year = year
+            this.month = month
+            this.day = dayOfMonth
+            showTimePicker()
+        }
+    private val timeListener =
+        TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            chooseTime = true
+            this.hour = hourOfDay
+            this.minute = minute
+            addAlarm()
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,13 +142,34 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     }
 
     private fun addNotification(){
+        if(!chooseDate){
+            showDataPicker()
+        }else if(!chooseTime){
+            showTimePicker()
+        }else{
+            Toast.makeText(requireContext(), "already add notification", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun  addAlarm(){
         val context = requireContext()
         val alarmManager = getSystemService(context, AlarmManager::class.java)
         val intent = Intent(context, SeeLaterReceiver::class.java)
         intent.putExtra(EXTRA_FILM_ID, film.id)
         intent.putExtra(EXTRA_FILM_NAME, film.name)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager?.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000L, pendingIntent)
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day, hour, minute)
+        alarmManager?.set(AlarmManager.RTC_WAKEUP,  calendar.timeInMillis, pendingIntent)
+    }
+
+    private fun showDataPicker() {
+        DatePickerDialog(requireActivity(), dataListener, year, month, day).show()
+    }
+
+    private fun showTimePicker(){
+        TimePickerDialog(requireActivity(),timeListener, hour, minute, true).show()
     }
 
 }
