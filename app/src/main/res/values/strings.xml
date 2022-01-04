@@ -25,4 +25,6 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="it_is_time_move_film">Пора смотреть фильм \"%s\"!</string>
     <string name="open_film">Открыть фильм</string>
+
+    <string name="default_notification_channel_id" translatable="false">firebase channel</string>
 </resources>

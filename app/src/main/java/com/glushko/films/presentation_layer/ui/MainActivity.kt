@@ -25,8 +25,10 @@ import com.glushko.films.presentation_layer.ui.films.CallbackFragmentFilms
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilms,
     CallbackFragmentFavorites {
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initFirebaseToken()
         setContentView(R.layout.activity_single_main)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -111,6 +114,18 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
         })
     }
 
+    private fun initFirebaseToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("TAG", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            Log.d("TAG", "token = $token")
+        })
+    }
 
     private fun getErrorMessage(error: Int): String{
         return when(error){
