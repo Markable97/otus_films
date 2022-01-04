@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.Users
+import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
@@ -67,7 +68,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     private val filmDefault = AboutFilm(
         name = "",
         img = "",
-        imgLike = R.drawable.ic_not_like
+        imgLike = R.drawable.ic_not_like,
+        typeList = ""
     )
     var film: AboutFilm = filmDefault
     private lateinit var editTextComment: EditText

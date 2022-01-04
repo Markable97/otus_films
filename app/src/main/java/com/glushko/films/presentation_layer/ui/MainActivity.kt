@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
@@ -15,6 +16,8 @@ import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.data_layer.utils.TAG
+import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_ID
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm.Companion.EXTRA_FILM_NAME
@@ -28,11 +31,17 @@ import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilms,
     CallbackFragmentFavorites {
 
+    private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView
     private lateinit var toolbar: Toolbar
@@ -42,18 +51,20 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
 
     companion object {
         const val EXTRA_SAVE_STATE_TAB = "id_menu_bottom"
+        const val TYPE_LIST_FILM_KEY = "TYPE_LIST_FILM"
     }
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
         initFirebaseToken()
+        initFirebaseConfig()
         setContentView(R.layout.activity_single_main)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         progressBar = findViewById(R.id.toolbar_progress_bar)
-        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
         selectMenu = savedInstanceState?.getInt(EXTRA_SAVE_STATE_TAB)?: R.id.menu_films
         container = findViewById(R.id.main_container)
         bottomNavigate = findViewById(R.id.nav_bottom_main)
@@ -62,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
                 R.id.menu_films -> {
                     progressBar.visibility = View.VISIBLE
                     //model.clearFilms()
-                    model.getFilms(1)
+                    //model.getFilms(1)
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_container, FragmentFilms()).commit()
                 }
@@ -114,6 +125,35 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
         })
     }
 
+    private fun initFirebaseConfig() {
+        remoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 0
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val updated = task.result
+                    Log.d(TAG, "Config params updated: $updated")
+                    Toast.makeText(this, "Fetch and activate succeeded",
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Fetch failed",
+                        Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "Config params failed: ${task.isSuccessful}")
+                }
+                updateTypeList()
+            }
+    }
+
+    private fun updateTypeList(){
+        val type = remoteConfig.getString(TYPE_LIST_FILM_KEY)
+        Log.d(TAG, "Type list film: $type")
+        TYPE_FILM_LIST = type
+        model.getFilms(1)
+    }
     private fun initFirebaseToken(){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {

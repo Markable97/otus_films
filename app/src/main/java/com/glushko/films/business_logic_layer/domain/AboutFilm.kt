@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.glushko.films.R
+import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -16,5 +17,6 @@ data class AboutFilm(
     var like: Int = 0,
     @SerializedName("posterUrlPreview") val img: String,
     var imgLike: Int = R.drawable.ic_not_like,
-    var position: Int = 0
+    var position: Int = 0,
+    var typeList: String
 ): Parcelable

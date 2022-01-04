@@ -5,20 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
-import com.glushko.films.business_logic_layer.domain.AboutOnceFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
 import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
+import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import retrofit2.awaitResponse
 import java.util.concurrent.TimeUnit
 
 class UseCaseRepository {
 
     companion object {
-        val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(2) //TimeUnit.DAYS.toMillis(1)
+        val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(1) //TimeUnit.DAYS.toMillis(1)
     }
 
     private val dao = App.instance.db.filmsDao()
@@ -26,7 +26,7 @@ class UseCaseRepository {
     suspend fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>) {
         println("Загрузка данных страница = $page")
         //пока грузятся данные взять из бд
-        val list = dao.getFilms(page, ResponseFilm.PAGE_COUNT)
+        val list = dao.getFilms(page, ResponseFilm.PAGE_COUNT, TYPE_FILM_LIST)
         //Передать LiveData
         liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page, err = ResponseFilm.ERROR_NO))
         //обновить данные
@@ -41,7 +41,7 @@ class UseCaseRepository {
         if(isEmptyDB or isRefresh ){
             println("Пора обновить даные")
             try {
-                val response = NetworkService.makeNetworkService().getFilm(page).awaitResponse()
+                val response = NetworkService.makeNetworkService().getFilm(TYPE_FILM_LIST, page).awaitResponse()
                 if(response.isSuccessful){
                     val filmsFromServer = response.body()?.films
                     filmsFromServer?.forEach {
@@ -53,6 +53,7 @@ class UseCaseRepository {
                             it.imgLike = R.drawable.ic_not_like
                         }
                         it.comment = getComment(it.id)?:""
+                        it.typeList = TYPE_FILM_LIST
                     }
 
                     liveData.postValue(response.body()?.apply {

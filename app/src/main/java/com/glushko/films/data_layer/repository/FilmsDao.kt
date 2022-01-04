@@ -21,7 +21,8 @@ interface FilmsDao {
                end  as `like`, 
                f.img, 
                f.imgLike, 
-               f.position 
+               f.position,
+               f.typeList
         from films_table f 
         left join favorite_films_table ff on f.id = ff.id  
         where f.id = :id 
@@ -38,12 +39,14 @@ interface FilmsDao {
                end  as `like`, 
                f.img, 
                f.imgLike, 
-               f.position 
+               f.position,
+               f.typeList
         from films_table f
         left join favorite_films_table ff on f.id = ff.id
+        where f.typeList = :type
         order by position  limit :count offset :count*(:page-1)
         """ )
-    suspend fun getFilms(page: Int, count: Int): List<AboutFilm>
+    suspend fun getFilms(page: Int, count: Int, type: String): List<AboutFilm>
     @Query("select count(1) from films_table")
     suspend fun getCntFilm(): Int
 
