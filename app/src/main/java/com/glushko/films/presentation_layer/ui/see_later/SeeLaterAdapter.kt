@@ -13,7 +13,7 @@ import com.glushko.films.data_layer.utils.TAG
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListOf()) :
+class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListOf(), val callback: CallbackAdapterSeeLater) :
     RecyclerView.Adapter<SeeLaterAdapter.SeeLaterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeeLaterViewHolder {
@@ -31,8 +31,13 @@ class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListO
     fun insertFilms(films: List<SeeLaterFilm>){
         Log.d(TAG, "Обновляем адаптер")
         list.addAll(films)
-        Log.d(TAG, "$list")
+        Log.d(TAG, "${list.size}")
         notifyItemRangeInserted(0, list.size)
+    }
+
+    fun updateFilm(film: SeeLaterFilm, position: Int){
+        list[position] = film
+        notifyItemChanged(position)
     }
 
     inner class SeeLaterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,7 +51,7 @@ class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListO
             tvFilmName.text = item.name
             tvTime.text = getStrDate(item)
             btnNotificationEdit.setOnClickListener {
-
+                callback.onClickEdit(item, adapterPosition)
             }
         }
 
