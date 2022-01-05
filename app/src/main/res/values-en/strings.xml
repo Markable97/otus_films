@@ -26,4 +26,6 @@
     <string name="repeat">Repeat</string>
     <string name="it_is_time_move_film">It\'s time to watch the movie \"%s\"!</string>
     <string name="open_film">Open the film</string>
+    <string name="see_later">See later</string>
+    <string name="empty_see_later">The list is empty</string>
 </resources>

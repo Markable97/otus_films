@@ -26,6 +26,7 @@ import com.glushko.films.presentation_layer.ui.favorite.CallbackFragmentFavorite
 import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
 import com.glushko.films.presentation_layer.ui.films.CallbackFragmentFilms
 import com.glushko.films.presentation_layer.ui.films.FragmentFilms
+import com.glushko.films.presentation_layer.ui.see_later.FragmentSeeLater
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.gms.tasks.OnCompleteListener
@@ -82,6 +83,11 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
                         R.id.main_container,
                         FragmentFavorites()).commit()
 
+                }
+                R.id.menu_see_later ->{
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.main_container,
+                        FragmentSeeLater()).commit()
                 }
             }
             true

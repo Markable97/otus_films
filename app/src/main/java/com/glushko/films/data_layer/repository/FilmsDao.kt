@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
+import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
 
 @Dao
@@ -77,5 +78,14 @@ interface FilmsDao {
 
     @Query("select t.time from refresh_table t")
     suspend fun getRefreshTime(): Long?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addSeeLaterFilm(film: SeeLaterFilm)
+
+    @Query("select * from see_later_films_table")
+    suspend fun getSeeLaterFilms(): List<SeeLaterFilm>
+
+    @Query("select * from see_later_films_table where id = :id")
+    suspend fun getSeeLaterFilm(id: Int): List<SeeLaterFilm>
 
 }

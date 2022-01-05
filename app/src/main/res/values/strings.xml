@@ -12,6 +12,7 @@
     <string name="default_value">Значения По умолчанию</string>
     <string name="title_favorite_film">Избранное</string>
     <string name="empty_favorite">Список избранного пуст</string>
+    <string name="empty_see_later">Список пуст</string>
     <string name="close_app_body">Закрыть приложение?</string>
     <string name="film_bottom_menu">Фильмы</string>
     <string name="favorite_film_bottom_menu">Избранное</string>
@@ -25,6 +26,6 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="it_is_time_move_film">Пора смотреть фильм \"%s\"!</string>
     <string name="open_film">Открыть фильм</string>
-
+    <string name="see_later">Посмотреть позже</string>
     <string name="default_notification_channel_id" translatable="false">firebase channel</string>
 </resources>

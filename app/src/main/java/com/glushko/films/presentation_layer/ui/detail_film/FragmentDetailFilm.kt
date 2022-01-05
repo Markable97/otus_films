@@ -14,14 +14,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
+import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.domain.Users
-import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
+import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -73,6 +75,7 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     )
     var film: AboutFilm = filmDefault
     private lateinit var editTextComment: EditText
+    private lateinit var model: ViewModelSeeLater
     //private lateinit var btnLike: ImageButton
 
     private val dataListener =
@@ -90,6 +93,11 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             this.minute = minute
             addAlarm()
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        model = ViewModelProvider(requireActivity())[ViewModelSeeLater::class.java]
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -155,12 +163,13 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     }
 
     private fun  addAlarm(){
+        model.addSeeLaterFilm(SeeLaterFilm(film.id, film.name, year, month, day, hour, minute))
         val context = requireContext()
         val alarmManager = getSystemService(context, AlarmManager::class.java)
         val intent = Intent(context, SeeLaterReceiver::class.java)
         intent.putExtra(EXTRA_FILM_ID, film.id)
         intent.putExtra(EXTRA_FILM_NAME, film.name)
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(context, film.id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day, hour, minute)
         alarmManager?.set(AlarmManager.RTC_WAKEUP,  calendar.timeInMillis, pendingIntent)

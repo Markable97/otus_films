@@ -11,4 +11,9 @@
         android:title="@string/favorite_film_bottom_menu"
         android:icon="@drawable/ic_favorites"
         />
+    <item
+        android:id="@+id/menu_see_later"
+        android:title="@string/see_later"
+        android:icon="@drawable/ic_see_later"
+        />
 </menu>

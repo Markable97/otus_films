@@ -30,7 +30,7 @@ class SeeLaterReceiver : BroadcastReceiver() {
             val film = intent?.getStringExtra(EXTRA_FILM_NAME)?:""
             val filmID = intent?.getIntExtra(EXTRA_FILM_ID, 0)
             val intentNew = Intent(_context, MainActivity::class.java)
-            intentNew.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intentNew.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intentNew.action = Intent.ACTION_MAIN
             intentNew.putExtra(EXTRA_FILM_ID, filmID)
             intentNew.putExtra(EXTRA_FILM_NAME, film)

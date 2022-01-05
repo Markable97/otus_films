@@ -6,10 +6,11 @@ import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
+import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
 
 @Database(
-    entities = [AboutFilm::class, FavoriteFilm::class, UpdateTime::class],
+    entities = [AboutFilm::class, FavoriteFilm::class, UpdateTime::class, SeeLaterFilm::class],
     version = 1, exportSchema = false
 )
 abstract class MainDatabase : RoomDatabase() {
