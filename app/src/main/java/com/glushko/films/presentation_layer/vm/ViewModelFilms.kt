@@ -9,9 +9,11 @@ import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
 
 class ViewModelFilms: ViewModel() {
+    private val compositeDisposable = CompositeDisposable()
     private val useCase = UseCaseRepository()
     private var _page: Int = 0
     private var _liveDataFilm: MutableLiveData<ResponseFilm> = MutableLiveData()
@@ -31,21 +33,17 @@ class ViewModelFilms: ViewModel() {
     }
 
     fun getFilms(page:Int = 0, isNoAddPage: Boolean = false){
-        viewModelScope.launch {
-            val curPage = if(page > 0) {
-                _page = page
-                page
+        val curPage = if(page > 0) {
+            _page = page
+            page
+        }else{
+            if(isNoAddPage){
+                _page
             }else{
-                if(isNoAddPage){
-                    _page
-                }else{
-                    ++_page
-                }
+                ++_page
             }
-
-            useCase.getFilm(curPage, _liveDataFilm)
         }
-
+        compositeDisposable.add(useCase.getFilm(curPage, _liveDataFilm))
     }
 
     fun addFavoriteFilm(film: FavoriteFilm){
@@ -76,5 +74,6 @@ class ViewModelFilms: ViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+        compositeDisposable.dispose()
     }
 }

@@ -12,7 +12,14 @@ import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.awaitResponse
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 class UseCaseRepository {
@@ -23,80 +30,107 @@ class UseCaseRepository {
 
     private val dao = App.instance.db.filmsDao()
 
-    suspend fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>) {
+     fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>): Disposable {
         println("Загрузка данных страница = $page")
         //пока грузятся данные взять из бд
-        val list = dao.getFilms(page, ResponseFilm.PAGE_COUNT, TYPE_FILM_LIST)
-        //Передать LiveData
-        liveData.postValue(ResponseFilm(list.size, true, isUpdateDB = true, films = list, page = page, err = ResponseFilm.ERROR_NO))
-        //обновить данные
-        refreshFilms(page, liveData, list.isEmpty())
+         val disposable: Disposable = dao.getFilms(page, ResponseFilm.PAGE_COUNT, TYPE_FILM_LIST)
+             .subscribeOn(Schedulers.io())
+             .map { list ->
+                 liveData.postValue(
+                     ResponseFilm(
+                         list.size,
+                         true,
+                         isUpdateDB = true,
+                         films = list,
+                         page = page,
+                         err = ResponseFilm.ERROR_NO
+                     )
+                 )
+                 Pair(dao.getRefreshTime(), list.isEmpty())
+             }
+             .map {it ->
+                 val currentTime = System.currentTimeMillis()
+                 val isRefresh = (currentTime - it.first) >=  FRESH_TIMEOUT
+                 it.second or isRefresh
+             }
+             .observeOn(AndroidSchedulers.mainThread())
+             .subscribe({
+              if(it){
+                  getFilmsFromServer(page, liveData)
+              }
+             }, {
+                 it.printStackTrace()
+                 liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = ResponseFilm.ERROR_UNKNOWN))
+             })
+         return disposable
     }
 
-    private suspend fun refreshFilms(page: Int, liveData: MutableLiveData<ResponseFilm>, isEmptyDB: Boolean){
-        val currentTime = System.currentTimeMillis()
-        val oldTime = dao.getRefreshTime()?:0L
-        val isRefresh = (currentTime - oldTime) >=  FRESH_TIMEOUT
-        println("isEmptyDB = $isEmptyDB isRefresh = $isRefresh")
-        if(isEmptyDB or isRefresh ){
-            println("Пора обновить даные")
-            try {
-                val response = NetworkService.makeNetworkService().getFilm(TYPE_FILM_LIST, page).awaitResponse()
-                if(response.isSuccessful){
-                    val filmsFromServer = response.body()?.films
-                    filmsFromServer?.forEach {
-                        if(isInFavorite(it.id) == 1){
-                            it.like = 1
-                            it.imgLike = R.drawable.ic_like
-                        }else{
-                            it.like = 0
-                            it.imgLike = R.drawable.ic_not_like
+
+
+    private fun getFilmsFromServer(page: Int, liveData: MutableLiveData<ResponseFilm>): Disposable{
+        return NetworkService.makeNetworkService().getFilmRx(TYPE_FILM_LIST, page)
+            .subscribeOn(Schedulers.io())
+            .map(this::mappingFilms)
+            .map { insertDB(it, page) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                       liveData.postValue(
+                           it.apply {
+                               isSuccess = true
+                               isUpdateDB = false
+                               this.page = page
+                               err = ResponseFilm.ERROR_NO
+                           })
+            }, {
+                it.printStackTrace()
+                when(it){
+                    is HttpException -> {
+                        val error = when(it.code()){
+                            401 -> ResponseFilm.ERROR_SERVER_TOKEN
+                            429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
+                            else -> ResponseFilm.ERROR_UNKNOWN
                         }
-                        it.comment = getComment(it.id)?:""
-                        it.typeList = TYPE_FILM_LIST
+                        liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = error))
                     }
-
-                    liveData.postValue(response.body()?.apply {
-                        this.films = filmsFromServer?: listOf()
-                        isSuccess = true
-                        isUpdateDB = false
-                        this.page = page
-                        err = ResponseFilm.ERROR_NO
-                    })
-                    insertDB(filmsFromServer, page)
-                    dao.addTimeRefresh(UpdateTime(time = System.currentTimeMillis()))
-                }else{
-                    val error = when(response.code()){
-                        401 -> ResponseFilm.ERROR_SERVER_TOKEN
-                        429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
-                        else -> ResponseFilm.ERROR_UNKNOWN
+                    is UnknownHostException -> {
+                        liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = ResponseFilm.ERROR_NETWORK))
                     }
-                    liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = error))
+                    else -> liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = ResponseFilm.ERROR_UNKNOWN))
                 }
-            }catch (e: Exception){
-                e.printStackTrace()
-                liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = false, isUpdateDB = false, page = page, err = ResponseFilm.ERROR_NETWORK))
+            })
+    }
+
+    private fun mappingFilms(response: ResponseFilm) : ResponseFilm{
+        val films = response.films
+        films.forEach {
+            if(isInFavorite(it.id) == 1){
+                it.like = 1
+                it.imgLike = R.drawable.ic_like
+            }else{
+                it.like = 0
+                it.imgLike = R.drawable.ic_not_like
             }
-        }else{
-            println("Никакого обновления")
-            liveData.postValue(ResponseFilm(pagesCount = 0, isSuccess = true, isUpdateDB = false,  page= page, err = ResponseFilm.ERROR_NO))
+            it.comment = getComment(it.id)?:""
+            it.typeList = TYPE_FILM_LIST
         }
+        response.films = films
+        return response
     }
-    suspend fun getAllFilmsCash(): List<AboutFilm>{
-        return App.instance.db.filmsDao().getAllFilms()
-    }
-    private suspend  fun insertDB(films: List<AboutFilm>?, page: Int) {
-        films?.let{
+    private fun insertDB(response: ResponseFilm, page: Int): ResponseFilm {
+        val films = response.films
+        films.let{
 
             it.forEachIndexed {index, film ->
                 film.position = it.size * (page - 1) + index + 1
             }
             dao.insertFilms(films)
         }
-        println("кол-во фильтмов в бд = ${dao.getCntFilm()}")
+        response.films = films
+        return response
+        //println("кол-во фильтмов в бд = ${dao.getCntFilm()}")
     }
 
-    private suspend fun isInFavorite(id: Int): Int{
+    private fun isInFavorite(id: Int): Int{
         return dao.isInFavorite(id)
     }
 
@@ -111,7 +145,7 @@ class UseCaseRepository {
         liveData.postValue(list)
     }
 
-    private suspend fun getComment(id: Int): String?{
+    private fun getComment(id: Int): String?{
         return dao.getCommentForFilm(id)
     }
     suspend fun addComment(film: AboutFilm) {

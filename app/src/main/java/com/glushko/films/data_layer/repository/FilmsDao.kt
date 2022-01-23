@@ -6,11 +6,12 @@ import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
+import io.reactivex.Single
 
 @Dao
 interface FilmsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFilms(films: List<AboutFilm>)
+    fun insertFilms(films: List<AboutFilm>)
 
     @Query("""
         select f.id, 
@@ -47,7 +48,7 @@ interface FilmsDao {
         where f.typeList = :type
         order by position  limit :count offset :count*(:page-1)
         """ )
-    suspend fun getFilms(page: Int, count: Int, type: String): List<AboutFilm>
+    fun getFilms(page: Int, count: Int, type: String): Single<List<AboutFilm>>
     @Query("select count(1) from films_table")
     suspend fun getCntFilm(): Int
 
@@ -66,18 +67,18 @@ interface FilmsDao {
     suspend fun deleteFavoriteFilm(film: FavoriteFilm)
 
     @Query("select count(1) from favorite_films_table t where t.id = :filmID")
-    suspend fun isInFavorite(filmID: Int): Int
+    fun isInFavorite(filmID: Int): Int
 
     @Update
     suspend fun addComment(film: AboutFilm): Int
     @Query("select comment from films_table where id = :id")
-    suspend fun getCommentForFilm(id: Int): String?
+    fun getCommentForFilm(id: Int): String?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTimeRefresh(time: UpdateTime)
 
     @Query("select t.time from refresh_table t")
-    suspend fun getRefreshTime(): Long?
+    fun getRefreshTime(): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addSeeLaterFilm(film: SeeLaterFilm)
