@@ -11,19 +11,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.glushko.films.App
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
+import com.glushko.films.di.AppComponent
 import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
+//import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
 
-companion object{
-    }
 
+    @Inject
+    lateinit var factory: ViewModelFilmsFactory
     private lateinit var model: ViewModelFilms
     //private var films: List<AboutFilm> = listOf()
     private var callback: CallbackFragmentFilms? = null
@@ -57,7 +61,8 @@ companion object{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(requireActivity(), ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
+        App.appComponent.inject(this)
+        model = ViewModelProvider(requireActivity(), factory).get(ViewModelFilms::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

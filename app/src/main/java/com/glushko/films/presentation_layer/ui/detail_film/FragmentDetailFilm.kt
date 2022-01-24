@@ -18,14 +18,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.domain.Users
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
+import com.glushko.films.presentation_layer.vm.ViewModelSeeLaterFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
+import javax.inject.Inject
 
 class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
@@ -76,6 +79,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     var film: AboutFilm = filmDefault
     private lateinit var editTextComment: EditText
     private lateinit var model: ViewModelSeeLater
+    @Inject
+    lateinit var factory: ViewModelSeeLaterFactory
     //private lateinit var btnLike: ImageButton
 
     private val dataListener =
@@ -96,7 +101,8 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(requireActivity())[ViewModelSeeLater::class.java]
+        App.appComponent.inject(this)
+        model = ViewModelProvider(requireActivity(), factory)[ViewModelSeeLater::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

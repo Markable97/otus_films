@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.glushko.films.App
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
@@ -29,6 +30,7 @@ import com.glushko.films.presentation_layer.ui.films.FragmentFilms
 import com.glushko.films.presentation_layer.ui.see_later.FragmentSeeLater
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
+//import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -38,15 +40,22 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilms,
     CallbackFragmentFavorites {
+
+
 
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var container: FragmentContainerView
     private lateinit var bottomNavigate: BottomNavigationView
     private lateinit var toolbar: Toolbar
     private lateinit var progressBar: ProgressBar
+
+
+    @Inject
+    lateinit var factory: ViewModelFilmsFactory
     private lateinit var model: ViewModelFilms
     private var selectMenu:Int? = null
 
@@ -59,7 +68,8 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
+        App.appComponent.inject(this)
+        model = ViewModelProvider(this, factory).get(ViewModelFilms::class.java)
         initFirebaseToken()
         initFirebaseConfig()
         setContentView(R.layout.activity_single_main)

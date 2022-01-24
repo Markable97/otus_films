@@ -9,10 +9,10 @@ import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
 import com.glushko.films.data_layer.utils.TAG
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ViewModelSeeLater: ViewModel() {
+class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : ViewModel() {
 
-    private val useCase = SeeLaterRepository()
 
     private val _liveDataSeeLater = MutableLiveData<List<SeeLaterFilm>>()
     val liveDataSeeLater: LiveData<List<SeeLaterFilm>> = _liveDataSeeLater

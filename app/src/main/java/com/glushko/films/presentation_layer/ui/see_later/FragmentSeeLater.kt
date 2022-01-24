@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.data_layer.utils.TAG
@@ -21,9 +22,14 @@ import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
 import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
+import com.glushko.films.presentation_layer.vm.ViewModelSeeLaterFactory
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
 
 class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
+    @Inject
+    lateinit var factory: ViewModelSeeLaterFactory
     private lateinit var model: ViewModelSeeLater
     private var filmEdit: SeeLaterFilm? = null
     private var positionEdit: Int? = null
@@ -59,7 +65,8 @@ class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProvider(this)[ViewModelSeeLater::class.java]
+        App.appComponent.inject(this)
+        model = ViewModelProvider(this, factory)[ViewModelSeeLater::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

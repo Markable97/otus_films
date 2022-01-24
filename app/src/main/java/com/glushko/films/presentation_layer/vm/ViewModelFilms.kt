@@ -9,12 +9,17 @@ import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class ViewModelFilms: ViewModel() {
+class ViewModelFilms constructor( private val useCase: UseCaseRepository) : ViewModel()  {
+
     private val compositeDisposable = CompositeDisposable()
-    private val useCase = UseCaseRepository()
+    //private val useCase = UseCaseRepository()
     private var _page: Int = 0
     private var _liveDataFilm: MutableLiveData<ResponseFilm> = MutableLiveData()
     val liveDataFilm: LiveData<ResponseFilm> = _liveDataFilm

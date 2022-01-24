@@ -3,6 +3,7 @@ package com.glushko.films.presentation_layer.ui.favorite
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.glushko.films.App
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
@@ -20,6 +22,7 @@ import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwi
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 
 class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
@@ -28,6 +31,8 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
     private lateinit var recycler: RecyclerView
     private lateinit var textViewEmpty: TextView
     private var callback: CallbackFragmentFavorites? = null
+    @Inject
+    lateinit var factory: ViewModelFilmsFactory
     private lateinit var model: ViewModelFilms
     private lateinit var _adapter: FavoriteAdapter
 
@@ -43,7 +48,8 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //передаю this потому что кажжый раз мне нужно нвоое состояние
-        model = ViewModelProvider(this, ViewModelFilmsFactory()).get(ViewModelFilms::class.java)
+        App.appComponent.inject(this)
+        model = ViewModelProvider(this, factory).get(ViewModelFilms::class.java)
         model.getFavoriteFilms()
     }
 
@@ -75,6 +81,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         val swiperCallback = FavoriteSwipeHelperCallback(_adapter)
         ItemTouchHelper(swiperCallback).attachToRecyclerView(recycler)
         model.liveDataFavoriteFilms.observe(viewLifecycleOwner, Observer {
+            Log.d("TAG", "избранное, пришло из фрагмента")
             if(it.isNotEmpty()){
                 recycler.visibility = View.VISIBLE
                 textViewEmpty.visibility = View.INVISIBLE

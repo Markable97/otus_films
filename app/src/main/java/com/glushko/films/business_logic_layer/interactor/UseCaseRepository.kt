@@ -7,8 +7,8 @@ import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
+import com.glushko.films.data_layer.datasource.ApiService
 import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
-import com.glushko.films.data_layer.datasource.NetworkService
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
@@ -21,8 +21,9 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.awaitResponse
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class UseCaseRepository {
+class UseCaseRepository @Inject constructor(private val api: ApiService) {
 
     companion object {
         val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(1) //TimeUnit.DAYS.toMillis(1)
@@ -68,7 +69,7 @@ class UseCaseRepository {
 
 
     private fun getFilmsFromServer(page: Int, liveData: MutableLiveData<ResponseFilm>): Disposable{
-        return NetworkService.makeNetworkService().getFilmRx(TYPE_FILM_LIST, page)
+        return api.getFilmRx(TYPE_FILM_LIST, page)
             .subscribeOn(Schedulers.io())
             .map(this::mappingFilms)
             .map { insertDB(it, page) }
@@ -154,7 +155,7 @@ class UseCaseRepository {
 
     suspend fun getFilmWithId(id: Int, liveData: MutableLiveData<ResponseOnceFilm>){
         try {
-            val response = NetworkService.makeNetworkService().getFilmWithID("$GET_FILMS$id").awaitResponse()
+            val response = api.getFilmWithID("$GET_FILMS$id").awaitResponse()
             if(response.isSuccessful){
                 Log.d("TAG", "${response.body()}")
                 val filmOnce = response.body()!!
