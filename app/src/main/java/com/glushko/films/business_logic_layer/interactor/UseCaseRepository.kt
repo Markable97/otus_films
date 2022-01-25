@@ -11,6 +11,7 @@ import com.glushko.films.data_layer.datasource.ApiService
 import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
+import com.glushko.films.data_layer.repository.FilmsDao
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.SingleObserver
@@ -23,13 +24,13 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UseCaseRepository @Inject constructor(private val api: ApiService) {
+class UseCaseRepository @Inject constructor(private val api: ApiService, private val dao: FilmsDao) {
 
     companion object {
         val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(1) //TimeUnit.DAYS.toMillis(1)
     }
 
-    private val dao = App.instance.db.filmsDao()
+    //private val dao = App.instance.db.filmsDao()
 
      fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>): Disposable {
         println("Загрузка данных страница = $page")

@@ -1,5 +1,8 @@
 package com.glushko.films.di
 
+import android.app.Application
+import com.glushko.films.App
+import com.glushko.films.di.module.AppModule
 import com.glushko.films.di.module.NetworkModule
 import com.glushko.films.di.module.RepositoryModule
 import com.glushko.films.presentation_layer.ui.MainActivity
@@ -12,8 +15,9 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetworkModule::class, RepositoryModule::class])
+@Component(modules = [AppModule::class, NetworkModule::class, RepositoryModule::class])
 interface AppComponent {
+    fun inject(context: App)
     fun inject(activity: MainActivity)
     fun inject(fragment: FragmentFilms)
     fun inject(fragment: FragmentFavorites)

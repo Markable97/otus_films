@@ -10,9 +10,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+
 
 @Module
 class NetworkModule {
+    @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient{
         val httpClient = OkHttpClient.Builder()
@@ -36,6 +39,7 @@ class NetworkModule {
             }).build()
         return client
     }
+    @Singleton
     @Provides
     fun provideRetrofit(client: OkHttpClient): Retrofit{
         return Retrofit.Builder()
