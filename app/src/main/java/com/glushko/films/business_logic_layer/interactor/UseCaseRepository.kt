@@ -30,8 +30,6 @@ class UseCaseRepository @Inject constructor(private val api: ApiService, private
         val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(1) //TimeUnit.DAYS.toMillis(1)
     }
 
-    //private val dao = App.instance.db.filmsDao()
-
      fun getFilm(page: Int, liveData: MutableLiveData<ResponseFilm>): Disposable {
         println("Загрузка данных страница = $page")
         //пока грузятся данные взять из бд

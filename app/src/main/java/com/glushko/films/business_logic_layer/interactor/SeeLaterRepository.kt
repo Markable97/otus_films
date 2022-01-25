@@ -6,7 +6,6 @@ import com.glushko.films.data_layer.repository.FilmsDao
 import javax.inject.Inject
 
 class SeeLaterRepository @Inject constructor(private val dao: FilmsDao){
-    //private val dao = App.instance.db.filmsDao()
 
     suspend fun getSeeLaterFilms(): List<SeeLaterFilm> {
         return dao.getSeeLaterFilms()
