@@ -12,7 +12,8 @@ data class ResponseFilm(
     var isUpdateDB: Boolean,
     var page: Int,
     var films: List<AboutFilm> = listOf(),
-    var err: Int
+    var err: Int,
+    var isLocalSearch: Boolean = false
 ){
     companion object{
         const val PAGE_COUNT = 20

@@ -64,6 +64,11 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
     }
 
     override fun getItemCount() = films.size
+    fun updateAll(filmsSearch: List<AboutFilm>) {
+        films.clear()
+        films.addAll(filmsSearch.toMutableList())
+        notifyDataSetChanged()
+    }
 
     inner class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgAnimate = itemView.findViewById<ImageView>(R.id.imgAnimate)

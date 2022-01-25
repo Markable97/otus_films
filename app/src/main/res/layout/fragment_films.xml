@@ -7,14 +7,22 @@
     android:background="@color/cardview_dark_background"
     tools:context=".presentation_layer.ui.MainActivity">
 
+    <EditText
+        android:id="@+id/edit_find_film"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/swiper_films"
+        android:drawableStart="@android:drawable/ic_menu_search"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiper_films"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_find_film"
         >
 
     <androidx.recyclerview.widget.RecyclerView

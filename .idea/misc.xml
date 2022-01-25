@@ -5,26 +5,31 @@
       <map>
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3769230769230769" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_avatar_unknow.xml" value="0.3675925925925926" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_edit_notifications.xml" value="0.3453703703703704" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_favorites.xml" value="0.3675925925925926" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3769230769230769" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_like.xml" value="0.3769230769230769" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_not_like.xml" value="0.3769230769230769" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/drawable/ic_see_later.xml" value="0.3453703703703704" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout-land/activity_favorite_film.xml" value="0.4200217627856366" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout-land/fragment_favorite_film.xml" value="0.31354166666666666" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_detail_film.xml" value="0.36666666666666664" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_favorite_film.xml" value="0.36666666666666664" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_single_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/activity_single_main.xml" value="0.33" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/bottom_sheet_detail_film.xml" value="0.33" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/dialog_costum.xml" value="0.36666666666666664" />
-        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/fragment_detail_film.xml" value="0.25" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/fragment_detail_film.xml" value="0.33" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/fragment_favorite_film.xml" value="0.20520833333333333" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/fragment_films.xml" value="0.36666666666666664" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/fragment_see_later.xml" value="0.33" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_comment.xml" value="0.25" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_film.xml" value="0.32041343669250644" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_film_favorite.xml" value="0.36666666666666664" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/item_see_later.xml" value="0.36666666666666664" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/layout/toolbar.xml" value="0.36666666666666664" />
         <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/menu/menu_bottom.xml" value="0.36666666666666664" />
+        <entry key="..\:/Project/otus.ru/Homework_1_films/app/src/main/res/xml/remote_config_defaults.xml" value="0.20572916666666666" />
       </map>
     </option>
   </component>

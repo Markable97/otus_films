@@ -15,6 +15,9 @@ class OnScrollListener(
     private var firstVisibleItem = 0
     private var visibleItemCount = 0
     private var totalItemCount = 0
+
+    private var isPagination = true
+
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         visibleItemCount = recyclerView.childCount
@@ -29,10 +32,16 @@ class OnScrollListener(
         }
 
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-            println("подгрузка данных")
-            callback?.showProgressbar()
-            model.getFilms()
-            loading = true
+            if(isPagination){
+                println("подгрузка данных")
+                callback?.showProgressbar()
+                model.getFilms()
+                loading = true
+            }
         }
+    }
+
+    fun isPagination(b: Boolean){
+        isPagination = b
     }
 }

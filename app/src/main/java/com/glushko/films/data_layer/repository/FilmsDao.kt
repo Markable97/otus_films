@@ -27,6 +27,24 @@ interface FilmsDao {
                f.typeList
         from films_table f 
         left join favorite_films_table ff on f.id = ff.id  
+        where f.name like '%'||:text||'%'
+    """)
+    fun searchFilm(text: String): Single<List<AboutFilm>>
+
+    @Query("""
+        select f.id, 
+               f.name, 
+               f.comment, 
+               case when ff.id is not null 
+                    then 1 
+                    else  0 
+               end  as `like`, 
+               f.img, 
+               f.imgLike, 
+               f.position,
+               f.typeList
+        from films_table f 
+        left join favorite_films_table ff on f.id = ff.id  
         where f.id = :id 
     """)
     fun getFilm(id: Int): AboutFilm

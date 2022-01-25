@@ -1,5 +1,6 @@
 package com.glushko.films.presentation_layer.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -66,5 +67,15 @@ class ViewModelFilms constructor( private val useCase: UseCaseRepository) : View
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    fun searchFilm(text: String?) {
+        if(text.isNullOrEmpty()){
+            Log.d("TAG", "Пустое значение подтянем фильмы как всегда")
+            getFilms(page = 1)
+        }else{
+            compositeDisposable.add(useCase.searchFilm(text, _liveDataFilm))
+        }
+
     }
 }

@@ -1,9 +1,14 @@
 package com.glushko.films.presentation_layer.ui.films
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
@@ -21,6 +26,9 @@ import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 //import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FragmentFilms: Fragment(R.layout.fragment_films) {
@@ -33,6 +41,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
     private var callback: CallbackFragmentFilms? = null
     private lateinit var recycler: RecyclerView
     private lateinit var swiper: SwipeRefreshLayout
+    private lateinit var editTextFindFilm: EditText
     private val adapter by lazy {
         AdapterFilms(callback = object : AdapterFilms.Callback {
             override fun onClickDetail(film: AboutFilm, position: Int) {
@@ -48,6 +57,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
         })
     }
+    lateinit var scrollListener: OnScrollListener
 
 
     override fun onAttach(context: Context) {
@@ -68,6 +78,9 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val layoutManager = LinearLayoutManager(requireActivity())
+        editTextFindFilm = view.findViewById(R.id.edit_find_film)
+        editTextFindFilm.isEnabled = false
+        actionSearchUser()
         swiper = view.findViewById(R.id.swiper_films)
         swiper.setOnRefreshListener {
             model.getFilms(page = 1)
@@ -76,7 +89,8 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         recycler.layoutManager = layoutManager
         recycler.adapter = adapter
         recycler.itemAnimator = FilmsItemAnimate()
-        recycler.addOnScrollListener(OnScrollListener(layoutManager, model, callback))
+        scrollListener = OnScrollListener(layoutManager, model, callback)
+        recycler.addOnScrollListener(scrollListener)
         setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){ _, bundle ->
             val film =
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
@@ -88,15 +102,37 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         }
 
         model.liveDataFilm.observe(viewLifecycleOwner, Observer {
+            editTextFindFilm.isEnabled = true
             swiper.isRefreshing = false
             if(it.isSuccess){
                 println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount} isUpdate = ${it.isUpdateDB}")
-                if(it.films.isNotEmpty()){
-                    adapter.update(it.films, it.films.size, it.page)
+                if(!it.isLocalSearch){
+                    scrollListener.isPagination(true)
+                    if(it.films.isNotEmpty()){
+                        adapter.update(it.films, it.films.size, it.page)
+                    }
+                }else{
+                    scrollListener.isPagination(false)
+                    adapter.updateAll(it.films)
                 }
             }
         })
 
+    }
+
+    @SuppressLint("CheckResult")
+    private fun actionSearchUser(){
+        editTextFindFilm.clearFocus()
+        Observable.create(ObservableOnSubscribe<String> {
+            editTextFindFilm.doAfterTextChanged{ str ->
+                it.onNext(str.toString())
+            }
+        })
+            .map { text -> text.trim().lowercase()}
+            .debounce(250, TimeUnit.MILLISECONDS)
+            .subscribe { text ->
+                model.searchFilm(text)
+            }
     }
 
     private fun actionWithFilm(film: AboutFilm, position: Int, showSnackBar: Boolean = true) {
