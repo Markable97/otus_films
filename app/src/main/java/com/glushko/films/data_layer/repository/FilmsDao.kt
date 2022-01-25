@@ -29,7 +29,7 @@ interface FilmsDao {
         left join favorite_films_table ff on f.id = ff.id  
         where f.id = :id 
     """)
-    suspend fun getFilm(id: Int): AboutFilm
+    fun getFilm(id: Int): AboutFilm
 
     @Query("""
         select f.id, 
@@ -58,19 +58,19 @@ interface FilmsDao {
     @Query("select * from films_table f limit 13 offset 0")
     fun getFilmsStart(): LiveData<List<AboutFilm>>
     @Query("select * from favorite_films_table")
-    suspend fun getFavoriteFilms(): List<FavoriteFilm>
+    fun getFavoriteFilms(): Single<List<FavoriteFilm>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteFilm(film: FavoriteFilm)
+    fun insertFavoriteFilm(film: FavoriteFilm)
 
     @Delete
-    suspend fun deleteFavoriteFilm(film: FavoriteFilm)
+    fun deleteFavoriteFilm(film: FavoriteFilm): Single<Int>
 
     @Query("select count(1) from favorite_films_table t where t.id = :filmID")
     fun isInFavorite(filmID: Int): Int
 
     @Update
-    suspend fun addComment(film: AboutFilm): Int
+    fun addComment(film: AboutFilm): Single<Int>
     @Query("select comment from films_table where id = :id")
     fun getCommentForFilm(id: Int): String?
 
@@ -81,10 +81,10 @@ interface FilmsDao {
     fun getRefreshTime(): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addSeeLaterFilm(film: SeeLaterFilm)
+    fun addSeeLaterFilm(film: SeeLaterFilm)
 
     @Query("select * from see_later_films_table")
-    suspend fun getSeeLaterFilms(): List<SeeLaterFilm>
+    fun getSeeLaterFilms(): Single<List<SeeLaterFilm>>
 
     @Query("select * from see_later_films_table where id = :id")
     suspend fun getSeeLaterFilm(id: Int): List<SeeLaterFilm>

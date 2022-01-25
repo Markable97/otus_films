@@ -17,12 +17,12 @@ interface ApiService {
     }
 
     @GET(GET_FILMS_TOP)
-    fun getFilm(@Query("type") type:String, @Query("page")page: Int): Call<ResponseFilm>
+    fun getFilm(@Query("type") type:String, @Query("page")page: Int): Single<ResponseFilm>
 
     @GET(GET_FILMS_TOP)
     fun getFilmRx(@Query("type") type:String, @Query("page")page: Int): Single<ResponseFilm>
 
     @GET("")
-    fun getFilmWithID(@Url id: String):Call<AboutOnceFilm>
+    fun getFilmWithID(@Url id: String):Single<AboutOnceFilm>
 
 }

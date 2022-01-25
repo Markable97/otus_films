@@ -8,28 +8,28 @@ import androidx.lifecycle.viewModelScope
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
 import com.glushko.films.data_layer.utils.TAG
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : ViewModel() {
 
+    private val compositeDisposable = CompositeDisposable()
 
     private val _liveDataSeeLater = MutableLiveData<List<SeeLaterFilm>>()
     val liveDataSeeLater: LiveData<List<SeeLaterFilm>> = _liveDataSeeLater
 
     fun getSeeLaterFilms() {
-        viewModelScope.launch {
-            val films = useCase.getSeeLaterFilms()
-            _liveDataSeeLater.postValue(films)
-        }
+        compositeDisposable.add(useCase.getSeeLaterFilms(_liveDataSeeLater))
     }
 
     fun addSeeLaterFilm(film: SeeLaterFilm){
-        viewModelScope.launch {
-            useCase.addSeeLaterFilm(film)
-            Log.d(TAG, "Добавление фильма в список посмотреть позже")
-        }
+        compositeDisposable.add(useCase.addSeeLaterFilm(film))
+        Log.d(TAG, "Добавление фильма в список посмотреть позже")
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
 
 }

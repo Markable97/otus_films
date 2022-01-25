@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
+import com.glushko.films.business_logic_layer.domain.AboutOnceFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.UpdateTime
 import com.glushko.films.data_layer.datasource.ApiService
@@ -14,6 +15,8 @@ import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import com.glushko.films.data_layer.repository.FilmsDao
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -134,51 +137,72 @@ class UseCaseRepository @Inject constructor(private val api: ApiService, private
         return dao.isInFavorite(id)
     }
 
-    suspend fun addFavoriteFilm(film: FavoriteFilm){
-        dao.insertFavoriteFilm(film)
+    fun addFavoriteFilm(film: FavoriteFilm): Disposable {
+        return Single.just("")
+            .subscribeOn(Schedulers.io())
+            .map { dao.insertFavoriteFilm(film) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+
     }
-    suspend fun deleteFavoriteFilm(film: FavoriteFilm){
-        dao.deleteFavoriteFilm(film)
+    fun deleteFavoriteFilm(film: FavoriteFilm): Disposable {
+        return dao.deleteFavoriteFilm(film)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
-    suspend fun getFavoriteFilms(liveData: MutableLiveData<List<FavoriteFilm>>){
-        val list = dao.getFavoriteFilms()
-        liveData.postValue(list)
+    fun getFavoriteFilms(liveData: MutableLiveData<List<FavoriteFilm>>): Disposable{
+        return dao.getFavoriteFilms()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list ->
+                liveData.postValue(list)
+            }
+
     }
 
     private fun getComment(id: Int): String?{
         return dao.getCommentForFilm(id)
     }
-    suspend fun addComment(film: AboutFilm) {
-        dao.addComment(film)
+    fun addComment(film: AboutFilm): Disposable {
+        return dao.addComment(film)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 
-    suspend fun getFilmWithId(id: Int, liveData: MutableLiveData<ResponseOnceFilm>){
-        try {
-            val response = api.getFilmWithID("$GET_FILMS$id").awaitResponse()
-            if(response.isSuccessful){
-                Log.d("TAG", "${response.body()}")
-                val filmOnce = response.body()!!
-                getFilmWithIdDB(filmOnce.id, liveData)
-            }else{
-                val error = when(response.code()){
-                    401 -> ResponseFilm.ERROR_SERVER_TOKEN
-                    429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
-                    else -> ResponseFilm.ERROR_UNKNOWN
-                }
-                Log.d("TAG", "$error")
-                liveData.postValue(ResponseOnceFilm(error, null))
-                getFilmWithIdDB(id, liveData)
+    fun getFilmWithId(id: Int, liveData: MutableLiveData<ResponseOnceFilm>): Disposable {
+        return api.getFilmWithID("$GET_FILMS$id")
+            .subscribeOn(Schedulers.io())
+            .flatMap { response  ->
+                Single.just(
+                    getFilmWithIdDB(response.id)
+                )
             }
-        }catch (e: Exception){
-            e.printStackTrace()
-            liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NETWORK, null))
-            getFilmWithIdDB(id, liveData)
-        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ film ->
+                liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NO, film))
+            }, {
+                when (it) {
+                    is HttpException -> {
+                        val error = when (it.code()) {
+                            401 -> ResponseFilm.ERROR_SERVER_TOKEN
+                            429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
+                            else -> ResponseFilm.ERROR_UNKNOWN
+                        }
+                        Log.d("TAG", "$error")
+                        liveData.postValue(ResponseOnceFilm(error, null))
+                    }
+                    is UnknownHostException -> {
+                        liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NETWORK, null))
+                    }
+                    else -> liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_UNKNOWN, null))
+                }
+            })
     }
 
-    private suspend fun getFilmWithIdDB(id: Int, liveData: MutableLiveData<ResponseOnceFilm>){
-        val film = dao.getFilm(id)
-        liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NO, film))
+    private fun getFilmWithIdDB(id: Int): AboutFilm{
+        return dao.getFilm(id)
     }
 
 }

@@ -52,33 +52,19 @@ class ViewModelFilms constructor( private val useCase: UseCaseRepository) : View
     }
 
     fun addFavoriteFilm(film: FavoriteFilm){
-        viewModelScope.launch {
-            useCase.addFavoriteFilm(film)
-        }
+        compositeDisposable.add(useCase.addFavoriteFilm(film))
     }
     fun deleteFavoriteFilm(film: FavoriteFilm){
-        viewModelScope.launch {
-            useCase.deleteFavoriteFilm(film)
-        }
+        compositeDisposable.add(useCase.deleteFavoriteFilm(film))
     }
     fun getFavoriteFilms(){
-        viewModelScope.launch {
-            useCase.getFavoriteFilms(_liveDataFavoriteFilms)
-        }
+        compositeDisposable.add(useCase.getFavoriteFilms(_liveDataFavoriteFilms))
     }
     fun addComment(film: AboutFilm){
-        viewModelScope.launch {
-            useCase.addComment(film)
-        }
+        compositeDisposable.add(useCase.addComment(film))
     }
-    fun cancelDownloading(){
-       viewModelScope.cancel()
-
-    }
-
     override fun onCleared() {
         super.onCleared()
-        viewModelScope.cancel()
         compositeDisposable.dispose()
     }
 }
