@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
@@ -45,7 +46,8 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilms,
     CallbackFragmentFavorites {
 
-
+    @VisibleForTesting
+    val idlingResource = SimpleIdlingResource()
 
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var container: FragmentContainerView
@@ -68,6 +70,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        idlingResource.setIdleState(false)
         App.appComponent.inject(this)
         model = ViewModelProvider(this, factory).get(ViewModelFilms::class.java)
         initFirebaseToken()
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
                         .replace(R.id.main_container, FragmentFilms()).commit()
                 }
                 R.id.menu_favorite_films -> {
+                    idlingResource.setIdleState(false)
                     supportFragmentManager.beginTransaction().replace(
                         R.id.main_container,
                         FragmentFavorites()).commit()
@@ -109,6 +113,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
             bottomNavigate.selectedItemId = it
         }
         model.liveDataFilm.observe(this, Observer {
+            idlingResource.setIdleState(true)
             if(!it.isUpdateDB){
                 progressBar.visibility = View.INVISIBLE
                 if(!it.isSuccess){
@@ -129,16 +134,16 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
             model.getFilm(filmId)
             progressBar.visibility = View.VISIBLE
         }
-        model.liveDataOnceFilm.observe(this,{
+        model.liveDataOnceFilm.observe(this) {
             progressBar.visibility = View.INVISIBLE
-            if(it.err == ResponseFilm.ERROR_NO){
+            if (it.err == ResponseFilm.ERROR_NO) {
                 val film = it.film!!
                 supportFragmentManager.beginTransaction()
                     .add(R.id.main_container, FragmentDetailFilm.newInstance(film.position, film))
                     .addToBackStack("films")
                     .commit()
             }
-        })
+        }
     }
 
     private fun initFirebaseConfig() {

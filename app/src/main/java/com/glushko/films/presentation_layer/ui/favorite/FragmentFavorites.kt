@@ -17,6 +17,7 @@ import com.glushko.films.App
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
+import com.glushko.films.presentation_layer.ui.MainActivity
 import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperCallback
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
@@ -81,6 +82,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         val swiperCallback = FavoriteSwipeHelperCallback(_adapter)
         ItemTouchHelper(swiperCallback).attachToRecyclerView(recycler)
         model.liveDataFavoriteFilms.observe(viewLifecycleOwner, Observer {
+            (requireActivity() as MainActivity).idlingResource.setIdleState(true)
             Log.d("TAG", "избранное, пришло из фрагмента")
             if(it.isNotEmpty()){
                 recycler.visibility = View.VISIBLE
