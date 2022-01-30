@@ -15,9 +15,11 @@ class SeeLaterRepository @Inject constructor(private val dao: FilmsDao){
         return dao.getSeeLaterFilms()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{ filmsSeeLater ->
+            .subscribe({ filmsSeeLater ->
                 liveDataSeeLater.postValue(filmsSeeLater)
-            }
+            },{
+
+            })
     }
 
     fun addSeeLaterFilm(film: SeeLaterFilm): Disposable {

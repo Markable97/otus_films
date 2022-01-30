@@ -105,6 +105,6 @@ interface FilmsDao {
     fun getSeeLaterFilms(): Single<List<SeeLaterFilm>>
 
     @Query("select * from see_later_films_table where id = :id")
-    suspend fun getSeeLaterFilm(id: Int): List<SeeLaterFilm>
+    fun getSeeLaterFilm(id: Int): Single<SeeLaterFilm>
 
 }
