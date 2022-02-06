@@ -9,7 +9,9 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.glushko.films.BuildConfig
 import com.glushko.films.R
+import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TAG
 import com.glushko.films.presentation_layer.ui.MainActivity
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
@@ -28,7 +30,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * FCM registration token is initially generated so this is where you would retrieve the token.
      */
     override fun onNewToken(token: String) {
-        Log.d("TAG", "Refreshed token: $token")
+        LoggingHelper.log(Log.DEBUG, "Refreshed token: $token")
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
@@ -37,12 +39,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: $remoteMessage")
-        Log.d(TAG, "From: ${remoteMessage.from}")
-        // Check if message contains a data payload.
-        Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-        Log.d(TAG, "Message Notification Body: ${remoteMessage.notification?.body}")
-        // Check if message contains a notification payload.
+        LoggingHelper.apply {
+            log(Log.DEBUG, "From: ${remoteMessage.from}")
+            log(Log.DEBUG, "Message data payload: ${remoteMessage.data}")
+            log(Log.DEBUG, "Message Notification Body: ${remoteMessage.notification?.body}")
+        }
         remoteMessage.notification?.let {
             sendNotification(it, remoteMessage.data)
 
@@ -62,7 +63,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 filmID = it.toInt()
             }
         }catch (e:NumberFormatException){
-            Firebase.crashlytics.recordException(e)
+            if (BuildConfig.REPORT_CRASHES){
+                Firebase.crashlytics.recordException(e)
+            }
         }
         val filmName = data["film_name"]
         intent.putExtra(FragmentDetailFilm.EXTRA_FILM_NAME, filmName)

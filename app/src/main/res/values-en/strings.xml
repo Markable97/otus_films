@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Films</string>
+<!--    <string name="app_name">Films</string>-->
     <string name="comment_header">Comment</string>
     <string name="like_text">Like</string>
     <string name="button_detail_description">Details</string>

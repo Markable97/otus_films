@@ -18,6 +18,7 @@ import com.glushko.films.presentation_layer.ui.exit_dialog.ExitDialog
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TAG
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
             }
         })
 
-        Log.d("TAG", "Пришло от уведомления название фильма ${intent.getStringExtra(EXTRA_FILM_NAME)} \n " +
+        LoggingHelper.log(Log.DEBUG, "Пришло от уведомления название фильма ${intent.getStringExtra(EXTRA_FILM_NAME)} \n " +
                 "id = ${intent.getIntExtra(EXTRA_FILM_ID, -1)}")
         val filmId = intent.getIntExtra(EXTRA_FILM_ID, -1)
         if(filmId > 0){
@@ -157,13 +158,13 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
-                    Log.d(TAG, "Config params updated: $updated")
+                    LoggingHelper.log(Log.DEBUG, "Config params updated: $updated")
                     Toast.makeText(this, "Fetch and activate succeeded",
                         Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Fetch failed",
                         Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, "Config params failed: ${task.isSuccessful}")
+                    LoggingHelper.log(Log.DEBUG, "Config params failed: ${task.isSuccessful}")
                 }
                 updateTypeList()
             }
@@ -171,7 +172,7 @@ class MainActivity : AppCompatActivity(), OnDialogListener, CallbackFragmentFilm
 
     private fun updateTypeList(){
         val type = remoteConfig.getString(TYPE_LIST_FILM_KEY)
-        Log.d(TAG, "Type list film: $type")
+        LoggingHelper.log(Log.DEBUG, "Type list film: $type")
         TYPE_FILM_LIST = type
         model.getFilms(1)
     }

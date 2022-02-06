@@ -13,6 +13,7 @@ import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import com.glushko.films.data_layer.repository.FilmsDao
+import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.Observable
@@ -221,6 +222,7 @@ class UseCaseRepository @Inject constructor(
             .subscribe({ film ->
                 liveData.postValue(ResponseOnceFilm(ResponseFilm.ERROR_NO, film))
             }, {
+                LoggingHelper.log(Log.ERROR, it.message)
                 when (it) {
                     is HttpException -> {
                         val error = when (it.code()) {
@@ -228,7 +230,7 @@ class UseCaseRepository @Inject constructor(
                             429 -> ResponseFilm.ERROR_SERVER_TIME_LIMIT
                             else -> ResponseFilm.ERROR_UNKNOWN
                         }
-                        Log.d("TAG", "$error")
+                        LoggingHelper.log(Log.DEBUG, "$error")
                         liveData.postValue(ResponseOnceFilm(error, null))
                     }
                     is UnknownHostException -> {
@@ -247,7 +249,7 @@ class UseCaseRepository @Inject constructor(
         return dao.searchFilm(text).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
-                Log.d("TAG", "Список фильмов ${list.size} $list")
+                LoggingHelper.log(Log.DEBUG, "Список фильмов ${list.size} $list")
                 liveDataFilm.postValue(
                     ResponseFilm(
                         list.size,

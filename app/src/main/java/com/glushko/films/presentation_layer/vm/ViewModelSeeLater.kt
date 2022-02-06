@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
+import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TAG
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : V
 
     fun addSeeLaterFilm(film: SeeLaterFilm){
         compositeDisposable.add(useCase.addSeeLaterFilm(film))
-        Log.d(TAG, "Добавление фильма в список посмотреть позже")
+        LoggingHelper.log(Log.DEBUG, "Добавление фильма в список посмотреть позже")
     }
 
     override fun onCleared() {

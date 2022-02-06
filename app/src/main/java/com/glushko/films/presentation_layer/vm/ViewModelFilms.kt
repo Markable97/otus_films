@@ -10,6 +10,7 @@ import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
+import com.glushko.films.data_layer.utils.LoggingHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -71,7 +72,7 @@ class ViewModelFilms constructor( private val useCase: UseCaseRepository) : View
 
     fun searchFilm(text: String?) {
         if(text.isNullOrEmpty()){
-            Log.d("TAG", "Пустое значение подтянем фильмы как всегда")
+            LoggingHelper.log(Log.DEBUG, "Пустое значение подтянем фильмы как всегда")
             getFilms(page = 1)
         }else{
             compositeDisposable.add(useCase.searchFilm(text, _liveDataFilm))

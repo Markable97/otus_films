@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Films</string>
+<!--    <string name="app_name">Films</string>-->
     <string name="comment_header">Комментарий:</string>
     <string name="like_text">Нравится</string>
     <string name="button_detail_description">детали</string>

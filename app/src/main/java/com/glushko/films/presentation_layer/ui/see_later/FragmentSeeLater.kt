@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
+import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TAG
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
@@ -78,14 +79,14 @@ class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
         recycler.adapter = this.adapter
         recycler.addItemDecoration(FavoriteItemDecoration(requireContext()))
         model.getSeeLaterFilms()
-        model.liveDataSeeLater.observe(viewLifecycleOwner, {
-            Log.d(TAG, "Пришло от LiveData = $it")
-            if(it.isNotEmpty()){
+        model.liveDataSeeLater.observe(viewLifecycleOwner) {
+            LoggingHelper.log(Log.DEBUG, "Пришло от LiveData = $it")
+            if (it.isNotEmpty()) {
                 view.findViewById<TextView>(R.id.tvEmptySeeLater).visibility = View.INVISIBLE
                 recycler.visibility = View.VISIBLE
                 adapter.insertFilms(it)
             }
-        })
+        }
     }
 
     private fun showDataPicker() {
