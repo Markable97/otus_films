@@ -9,7 +9,10 @@ import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
 import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TAG
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
 class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : ViewModel() {
@@ -18,14 +21,35 @@ class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : V
 
     private val _liveDataSeeLater = MutableLiveData<List<SeeLaterFilm>>()
     val liveDataSeeLater: LiveData<List<SeeLaterFilm>> = _liveDataSeeLater
+    private val _liveDataAddSeeLaterFilm = MutableLiveData<Boolean>()
+    val liveDataAddSeeLaterFilm: LiveData<Boolean> = _liveDataAddSeeLaterFilm
+
 
     fun getSeeLaterFilms() {
-        compositeDisposable.add(useCase.getSeeLaterFilms(_liveDataSeeLater))
+        compositeDisposable.add(useCase.getSeeLaterFilms()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ filmsSeeLater ->
+                _liveDataSeeLater.postValue(filmsSeeLater)
+            },{
+                it.printStackTrace()
+            }))
     }
 
     fun addSeeLaterFilm(film: SeeLaterFilm){
-        compositeDisposable.add(useCase.addSeeLaterFilm(film))
-        LoggingHelper.log(Log.DEBUG, "Добавление фильма в список посмотреть позже")
+//        LoggingHelper.log(Log.DEBUG, "Добавление фильма в список посмотреть позже")
+        compositeDisposable.add(
+            Single.just("")
+            .subscribeOn(Schedulers.io())
+            .map {useCase.addSeeLaterFilm(film)}
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _liveDataAddSeeLaterFilm.value = true
+            }, {
+                _liveDataAddSeeLaterFilm.value = false
+            })
+        )
+
     }
 
     override fun onCleared() {

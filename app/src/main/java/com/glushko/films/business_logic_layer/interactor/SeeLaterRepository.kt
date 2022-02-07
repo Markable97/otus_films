@@ -9,25 +9,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SeeLaterRepository @Inject constructor(private val dao: FilmsDao){
+open class SeeLaterRepository @Inject constructor(private val dao: FilmsDao){
 
-    fun getSeeLaterFilms(liveDataSeeLater: MutableLiveData<List<SeeLaterFilm>>): Disposable {
+    fun getSeeLaterFilms(): Single<List<SeeLaterFilm>> {
         return dao.getSeeLaterFilms()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ filmsSeeLater ->
-                liveDataSeeLater.postValue(filmsSeeLater)
-            },{
-
-            })
     }
 
-    fun addSeeLaterFilm(film: SeeLaterFilm): Disposable {
-        return  Single.just("")
-            .subscribeOn(Schedulers.io())
-            .map {dao.addSeeLaterFilm(film)}
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+    fun addSeeLaterFilm(film: SeeLaterFilm) {
+        return dao.addSeeLaterFilm(film)
     }
 
 

@@ -1,52 +1,40 @@
 package com.glushko.films
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
 import com.glushko.films.data_layer.repository.FilmsDao
+import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
 import io.reactivex.Single
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.internal.observers.ConsumerSingleObserver
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
-import org.junit.*
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class SeeLaterRepositoryTest {
-
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
     @get:Rule
     val schedulers = RxImmediateSchedulerRule()
-    @Mock
-    private lateinit var dao: FilmsDao
-    private lateinit var liveData: MutableLiveData<List<SeeLaterFilm>>
-    private lateinit var repository: SeeLaterRepository
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        repository = SeeLaterRepository(dao)
-        liveData = MutableLiveData()
-    }
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
+    private lateinit var viewModel: ViewModelSeeLater
+
 
     @Test
-    fun checkingGetSeeLaterFilmsIsNotEmpty(){
-        `when`(dao.getSeeLaterFilms()).thenReturn(
-            Single.just(seeLaterSample())
-        )
-
-        repository.getSeeLaterFilms(liveData)
-        Assert.assertEquals(true, liveData.value?.isNotEmpty())
+    fun checkingGetFilmsSeeLater(){
+        val dao = Mockito.mock(FilmsDao::class.java)
+        Mockito.`when`(dao.getSeeLaterFilms()).thenReturn(Single.just(seeLaterSample()))
+        val repository = SeeLaterRepository(dao)
+        viewModel = ViewModelSeeLater(repository)
+        viewModel.getSeeLaterFilms()
+        Assert.assertNotNull(viewModel.liveDataSeeLater)
+        println("Тестовые записи ${viewModel.liveDataSeeLater.value}")
+        println("${viewModel.liveDataSeeLater.hasActiveObservers()}")
+        Assert.assertTrue(viewModel.liveDataSeeLater.value?.isNotEmpty()?:false)
     }
 
     private fun seeLaterSample(): List<SeeLaterFilm>{
@@ -57,19 +45,24 @@ class SeeLaterRepositoryTest {
     }
 
     @Test
-    fun checkingGetSeeLaterFilmsIsEmpty(){
-        `when`(dao.getSeeLaterFilms()).thenReturn(
-            Single.just(emptyList())
-        )
+    fun checkingAddSeeLaterFilm(){
+        val film = seeLaterSample().first()
+        val dao = Mockito.mock(FilmsDao::class.java)
+        val repository = SeeLaterRepository(dao)
+        viewModel = ViewModelSeeLater(repository)
+        viewModel.addSeeLaterFilm(film)
 
-        repository.getSeeLaterFilms(liveData)
-        Assert.assertEquals(true, liveData.value?.isEmpty())
+        Assert.assertTrue(viewModel.liveDataAddSeeLaterFilm.value ?:false)
     }
 
-    @After
-    fun end(){
-        RxJavaPlugins.reset()
-        RxAndroidPlugins.reset()
+    @Test(expected = Exception::class)
+    fun checkingFalseAddSeeLaterFilm(){
+        val film = seeLaterSample().first()
+        val dao = Mockito.mock(FilmsDao::class.java)
+        Mockito.`when`(dao.addSeeLaterFilm(film)).thenThrow(Exception())
+        val repository = SeeLaterRepository(dao)
+        viewModel = ViewModelSeeLater(repository)
+        viewModel.addSeeLaterFilm(film)
+        Assert.assertFalse(viewModel.liveDataAddSeeLaterFilm.value ?:false)
     }
-
 }
