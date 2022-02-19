@@ -41,6 +41,19 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    flavorDimensions "paid_or_free"
+    productFlavors {
+        paidApp {
+            dimension "paid_or_free"
+            applicationIdSuffix ".paid"
+        }
+        freeApp {
+            dimension "paid_or_free"
+            applicationIdSuffix ".free"
+        }
+    }
+
 }
 
 ext{
