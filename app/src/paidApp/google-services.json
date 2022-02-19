@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611224505005:android:4d5e536dc48e4c05a69424",
+        "android_client_info": {
+          "package_name": "com.glushko.films.paid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRXB1zufl374A1z0x-i0zuZFhfzNdpyyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

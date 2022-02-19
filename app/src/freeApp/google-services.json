@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "611224505005",
+    "project_id": "otus-films-f5d43",
+    "storage_bucket": "otus-films-f5d43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611224505005:android:f7571d4ac8c6c924a69424",
+        "android_client_info": {
+          "package_name": "com.glushko.films"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRXB1zufl374A1z0x-i0zuZFhfzNdpyyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611224505005:android:728feddd0c58f4e3a69424",
+        "android_client_info": {
+          "package_name": "com.glushko.films.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRXB1zufl374A1z0x-i0zuZFhfzNdpyyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611224505005:android:4d5e536dc48e4c05a69424",
+        "android_client_info": {
+          "package_name": "com.glushko.films.paid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRXB1zufl374A1z0x-i0zuZFhfzNdpyyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611224505005-ehs5h6lrhqcreu3ocs97ms1v8e3tmtik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
