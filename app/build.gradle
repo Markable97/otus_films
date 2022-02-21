@@ -8,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Project\\keys\\apps_key.jks')
+            storePassword '7913194'
+            keyAlias 'OtusFilm'
+            keyPassword '7913194'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
