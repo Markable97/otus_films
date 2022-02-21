@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId "com.glushko.films"
         minSdk 21
-        targetSdk 26
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
