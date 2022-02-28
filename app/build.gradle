@@ -56,10 +56,12 @@ android {
         paidApp {
             dimension "paid_or_free"
             applicationIdSuffix ".paid"
+            signingConfig signingConfigs.release
         }
         freeApp {
             dimension "paid_or_free"
             applicationIdSuffix ".free"
+            signingConfig signingConfigs.release
         }
     }
 
