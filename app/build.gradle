@@ -9,7 +9,7 @@ plugins {
 
 android {
     signingConfigs {
-        debug {
+        release {
             storeFile file('D:\\Project\\keys\\apps_key.jks')
             storePassword '7913194'
             keyAlias 'OtusFilm'
@@ -30,11 +30,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "REPORT_CRASHES", "true"
             buildConfigField "boolean", "LOGGING", "false"
             resValue "string", "app_name", "Film"
+            signingConfig signingConfigs.release
         }
         debug {
             buildConfigField "boolean", "REPORT_CRASHES", "false"
