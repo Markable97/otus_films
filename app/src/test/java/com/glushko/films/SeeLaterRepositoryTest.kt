@@ -25,7 +25,7 @@ class SeeLaterRepositoryTest {
 
 
     @Test
-    fun checkingGetFilmsSeeLater(){
+    fun getFilmsSeeLaterFromDB(){
         val dao = Mockito.mock(FilmsDao::class.java)
         Mockito.`when`(dao.getSeeLaterFilms()).thenReturn(Single.just(seeLaterSample()))
         val repository = SeeLaterRepository(dao)
@@ -45,7 +45,7 @@ class SeeLaterRepositoryTest {
     }
 
     @Test
-    fun checkingAddSeeLaterFilm(){
+    fun addSeeLaterFilmSavesFilmInDatabase(){
         val film = seeLaterSample().first()
         val dao = Mockito.mock(FilmsDao::class.java)
         val repository = SeeLaterRepository(dao)
@@ -56,7 +56,7 @@ class SeeLaterRepositoryTest {
     }
 
     @Test(expected = Exception::class)
-    fun checkingFalseAddSeeLaterFilm(){
+    fun addSeeLaterFilmSavesFilmInDatabaseException (){
         val film = seeLaterSample().first()
         val dao = Mockito.mock(FilmsDao::class.java)
         Mockito.`when`(dao.addSeeLaterFilm(film)).thenThrow(Exception())

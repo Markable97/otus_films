@@ -37,7 +37,7 @@ class RoomTest {
     }
 
     @Test
-    fun checkSeeLaterFilmAdd(){
+    fun checkSeeLaterFilmAddInDB(){
         seeLaterRepository.addSeeLaterFilm(seeLaterFilmSample)
         val filmFromDb = filmDaO.getSeeLaterFilm(seeLaterFilmSample.id).blockingGet()
         Assert.assertEquals(seeLaterFilmSample, filmFromDb)
