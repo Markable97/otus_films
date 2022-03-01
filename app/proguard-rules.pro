@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.glushko.films.business_logic_layer.domain.** { *; }
+-keep class com.glushko.films.data_layer.datasource.response.** { *; }
+
+
+-keepattributes Signature
+-keepattributes *Annotation*
