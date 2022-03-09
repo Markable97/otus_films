@@ -3,10 +3,10 @@ package com.glushko.films
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
-import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
-import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
-import com.glushko.films.data_layer.repository.FilmsDao
-import com.glushko.films.data_layer.repository.MainDatabase
+import com.glushko.films.domain.models.SeeLaterFilm
+import com.glushko.films.domain.interactor.SeeLaterRepository
+import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.data.repository.MainDatabase
 import org.junit.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

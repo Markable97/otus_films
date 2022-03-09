@@ -1,11 +1,9 @@
 package com.glushko.films
 
-import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
-import org.junit.After
+import com.glushko.films.domain.models.SeeLaterFilm
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.Before
 import java.util.*
 
 /**

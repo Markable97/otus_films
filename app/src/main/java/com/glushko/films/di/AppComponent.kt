@@ -4,11 +4,11 @@ import com.glushko.films.App
 import com.glushko.films.di.module.AppModule
 import com.glushko.films.di.module.NetworkModule
 import com.glushko.films.di.module.RepositoryModule
-import com.glushko.films.presentation_layer.ui.MainActivity
-import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
-import com.glushko.films.presentation_layer.ui.favorite.FragmentFavorites
-import com.glushko.films.presentation_layer.ui.films.FragmentFilms
-import com.glushko.films.presentation_layer.ui.see_later.FragmentSeeLater
+import com.glushko.films.presentation.ui.MainActivity
+import com.glushko.films.presentation.ui.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation.ui.favorite.FragmentFavorites
+import com.glushko.films.presentation.ui.films.FragmentFilms
+import com.glushko.films.presentation.ui.see_later.FragmentSeeLater
 import dagger.Component
 import javax.inject.Singleton
 

@@ -2,11 +2,11 @@ package com.glushko.films
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.glushko.films.business_logic_layer.domain.AboutFilm
-import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
-import com.glushko.films.data_layer.datasource.ApiService
-import com.glushko.films.data_layer.datasource.response.ResponseFilm
-import com.glushko.films.data_layer.repository.FilmsDao
+import com.glushko.films.domain.models.AboutFilm
+import com.glushko.films.domain.interactor.UseCaseRepository
+import com.glushko.films.data.datasource.ApiService
+import com.glushko.films.data.datasource.response.ResponseFilm
+import com.glushko.films.data.repository.FilmsDao
 import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Rule

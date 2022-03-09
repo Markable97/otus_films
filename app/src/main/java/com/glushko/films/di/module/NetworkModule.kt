@@ -1,7 +1,7 @@
 package com.glushko.films.di.module
 
 import com.glushko.films.BuildConfig
-import com.glushko.films.data_layer.datasource.ApiService
+import com.glushko.films.data.datasource.ApiService
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import dagger.Module
 import dagger.Provides

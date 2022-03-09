@@ -1,9 +1,9 @@
 package com.glushko.films.di.module
 
-import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
-import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
-import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
-import com.glushko.films.presentation_layer.vm.ViewModelSeeLaterFactory
+import com.glushko.films.domain.interactor.SeeLaterRepository
+import com.glushko.films.domain.interactor.UseCaseRepository
+import com.glushko.films.presentation.vm.ViewModelFilmsFactory
+import com.glushko.films.presentation.vm.ViewModelSeeLaterFactory
 import dagger.Module
 import dagger.Provides
 

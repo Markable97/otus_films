@@ -1,13 +1,12 @@
 package com.glushko.films
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
-import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
-import com.glushko.films.data_layer.repository.FilmsDao
-import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
+import com.glushko.films.domain.models.SeeLaterFilm
+import com.glushko.films.domain.interactor.SeeLaterRepository
+import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.presentation.vm.ViewModelSeeLater
 import io.reactivex.Single
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
