@@ -1,9 +1,9 @@
 package com.glushko.films.data_layer.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm

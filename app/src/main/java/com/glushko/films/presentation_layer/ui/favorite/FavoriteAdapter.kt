@@ -5,14 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.presentation_layer.ui.favorite.swipe_helper.FavoriteSwipeHelperAdapter
 
-class FavoriteAdapter(private val films: MutableList<FavoriteFilm> = mutableListOf(), val callback: Callback) :
+class FavoriteAdapter(
+    private val films: MutableList<FavoriteFilm> = mutableListOf(),
+    val callback: CallbackFavoriteAdapter
+) :
     RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>(), FavoriteSwipeHelperAdapter {
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
@@ -34,12 +35,12 @@ class FavoriteAdapter(private val films: MutableList<FavoriteFilm> = mutableList
         callback.onDeleteSwipe(film, position)
     }
 
-    fun updateFilm(favoriteFilms: List<FavoriteFilm>){
+    fun updateFilm(favoriteFilms: List<FavoriteFilm>) {
         this.films.addAll(favoriteFilms)
         notifyItemRangeInserted(0, films.size)
     }
 
-    fun insertCancelledFilm(position: Int, film: FavoriteFilm){
+    fun insertCancelledFilm(position: Int, film: FavoriteFilm) {
         films.add(position, film)
         notifyItemInserted(position)
     }
@@ -53,9 +54,6 @@ class FavoriteAdapter(private val films: MutableList<FavoriteFilm> = mutableList
         }
     }
 
-    interface Callback{
-        fun onDeleteSwipe(film: FavoriteFilm, position: Int)
-    }
 
 
 }

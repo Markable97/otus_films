@@ -32,7 +32,7 @@ class OnScrollListener(
         }
 
         if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-            if(isPagination){
+            if (isPagination) {
                 println("подгрузка данных")
                 callback?.showProgressbar()
                 model.getFilms()
@@ -41,7 +41,7 @@ class OnScrollListener(
         }
     }
 
-    fun isPagination(b: Boolean){
+    fun isPagination(b: Boolean) {
         isPagination = b
     }
 }

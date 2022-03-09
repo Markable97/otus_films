@@ -1,15 +1,13 @@
 package com.glushko.films.presentation_layer.ui.films.anim
 
 import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.animation.AnimationUtils.DECELERATE_INTERPOLATOR
-
-import android.animation.PropertyValuesHolder
-
-import android.animation.ObjectAnimator
 import com.glushko.films.presentation_layer.ui.films.AdapterFilms
+import com.google.android.material.animation.AnimationUtils.DECELERATE_INTERPOLATOR
 
 
 class FilmsItemAnimate : DefaultItemAnimator() {
@@ -34,9 +32,7 @@ class FilmsItemAnimate : DefaultItemAnimator() {
         return super.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads)
     }
 
-    inner class CharacterItemHolderInfo(val updateAction: String) : ItemHolderInfo() {
-
-    }
+    inner class CharacterItemHolderInfo(val updateAction: String) : ItemHolderInfo()
 
     override fun animateChange(
         oldHolder: RecyclerView.ViewHolder,
@@ -68,7 +64,7 @@ class FilmsItemAnimate : DefaultItemAnimator() {
         scaleLikeIcon.interpolator = DECELERATE_INTERPOLATOR
         scaleLikeIcon.duration = 2000
 
-        val animator =  AnimatorSet()
+        val animator = AnimatorSet()
         animator.play(scaleLikeIcon)
         animator.start()
     }

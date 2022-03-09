@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.data_layer.utils.LoggingHelper
-import com.glushko.films.data_layer.utils.TAG
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListOf(), val callback: CallbackAdapterSeeLater) :
+class SeeLaterAdapter(
+    private val list: MutableList<SeeLaterFilm> = mutableListOf(),
+    val callback: CallbackAdapterSeeLater
+) :
     RecyclerView.Adapter<SeeLaterAdapter.SeeLaterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeeLaterViewHolder {
@@ -29,14 +31,14 @@ class SeeLaterAdapter(private val list: MutableList<SeeLaterFilm> = mutableListO
 
     override fun getItemCount(): Int = list.size
 
-    fun insertFilms(films: List<SeeLaterFilm>){
+    fun insertFilms(films: List<SeeLaterFilm>) {
         LoggingHelper.log(Log.DEBUG, "Обновляем адаптер")
         list.addAll(films)
         LoggingHelper.log(Log.DEBUG, "${list.size}")
         notifyItemRangeInserted(0, list.size)
     }
 
-    fun updateFilm(film: SeeLaterFilm, position: Int){
+    fun updateFilm(film: SeeLaterFilm, position: Int) {
         list[position] = film
         notifyItemChanged(position)
     }

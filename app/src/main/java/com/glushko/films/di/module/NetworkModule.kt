@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class NetworkModule {
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient{
+    fun provideOkHttpClient(): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
             val original = chain.request()
@@ -32,26 +32,27 @@ class NetworkModule {
         }
         val client = httpClient.addInterceptor(
             HttpLoggingInterceptor()
-            .apply {
-                if (BuildConfig.DEBUG) {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                }
-            }).build()
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        level = HttpLoggingInterceptor.Level.BASIC
+                    }
+                }).build()
         return client
     }
+
     @Singleton
     @Provides
-    fun provideRetrofit(client: OkHttpClient): Retrofit{
+    fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://kinopoiskapiunofficial.tech/api/v2.2/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(client)
-            .build();
+            .build()
     }
 
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService{
+    fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 

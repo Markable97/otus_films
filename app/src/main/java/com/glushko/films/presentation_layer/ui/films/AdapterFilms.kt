@@ -6,18 +6,18 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.business_logic_layer.interactor.MyGlideApp
-import com.glushko.films.data_layer.datasource.response.ResponseFilm
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 
-class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), val callback: Callback) :
+class AdapterFilms(
+    private var films: MutableList<AboutFilm> = mutableListOf(),
+    val callback: CallbackAdapterFilms
+) :
     RecyclerView.Adapter<AdapterFilms.FilmViewHolder>() {
 
-    companion object{
+    companion object {
         const val ACTION_CLICK_LIKE = "click like"
     }
 
@@ -27,28 +27,28 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         )
     }
 
-    fun removeAll(){
+    fun removeAll() {
         val cntAll = films.size
         films.clear()
         notifyItemRangeRemoved(0, cntAll)
     }
 
-    fun update(filmsRestore: List<AboutFilm>, count: Int, page: Int){
+    fun update(filmsRestore: List<AboutFilm>, count: Int, page: Int) {
         //Проверить, если пришла новая страница, но сток записей нет, то добавить, иначе изменить
         val sizeBefore = films.size
         val sizeIn = count * page
         //Если новые данные умноженыне на страницу > чем размер массива, то добваляем, иначе изменяем
         val isAdd = sizeIn > sizeBefore
-        if(isAdd){
+        if (isAdd) {
             val beforeCount = films.size
             println("Добавить от = $beforeCount рамзер = $count = ${filmsRestore.size} \n данные $filmsRestore ")
             films.addAll(filmsRestore)
             notifyItemRangeInserted(beforeCount, count)
-        }else{
+        } else {
             val beforeCount = count * (page - 1)
             println("Обновить от = $beforeCount рамзер = $count = ${filmsRestore.size} \n данные $filmsRestore ")
             var currentPosition = beforeCount
-            filmsRestore.forEach{
+            filmsRestore.forEach {
                 films[currentPosition] = it
                 currentPosition++
             }
@@ -60,7 +60,7 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         holder.bind(films.elementAt(position))
-    //holder.bind(films[position])
+        //holder.bind(films[position])
     }
 
     override fun getItemCount() = films.size
@@ -79,24 +79,20 @@ class AdapterFilms(private var films: MutableList<AboutFilm> = mutableListOf(), 
         private val tvComment = itemView.findViewById<TextView>(R.id.tvComment)
 
         fun bind(item: AboutFilm) {
-            Glide.with(itemView.context).load(item.img).error(R.drawable.ic_avatar_unknow).into(imgFilm)
-            btnLike.setImageResource(if(item.like == 0) R.drawable.ic_not_like else R.drawable.ic_like)
+            Glide.with(itemView.context).load(item.img).error(R.drawable.ic_avatar_unknow)
+                .into(imgFilm)
+            btnLike.setImageResource(if (item.like == 0) R.drawable.ic_not_like else R.drawable.ic_like)
             tvFilmName.text = item.name
             tvComment.text = item.comment
             btnDetail.setOnClickListener {
                 callback.onClickDetail(item, adapterPosition)
             }
             btnLike.setOnClickListener {
-                item.like = if(item.like == 1) 0 else 1
-                item.imgLike = if(item.like == 1) R.drawable.ic_like else R.drawable.ic_not_like
+                item.like = if (item.like == 1) 0 else 1
+                item.imgLike = if (item.like == 1) R.drawable.ic_like else R.drawable.ic_not_like
                 callback.onClickLike(item, adapterPosition)
 
             }
         }
-    }
-
-    interface Callback {
-        fun onClickDetail(film: AboutFilm, position: Int)
-        fun onClickLike(film: AboutFilm, position: Int)
     }
 }

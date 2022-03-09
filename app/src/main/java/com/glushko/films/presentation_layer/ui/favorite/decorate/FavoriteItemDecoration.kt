@@ -2,7 +2,6 @@ package com.glushko.films.presentation_layer.ui.favorite.decorate
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
@@ -11,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.R
 
 
-
-
-class FavoriteItemDecoration(context: Context): RecyclerView.ItemDecoration() {
+class FavoriteItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private val paint: Paint = Paint().apply {
         isAntiAlias = true
         color = ContextCompat.getColor(context, R.color.purple_200)
@@ -38,7 +35,7 @@ class FavoriteItemDecoration(context: Context): RecyclerView.ItemDecoration() {
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)
         val childCount = parent.childCount
-        for(i in 0 until childCount){
+        for (i in 0 until childCount) {
             val view = parent.getChildAt(i)
             val index = parent.getChildAdapterPosition(view)
             /*if(index == 0){

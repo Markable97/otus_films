@@ -11,16 +11,13 @@ import com.glushko.films.business_logic_layer.interactor.UseCaseRepository
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
 import com.glushko.films.data_layer.datasource.response.ResponseOnceFilm
 import com.glushko.films.data_layer.utils.LoggingHelper
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.*
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-class ViewModelFilms constructor( private val useCase: UseCaseRepository) : ViewModel()  {
+class ViewModelFilms constructor(private val useCase: UseCaseRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
+
     //private val useCase = UseCaseRepository()
     private var _page: Int = 0
     private var _liveDataFilm: MutableLiveData<ResponseFilm> = MutableLiveData()
@@ -33,48 +30,52 @@ class ViewModelFilms constructor( private val useCase: UseCaseRepository) : View
         _liveDataFilm.value?.films = listOf()
     }
 
-    fun getFilm(id: Int){
+    fun getFilm(id: Int) {
         viewModelScope.launch {
             useCase.getFilmWithId(id, _liveDataOnceFilm)
         }
     }
 
-    fun getFilms(page:Int = 0, isNoAddPage: Boolean = false){
-        val curPage = if(page > 0) {
+    fun getFilms(page: Int = 0, isNoAddPage: Boolean = false) {
+        val curPage = if (page > 0) {
             _page = page
             page
-        }else{
-            if(isNoAddPage){
+        } else {
+            if (isNoAddPage) {
                 _page
-            }else{
+            } else {
                 ++_page
             }
         }
         compositeDisposable.add(useCase.getFilm(curPage, _liveDataFilm))
     }
 
-    fun addFavoriteFilm(film: FavoriteFilm){
+    fun addFavoriteFilm(film: FavoriteFilm) {
         compositeDisposable.add(useCase.addFavoriteFilm(film))
     }
-    fun deleteFavoriteFilm(film: FavoriteFilm){
+
+    fun deleteFavoriteFilm(film: FavoriteFilm) {
         compositeDisposable.add(useCase.deleteFavoriteFilm(film))
     }
-    fun getFavoriteFilms(){
+
+    fun getFavoriteFilms() {
         compositeDisposable.add(useCase.getFavoriteFilms(_liveDataFavoriteFilms))
     }
-    fun addComment(film: AboutFilm){
+
+    fun addComment(film: AboutFilm) {
         compositeDisposable.add(useCase.addComment(film))
     }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
     }
 
     fun searchFilm(text: String?) {
-        if(text.isNullOrEmpty()){
+        if (text.isNullOrEmpty()) {
             LoggingHelper.log(Log.DEBUG, "Пустое значение подтянем фильмы как всегда")
             getFilms(page = 1)
-        }else{
+        } else {
             compositeDisposable.add(useCase.searchFilm(text, _liveDataFilm))
         }
 

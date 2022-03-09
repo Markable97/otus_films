@@ -2,12 +2,9 @@ package com.glushko.films.business_logic_layer.interactor
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
-import com.glushko.films.business_logic_layer.domain.AboutOnceFilm
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
-import com.glushko.films.business_logic_layer.domain.UpdateTime
 import com.glushko.films.data_layer.datasource.ApiService
 import com.glushko.films.data_layer.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data_layer.datasource.response.ResponseFilm
@@ -16,14 +13,10 @@ import com.glushko.films.data_layer.repository.FilmsDao
 import com.glushko.films.data_layer.utils.LoggingHelper
 import com.glushko.films.data_layer.utils.TYPE_FILM_LIST
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.awaitResponse
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

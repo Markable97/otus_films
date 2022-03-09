@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.Users
 
-class AdapterDetailFilm(val comments: List<Users> = listOf()) : RecyclerView.Adapter<AdapterDetailFilm.DetailFilmViewHolder>() {
+class AdapterDetailFilm(val comments: List<Users> = listOf()) :
+    RecyclerView.Adapter<AdapterDetailFilm.DetailFilmViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailFilmViewHolder {
         return DetailFilmViewHolder(
@@ -28,7 +29,7 @@ class AdapterDetailFilm(val comments: List<Users> = listOf()) : RecyclerView.Ada
         private val commentName: TextView = itemView.findViewById(R.id.commentName)
         private val commentText: TextView = itemView.findViewById(R.id.commentText)
 
-        fun bind(item: Users){
+        fun bind(item: Users) {
             commentName.text = item.name
             commentText.text = item.textComment
         }

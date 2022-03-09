@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class SimpleIdlingResource : IdlingResource {
     @Volatile
     private var mCallback: ResourceCallback? = null
+
     // Idleness is controlled with this boolean.
     private val mIsIdleNow =
         AtomicBoolean(true)

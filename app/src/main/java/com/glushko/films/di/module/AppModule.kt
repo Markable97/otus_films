@@ -14,18 +14,19 @@ class AppModule(val application: Application) {
 
     @Singleton
     @Provides
-    fun getDao(database: MainDatabase): FilmsDao{
+    fun getDao(database: MainDatabase): FilmsDao {
         return database.filmsDao()
     }
 
     @Singleton
     @Provides
-    fun getRoomDbInstance(): MainDatabase{
+    fun getRoomDbInstance(): MainDatabase {
         return MainDatabase.getDatabase(provideAppContext())
     }
+
     @Singleton
     @Provides
-    fun provideAppContext(): Context{
+    fun provideAppContext(): Context {
         return application.applicationContext
     }
 }

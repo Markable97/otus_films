@@ -13,7 +13,8 @@ interface FilmsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFilms(films: List<AboutFilm>)
 
-    @Query("""
+    @Query(
+        """
         select f.id, 
                f.name, 
                f.comment, 
@@ -28,10 +29,12 @@ interface FilmsDao {
         from films_table f 
         left join favorite_films_table ff on f.id = ff.id  
         where f.name like '%'||:text||'%'
-    """)
+    """
+    )
     fun searchFilm(text: String): Single<List<AboutFilm>>
 
-    @Query("""
+    @Query(
+        """
         select f.id, 
                f.name, 
                f.comment, 
@@ -46,10 +49,12 @@ interface FilmsDao {
         from films_table f 
         left join favorite_films_table ff on f.id = ff.id  
         where f.id = :id 
-    """)
+    """
+    )
     fun getFilm(id: Int): AboutFilm
 
-    @Query("""
+    @Query(
+        """
         select f.id, 
                f.name, 
                f.comment, 
@@ -65,8 +70,10 @@ interface FilmsDao {
         left join favorite_films_table ff on f.id = ff.id
         where f.typeList = :type
         order by position  limit :count offset :count*(:page-1)
-        """ )
+        """
+    )
     fun getFilms(page: Int, count: Int, type: String): Single<List<AboutFilm>>
+
     @Query("select count(1) from films_table")
     suspend fun getCntFilm(): Int
 
@@ -75,6 +82,7 @@ interface FilmsDao {
 
     @Query("select * from films_table f limit 13 offset 0")
     fun getFilmsStart(): LiveData<List<AboutFilm>>
+
     @Query("select * from favorite_films_table")
     fun getFavoriteFilms(): Single<List<FavoriteFilm>>
 
@@ -89,6 +97,7 @@ interface FilmsDao {
 
     @Update
     fun addComment(film: AboutFilm): Single<Int>
+
     @Query("select comment from films_table where id = :id")
     fun getCommentForFilm(id: Int): String?
 

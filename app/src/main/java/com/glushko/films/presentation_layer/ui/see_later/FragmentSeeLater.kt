@@ -18,7 +18,6 @@ import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.data_layer.utils.LoggingHelper
-import com.glushko.films.data_layer.utils.TAG
 import com.glushko.films.presentation_layer.services.SeeLaterReceiver
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.glushko.films.presentation_layer.ui.favorite.decorate.FavoriteItemDecoration
@@ -26,21 +25,21 @@ import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
 import com.glushko.films.presentation_layer.vm.ViewModelSeeLaterFactory
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
-class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
+class FragmentSeeLater : Fragment(R.layout.fragment_see_later) {
     @Inject
     lateinit var factory: ViewModelSeeLaterFactory
     private lateinit var model: ViewModelSeeLater
     private var filmEdit: SeeLaterFilm? = null
     private var positionEdit: Int? = null
-    private val adapter: SeeLaterAdapter = SeeLaterAdapter(callback = object : CallbackAdapterSeeLater{
-        override fun onClickEdit(film: SeeLaterFilm, position: Int) {
-            filmEdit = film
-            positionEdit = position
-            showDataPicker()
-        }
-    })
+    private val adapter: SeeLaterAdapter =
+        SeeLaterAdapter(callback = object : CallbackAdapterSeeLater {
+            override fun onClickEdit(film: SeeLaterFilm, position: Int) {
+                filmEdit = film
+                positionEdit = position
+                showDataPicker()
+            }
+        })
 
     private val calendar: Calendar = Calendar.getInstance()
     private var year = calendar.get(Calendar.YEAR)
@@ -93,20 +92,26 @@ class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
         DatePickerDialog(requireActivity(), dataListener, year, month, day).show()
     }
 
-    private fun showTimePicker(){
-        TimePickerDialog(requireActivity(),timeListener, hour, minute, true).show()
+    private fun showTimePicker() {
+        TimePickerDialog(requireActivity(), timeListener, hour, minute, true).show()
     }
 
-    private fun cancelAlarm(){
+    private fun cancelAlarm() {
         filmEdit?.let {
             val context = requireContext()
             val alarmManager = getSystemService(context, AlarmManager::class.java)
             val intent = Intent(context, SeeLaterReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, it.id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                it.id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
             alarmManager?.cancel(pendingIntent)
 
         }
     }
+
     private fun updateAlarm() {
         cancelAlarm()
         filmEdit?.let {
@@ -117,10 +122,15 @@ class FragmentSeeLater: Fragment(R.layout.fragment_see_later) {
             val intent = Intent(context, SeeLaterReceiver::class.java)
             intent.putExtra(FragmentDetailFilm.EXTRA_FILM_ID, it.id)
             intent.putExtra(FragmentDetailFilm.EXTRA_FILM_NAME, it.name)
-            val pendingIntent = PendingIntent.getBroadcast(context, it.id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                it.id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day, hour, minute)
-            alarmManager?.set(AlarmManager.RTC_WAKEUP,  calendar.timeInMillis, pendingIntent)
+            alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             adapter.updateFilm(it, positionEdit!!)
         }
     }

@@ -1,19 +1,14 @@
 package com.glushko.films.presentation_layer.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.glushko.films.business_logic_layer.domain.SeeLaterFilm
 import com.glushko.films.business_logic_layer.interactor.SeeLaterRepository
-import com.glushko.films.data_layer.utils.LoggingHelper
-import com.glushko.films.data_layer.utils.TAG
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.launch
 
 class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : ViewModel() {
 
@@ -31,23 +26,24 @@ class ViewModelSeeLater constructor(private val useCase: SeeLaterRepository) : V
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ filmsSeeLater ->
                 _liveDataSeeLater.postValue(filmsSeeLater)
-            },{
+            }, {
                 it.printStackTrace()
-            }))
+            })
+        )
     }
 
-    fun addSeeLaterFilm(film: SeeLaterFilm){
+    fun addSeeLaterFilm(film: SeeLaterFilm) {
 //        LoggingHelper.log(Log.DEBUG, "Добавление фильма в список посмотреть позже")
         compositeDisposable.add(
             Single.just("")
-            .subscribeOn(Schedulers.io())
-            .map {useCase.addSeeLaterFilm(film)}
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                _liveDataAddSeeLaterFilm.value = true
-            }, {
-                _liveDataAddSeeLaterFilm.value = false
-            })
+                .subscribeOn(Schedulers.io())
+                .map { useCase.addSeeLaterFilm(film) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _liveDataAddSeeLaterFilm.value = true
+                }, {
+                    _liveDataAddSeeLaterFilm.value = false
+                })
         )
 
     }

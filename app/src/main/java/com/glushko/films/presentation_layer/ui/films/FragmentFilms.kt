@@ -1,13 +1,11 @@
 package com.glushko.films.presentation_layer.ui.films
 
+//import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -17,33 +15,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.glushko.films.App
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
-import com.glushko.films.di.AppComponent
-import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
+import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
+import com.glushko.films.presentation_layer.ui.films.anim.FilmsItemAnimate
 import com.glushko.films.presentation_layer.vm.ViewModelFilms
 import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
-//import com.glushko.films.presentation_layer.vm.ViewModelFilmsFactory
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class FragmentFilms: Fragment(R.layout.fragment_films) {
+class FragmentFilms : Fragment(R.layout.fragment_films) {
 
 
     @Inject
     lateinit var factory: ViewModelFilmsFactory
     private lateinit var model: ViewModelFilms
+
     //private var films: List<AboutFilm> = listOf()
     private var callback: CallbackFragmentFilms? = null
     private lateinit var recycler: RecyclerView
     private lateinit var swiper: SwipeRefreshLayout
     private lateinit var editTextFindFilm: EditText
     private val adapter by lazy {
-        AdapterFilms(callback = object : AdapterFilms.Callback {
+        AdapterFilms(callback = object : CallbackAdapterFilms {
             override fun onClickDetail(film: AboutFilm, position: Int) {
                 parentFragmentManager.beginTransaction()
                     .add(R.id.main_container, FragmentDetailFilm.newInstance(position, film))
@@ -62,9 +59,9 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
+        try {
             callback = context as CallbackFragmentFilms
-        }catch(ex: Exception){
+        } catch (ex: Exception) {
             println("Bad callback fragment")
         }
     }
@@ -91,7 +88,7 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         recycler.itemAnimator = FilmsItemAnimate()
         scrollListener = OnScrollListener(layoutManager, model, callback)
         recycler.addOnScrollListener(scrollListener)
-        setFragmentResultListener(FragmentDetailFilm.KEY_RETURN){ _, bundle ->
+        setFragmentResultListener(FragmentDetailFilm.KEY_RETURN) { _, bundle ->
             val film =
                 bundle.getParcelable<AboutFilm>(FragmentDetailFilm.EXTRA_FILM_INFO)
             val position = bundle.getInt(FragmentDetailFilm.EXTRA_POSITION, -1)
@@ -104,14 +101,14 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
         model.liveDataFilm.observe(viewLifecycleOwner, Observer {
             editTextFindFilm.isEnabled = true
             swiper.isRefreshing = false
-            if(it.isSuccess){
+            if (it.isSuccess) {
                 println("Live Data isSuccess = ${it.isSuccess} = ${it.pagesCount} isUpdate = ${it.isUpdateDB}")
-                if(!it.isLocalSearch){
+                if (!it.isLocalSearch) {
                     scrollListener.isPagination(true)
-                    if(it.films.isNotEmpty()){
+                    if (it.films.isNotEmpty()) {
                         adapter.update(it.films, it.films.size, it.page)
                     }
-                }else{
+                } else {
                     scrollListener.isPagination(false)
                     adapter.updateAll(it.films)
                 }
@@ -121,14 +118,14 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
     }
 
     @SuppressLint("CheckResult")
-    private fun actionSearchUser(){
+    private fun actionSearchUser() {
         editTextFindFilm.clearFocus()
         Observable.create(ObservableOnSubscribe<String> {
-            editTextFindFilm.doAfterTextChanged{ str ->
+            editTextFindFilm.doAfterTextChanged { str ->
                 it.onNext(str.toString())
             }
         })
-            .map { text -> text.trim().lowercase()}
+            .map { text -> text.trim().lowercase() }
             .debounce(250, TimeUnit.MILLISECONDS)
             .subscribe { text ->
                 model.searchFilm(text)
@@ -138,30 +135,30 @@ class FragmentFilms: Fragment(R.layout.fragment_films) {
     private fun actionWithFilm(film: AboutFilm, position: Int, showSnackBar: Boolean = true) {
         var titleSnackBar = ""
 
-        if(film.like == 1){
+        if (film.like == 1) {
             recycler.adapter?.notifyItemChanged(position, AdapterFilms.ACTION_CLICK_LIKE)
-            if(showSnackBar){
+            if (showSnackBar) {
                 titleSnackBar = getString(R.string.snackbat_title_add)
             }
-        }else{
+        } else {
             recycler.adapter?.notifyItemChanged(position)
-            if(showSnackBar){
+            if (showSnackBar) {
                 titleSnackBar = getString(R.string.snackbat_title_delete)
             }
         }
         callback?.actionWithMovie(position, film)
-        if(showSnackBar){
-            val actionSnackBar: (film: AboutFilm)->Unit = {
+        if (showSnackBar) {
+            val actionSnackBar: (film: AboutFilm) -> Unit = {
                 val filmCanceled = it.apply {
-                    like = if(like == 1) 0 else 1
-                    imgLike = if(like == 1) R.drawable.ic_like else R.drawable.ic_not_like
+                    like = if (like == 1) 0 else 1
+                    imgLike = if (like == 1) R.drawable.ic_like else R.drawable.ic_not_like
                 }
                 actionWithFilm(filmCanceled, position, false)
                 callback?.actionWithMovie(position, filmCanceled)
             }
             view?.let {
                 Snackbar.make(it, titleSnackBar, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.snackbar_action_title){actionSnackBar(film)}
+                    .setAction(R.string.snackbar_action_title) { actionSnackBar(film) }
                     .show()
             }
         }

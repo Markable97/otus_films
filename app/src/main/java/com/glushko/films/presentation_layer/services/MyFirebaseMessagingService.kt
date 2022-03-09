@@ -12,14 +12,12 @@ import androidx.core.app.NotificationCompat
 import com.glushko.films.BuildConfig
 import com.glushko.films.R
 import com.glushko.films.data_layer.utils.LoggingHelper
-import com.glushko.films.data_layer.utils.TAG
 import com.glushko.films.presentation_layer.ui.MainActivity
 import com.glushko.films.presentation_layer.ui.detail_film.FragmentDetailFilm
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.lang.NumberFormatException
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -62,35 +60,40 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             data["film_id"]?.let {
                 filmID = it.toInt()
             }
-        }catch (e:NumberFormatException){
-            if (BuildConfig.REPORT_CRASHES){
+        } catch (e: NumberFormatException) {
+            if (BuildConfig.REPORT_CRASHES) {
                 Firebase.crashlytics.recordException(e)
             }
         }
         val filmName = data["film_name"]
         intent.putExtra(FragmentDetailFilm.EXTRA_FILM_NAME, filmName)
-        intent.putExtra( FragmentDetailFilm.EXTRA_FILM_ID, filmID)
+        intent.putExtra(FragmentDetailFilm.EXTRA_FILM_ID, filmID)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0 /* Request code */, intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(notification.title?:"Галовок по умолчаниб")
-            .setContentText(notification.body?:"Тело по умолчанию")
+            .setContentTitle(notification.title ?: "Галовок по умолчаниб")
+            .setContentText(notification.body ?: "Тело по умолчанию")
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
+            val channel = NotificationChannel(
+                channelId,
                 "Channel human readable title",
-                NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             notificationManager.createNotificationChannel(channel)
         }
 

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glushko.films.App
-import com.glushko.films.business_logic_layer.domain.AboutFilm
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.FavoriteFilm
 import com.glushko.films.presentation_layer.ui.MainActivity
@@ -32,6 +31,7 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
     private lateinit var recycler: RecyclerView
     private lateinit var textViewEmpty: TextView
     private var callback: CallbackFragmentFavorites? = null
+
     @Inject
     lateinit var factory: ViewModelFilmsFactory
     private lateinit var model: ViewModelFilms
@@ -59,10 +59,10 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         textViewEmpty = view.findViewById(R.id.tvEmptyFavorite)
         val orientation = resources.configuration.orientation
         recycler = view.findViewById(R.id.recyclerFavorite)
-        _adapter = FavoriteAdapter(callback = object : FavoriteAdapter.Callback {
+        _adapter = FavoriteAdapter(callback = object : CallbackFavoriteAdapter {
             override fun onDeleteSwipe(film: FavoriteFilm, position: Int) {
                 callback?.actionInFavoriteMovies(film, true)
-                if(recycler.layoutManager?.itemCount == 0){
+                if (recycler.layoutManager?.itemCount == 0) {
                     recycler.visibility = View.INVISIBLE
                     textViewEmpty.visibility = View.VISIBLE
                 }
@@ -84,11 +84,11 @@ class FragmentFavorites : Fragment(R.layout.fragment_favorite_film) {
         model.liveDataFavoriteFilms.observe(viewLifecycleOwner, Observer {
             (requireActivity() as MainActivity).idlingResource.setIdleState(true)
             Log.d("TAG", "избранное, пришло из фрагмента")
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 recycler.visibility = View.VISIBLE
                 textViewEmpty.visibility = View.INVISIBLE
                 _adapter.updateFilm(it)
-            }else{
+            } else {
                 recycler.visibility = View.INVISIBLE
                 textViewEmpty.visibility = View.VISIBLE
             }
