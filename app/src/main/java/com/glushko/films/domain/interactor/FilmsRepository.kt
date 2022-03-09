@@ -21,7 +21,7 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UseCaseRepository @Inject constructor(
+class FilmsRepository @Inject constructor(
     private val api: ApiService,
     private val dao: FilmsDao
 ) {

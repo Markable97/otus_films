@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.glushko.films.domain.models.AboutFilm
 import com.glushko.films.domain.models.FavoriteFilm
-import com.glushko.films.domain.interactor.UseCaseRepository
+import com.glushko.films.domain.interactor.FilmsRepository
 import com.glushko.films.data.datasource.response.ResponseFilm
 import com.glushko.films.data.datasource.response.ResponseOnceFilm
 import com.glushko.films.data.utils.LoggingHelper
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 
-class ViewModelFilms constructor(private val useCase: UseCaseRepository) : ViewModel() {
+class ViewModelFilms constructor(private val filmsRepository: FilmsRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -32,7 +32,7 @@ class ViewModelFilms constructor(private val useCase: UseCaseRepository) : ViewM
 
     fun getFilm(id: Int) {
         viewModelScope.launch {
-            useCase.getFilmWithId(id, _liveDataOnceFilm)
+            filmsRepository.getFilmWithId(id, _liveDataOnceFilm)
         }
     }
 
@@ -47,23 +47,23 @@ class ViewModelFilms constructor(private val useCase: UseCaseRepository) : ViewM
                 ++_page
             }
         }
-        compositeDisposable.add(useCase.getFilm(curPage, _liveDataFilm))
+        compositeDisposable.add(filmsRepository.getFilm(curPage, _liveDataFilm))
     }
 
     fun addFavoriteFilm(film: FavoriteFilm) {
-        compositeDisposable.add(useCase.addFavoriteFilm(film))
+        compositeDisposable.add(filmsRepository.addFavoriteFilm(film))
     }
 
     fun deleteFavoriteFilm(film: FavoriteFilm) {
-        compositeDisposable.add(useCase.deleteFavoriteFilm(film))
+        compositeDisposable.add(filmsRepository.deleteFavoriteFilm(film))
     }
 
     fun getFavoriteFilms() {
-        compositeDisposable.add(useCase.getFavoriteFilms(_liveDataFavoriteFilms))
+        compositeDisposable.add(filmsRepository.getFavoriteFilms(_liveDataFavoriteFilms))
     }
 
     fun addComment(film: AboutFilm) {
-        compositeDisposable.add(useCase.addComment(film))
+        compositeDisposable.add(filmsRepository.addComment(film))
     }
 
     override fun onCleared() {
@@ -76,7 +76,7 @@ class ViewModelFilms constructor(private val useCase: UseCaseRepository) : ViewM
             LoggingHelper.log(Log.DEBUG, "Пустое значение подтянем фильмы как всегда")
             getFilms(page = 1)
         } else {
-            compositeDisposable.add(useCase.searchFilm(text, _liveDataFilm))
+            compositeDisposable.add(filmsRepository.searchFilm(text, _liveDataFilm))
         }
 
     }
