@@ -23,12 +23,12 @@ class ExitDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
             .setView(R.layout.dialog_custom)
-            .setNegativeButton(android.R.string.cancel) { dialog, which ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 listener.onClickDialog(
                     false
                 )
             }
-            .setPositiveButton(android.R.string.ok) { dialog, which -> listener.onClickDialog(true) }
+            .setPositiveButton(android.R.string.ok) { _, _ -> listener.onClickDialog(true) }
             .create()
     }
 

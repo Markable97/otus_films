@@ -1,5 +1,6 @@
 package com.glushko.films.presentation.ui.detail_film
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
@@ -84,7 +85,7 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
     //private lateinit var btnLike: ImageButton
 
     private val dataListener =
-        DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             chooseDate = true
             this.year = year
             this.month = month
@@ -92,7 +93,7 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
             showTimePicker()
         }
     private val timeListener =
-        TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+        TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             chooseTime = true
             this.hour = hourOfDay
             this.minute = minute
@@ -168,6 +169,7 @@ class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun  addAlarm(){
         model.addSeeLaterFilm(SeeLaterFilm(film.id, film.name, year, month, day, hour, minute))
         val context = requireContext()

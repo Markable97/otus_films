@@ -1,5 +1,6 @@
 package com.glushko.films.presentation.ui.see_later
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
@@ -49,7 +50,7 @@ class FragmentSeeLater : Fragment(R.layout.fragment_see_later) {
     private var minute = calendar.get(Calendar.MINUTE)
 
     private val dataListener =
-        DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             this.year = year
             this.month = month
             this.day = dayOfMonth
@@ -57,7 +58,7 @@ class FragmentSeeLater : Fragment(R.layout.fragment_see_later) {
         }
 
     private val timeListener =
-        TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+        TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             this.hour = hourOfDay
             this.minute = minute
             updateAlarm()
@@ -96,6 +97,7 @@ class FragmentSeeLater : Fragment(R.layout.fragment_see_later) {
         TimePickerDialog(requireActivity(), timeListener, hour, minute, true).show()
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun cancelAlarm() {
         filmEdit?.let {
             val context = requireContext()
@@ -112,6 +114,7 @@ class FragmentSeeLater : Fragment(R.layout.fragment_see_later) {
         }
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun updateAlarm() {
         cancelAlarm()
         filmEdit?.let {

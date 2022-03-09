@@ -37,7 +37,6 @@ class FavoriteItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val childCount = parent.childCount
         for (i in 0 until childCount) {
             val view = parent.getChildAt(i)
-            val index = parent.getChildAdapterPosition(view)
             /*if(index == 0){
                 continue
             }*/
