@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 import com.glushko.films.App
 import com.glushko.films.R
 import com.glushko.films.business_logic_layer.domain.AboutFilm
-import com.glushko.films.business_logic_layer.domain.Users
+import com.glushko.films.business_logic_layer.domain.Comment
 import com.glushko.films.presentation_layer.vm.ViewModelSeeLater
 import com.glushko.films.presentation_layer.vm.ViewModelSeeLaterFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,15 +28,15 @@ import javax.inject.Inject
 class FragmentDetailFilm: Fragment(R.layout.fragment_detail_film) {
 
     private val comments = listOf(
-        Users("Users 1", "qwhjqwrbqwhrjqwrb"),
-        Users("Users 2", "safasfasfasfasfsnmaf \n ashfjajshfjasfha"),
-        Users("Users 3", "qwhjqwrbqwhrjqwrb\n\n\nasdasdasdsad as"),
-        Users("Users 4", "qwhjqwrbqwhrjqwrb sadasdsadasdsa Ad asfa s SAf SA"),
-        Users("Users 5", "qwhjqwrbqwhrjqwrb ASF ASf ASfA Sf"),
-        Users("Users 6", "qwhjqwrbqwhrjqwrb As FAs FAs fAS fAs"),
-        Users("Users 7", "qwhjqwrbqwhrjqwrb Asf ASf ASf as wqf w E JH as"),
-        Users("Users 8", "qwhjqwrbqwhrjqwrb"),
-        Users("Users 9", "qwhjqwrbqwhrjqwrb"),
+        Comment("Users 1", "qwhjqwrbqwhrjqwrb"),
+        Comment("Users 2", "safasfasfasfasfsnmaf \n ashfjajshfjasfha"),
+        Comment("Users 3", "qwhjqwrbqwhrjqwrb\n\n\nasdasdasdsad as"),
+        Comment("Users 4", "qwhjqwrbqwhrjqwrb sadasdsadasdsa Ad asfa s SAf SA"),
+        Comment("Users 5", "qwhjqwrbqwhrjqwrb ASF ASf ASfA Sf"),
+        Comment("Users 6", "qwhjqwrbqwhrjqwrb As FAs FAs fAS fAs"),
+        Comment("Users 7", "qwhjqwrbqwhrjqwrb Asf ASf ASf as wqf w E JH as"),
+        Comment("Users 8", "qwhjqwrbqwhrjqwrb"),
+        Comment("Users 9", "qwhjqwrbqwhrjqwrb"),
 
         )
 
