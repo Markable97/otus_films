@@ -2,11 +2,11 @@ package com.glushko.films.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.glushko.films.domain.interactor.SeeLaterRepository
+import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
 import javax.inject.Inject
 
 /*В констурктор можно допустим передать какие то парметры, чтобы они перешли во ViewModel*/
-class ViewModelSeeLaterFactory @Inject constructor(private val useCaseSeeLater: SeeLaterRepository) :
+class ViewModelSeeLaterFactory @Inject constructor(private val useCaseSeeLater: SeeLaterRepositoryImpl) :
     ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")

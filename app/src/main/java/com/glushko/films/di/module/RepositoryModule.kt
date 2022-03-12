@@ -2,6 +2,8 @@ package com.glushko.films.di.module
 
 import com.glushko.films.domain.interactor.SeeLaterRepository
 import com.glushko.films.domain.interactor.FilmsRepository
+import com.glushko.films.domain.interactor.FilmsRepositoryImpl
+import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
 import com.glushko.films.presentation.vm.ViewModelFilmsFactory
 import com.glushko.films.presentation.vm.ViewModelSeeLaterFactory
 import dagger.Module
@@ -10,14 +12,21 @@ import dagger.Provides
 @Module
 class RepositoryModule {
 
+    fun provideFilmsRepo(impl: FilmsRepositoryImpl): FilmsRepository = impl
+
     @Provides
-    fun provideViewModelFilms(filmsRepository: FilmsRepository): ViewModelFilmsFactory {
+    fun provideViewModelFilms(filmsRepository: FilmsRepositoryImpl): ViewModelFilmsFactory {
         return ViewModelFilmsFactory(filmsRepository)
     }
 
+
     companion object {
+
         @Provides
-        fun provideViewModelSeeLater(seeLaterRepository: SeeLaterRepository): ViewModelSeeLaterFactory {
+        fun provideSeeLaterRepo(impl: SeeLaterRepositoryImpl):SeeLaterRepository = impl
+
+        @Provides
+        fun provideViewModelSeeLater(seeLaterRepository: SeeLaterRepositoryImpl): ViewModelSeeLaterFactory {
             return ViewModelSeeLaterFactory(seeLaterRepository)
         }
     }
