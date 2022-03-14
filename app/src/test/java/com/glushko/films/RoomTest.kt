@@ -7,7 +7,7 @@ import com.glushko.films.domain.models.SeeLaterFilm
 import com.glushko.films.domain.interactor.SeeLaterRepository
 import com.glushko.films.data.database.FilmsDao
 import com.glushko.films.data.database.MainDatabase
-import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
+import com.glushko.films.data.repository.SeeLaterRepositoryImpl
 import org.junit.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

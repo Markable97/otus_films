@@ -7,7 +7,7 @@ import com.glushko.films.domain.interactor.FilmsRepository
 import com.glushko.films.data.datasource.ApiService
 import com.glushko.films.data.datasource.response.ResponseFilm
 import com.glushko.films.data.database.FilmsDao
-import com.glushko.films.domain.interactor.FilmsRepositoryImpl
+import com.glushko.films.data.repository.FilmsRepositoryImpl
 import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Rule

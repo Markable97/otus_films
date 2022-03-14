@@ -2,9 +2,8 @@ package com.glushko.films
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.glushko.films.domain.models.SeeLaterFilm
-import com.glushko.films.domain.interactor.SeeLaterRepository
 import com.glushko.films.data.database.FilmsDao
-import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
+import com.glushko.films.data.repository.SeeLaterRepositoryImpl
 import com.glushko.films.presentation.vm.ViewModelSeeLater
 import io.reactivex.Single
 import org.junit.Assert

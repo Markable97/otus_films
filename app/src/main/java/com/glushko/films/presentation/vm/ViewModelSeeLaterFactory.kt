@@ -2,7 +2,7 @@ package com.glushko.films.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
+import com.glushko.films.data.repository.SeeLaterRepositoryImpl
 import javax.inject.Inject
 
 /*В констурктор можно допустим передать какие то парметры, чтобы они перешли во ViewModel*/

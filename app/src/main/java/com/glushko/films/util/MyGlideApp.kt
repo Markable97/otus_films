@@ -1,4 +1,4 @@
-package com.glushko.films.domain.interactor
+package com.glushko.films.util
 
 import android.content.Context
 import com.bumptech.glide.GlideBuilder

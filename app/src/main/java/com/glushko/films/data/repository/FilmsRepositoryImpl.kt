@@ -1,4 +1,4 @@
-package com.glushko.films.domain.interactor
+package com.glushko.films.data.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +12,7 @@ import com.glushko.films.data.datasource.response.ResponseOnceFilm
 import com.glushko.films.data.database.FilmsDao
 import com.glushko.films.data.utils.LoggingHelper
 import com.glushko.films.data.utils.TYPE_FILM_LIST
+import com.glushko.films.domain.interactor.FilmsRepository
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +25,7 @@ import javax.inject.Inject
 class FilmsRepositoryImpl @Inject constructor(
     private val api: ApiService,
     private val dao: FilmsDao
-): FilmsRepository{
+): FilmsRepository {
 
     companion object {
         val FRESH_TIMEOUT = TimeUnit.MINUTES.toMillis(1) //TimeUnit.DAYS.toMillis(1)

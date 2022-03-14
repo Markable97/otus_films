@@ -2,8 +2,8 @@ package com.glushko.films.di.module
 
 import com.glushko.films.domain.interactor.SeeLaterRepository
 import com.glushko.films.domain.interactor.FilmsRepository
-import com.glushko.films.domain.interactor.FilmsRepositoryImpl
-import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
+import com.glushko.films.data.repository.FilmsRepositoryImpl
+import com.glushko.films.data.repository.SeeLaterRepositoryImpl
 import com.glushko.films.presentation.vm.ViewModelFilmsFactory
 import com.glushko.films.presentation.vm.ViewModelSeeLaterFactory
 import dagger.Module

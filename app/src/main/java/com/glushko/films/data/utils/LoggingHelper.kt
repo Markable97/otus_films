@@ -4,7 +4,6 @@ import android.util.Log
 import com.glushko.films.BuildConfig
 
 object LoggingHelper {
-    private const val TAG = "APP"
     fun log(lvl: Int, message: String?, tag:String = TAG){
         if(BuildConfig.LOGGING){
             when(lvl) {
