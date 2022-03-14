@@ -1,4 +1,4 @@
-package com.glushko.films.data.repository
+package com.glushko.films.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

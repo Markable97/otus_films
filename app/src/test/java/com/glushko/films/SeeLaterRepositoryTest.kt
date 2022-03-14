@@ -3,7 +3,8 @@ package com.glushko.films
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.glushko.films.domain.models.SeeLaterFilm
 import com.glushko.films.domain.interactor.SeeLaterRepository
-import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.data.database.FilmsDao
+import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
 import com.glushko.films.presentation.vm.ViewModelSeeLater
 import io.reactivex.Single
 import org.junit.Assert
@@ -27,7 +28,7 @@ class SeeLaterRepositoryTest {
     fun getFilmsSeeLaterFromDB(){
         val dao = Mockito.mock(FilmsDao::class.java)
         Mockito.`when`(dao.getSeeLaterFilms()).thenReturn(Single.just(seeLaterSample()))
-        val repository = SeeLaterRepository(dao)
+        val repository = SeeLaterRepositoryImpl(dao)
         viewModel = ViewModelSeeLater(repository)
         viewModel.getSeeLaterFilms()
         Assert.assertNotNull(viewModel.liveDataSeeLater)
@@ -47,7 +48,7 @@ class SeeLaterRepositoryTest {
     fun addSeeLaterFilmSavesFilmInDatabase(){
         val film = seeLaterSample().first()
         val dao = Mockito.mock(FilmsDao::class.java)
-        val repository = SeeLaterRepository(dao)
+        val repository = SeeLaterRepositoryImpl(dao)
         viewModel = ViewModelSeeLater(repository)
         viewModel.addSeeLaterFilm(film)
 
@@ -59,7 +60,7 @@ class SeeLaterRepositoryTest {
         val film = seeLaterSample().first()
         val dao = Mockito.mock(FilmsDao::class.java)
         Mockito.`when`(dao.addSeeLaterFilm(film)).thenThrow(Exception())
-        val repository = SeeLaterRepository(dao)
+        val repository = SeeLaterRepositoryImpl(dao)
         viewModel = ViewModelSeeLater(repository)
         viewModel.addSeeLaterFilm(film)
         Assert.assertFalse(viewModel.liveDataAddSeeLaterFilm.value ?:false)

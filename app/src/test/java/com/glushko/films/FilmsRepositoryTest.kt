@@ -6,7 +6,8 @@ import com.glushko.films.domain.models.AboutFilm
 import com.glushko.films.domain.interactor.FilmsRepository
 import com.glushko.films.data.datasource.ApiService
 import com.glushko.films.data.datasource.response.ResponseFilm
-import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.data.database.FilmsDao
+import com.glushko.films.domain.interactor.FilmsRepositoryImpl
 import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Rule
@@ -40,7 +41,7 @@ class FilmsRepositoryTest {
         val dao = Mockito.mock(FilmsDao::class.java)
         val api = Mockito.mock(ApiService::class.java)
         Mockito.`when`(dao.searchFilm(searchText)).thenReturn(Single.just(sample()))
-        filmsRepository = FilmsRepository(api, dao)
+        filmsRepository = FilmsRepositoryImpl(api, dao)
         filmsRepository.searchFilm(searchText, liveData)
         Assert.assertEquals(true, liveData.value?.films?.isNotEmpty())
     }
@@ -52,7 +53,7 @@ class FilmsRepositoryTest {
         val dao = Mockito.mock(FilmsDao::class.java)
         val api = Mockito.mock(ApiService::class.java)
         Mockito.`when`(dao.searchFilm(searchText)).thenReturn(Single.just(emptySample()))
-        filmsRepository = FilmsRepository(api, dao)
+        filmsRepository = FilmsRepositoryImpl(api, dao)
         filmsRepository.searchFilm(searchText, liveData)
         Assert.assertEquals(false, liveData.value?.films?.isNotEmpty())
     }

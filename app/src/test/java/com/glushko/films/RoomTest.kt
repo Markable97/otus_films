@@ -5,8 +5,9 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.glushko.films.domain.models.SeeLaterFilm
 import com.glushko.films.domain.interactor.SeeLaterRepository
-import com.glushko.films.data.repository.FilmsDao
-import com.glushko.films.data.repository.MainDatabase
+import com.glushko.films.data.database.FilmsDao
+import com.glushko.films.data.database.MainDatabase
+import com.glushko.films.domain.interactor.SeeLaterRepositoryImpl
 import org.junit.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -33,7 +34,7 @@ class RoomTest {
             MainDatabase::class.java
         ).allowMainThreadQueries().build()
         filmDaO = db.filmsDao()
-        seeLaterRepository = SeeLaterRepository(filmDaO)
+        seeLaterRepository = SeeLaterRepositoryImpl(filmDaO)
     }
 
     @Test

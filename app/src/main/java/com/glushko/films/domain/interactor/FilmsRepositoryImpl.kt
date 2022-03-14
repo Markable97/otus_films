@@ -9,7 +9,7 @@ import com.glushko.films.data.datasource.ApiService
 import com.glushko.films.data.datasource.ApiService.Companion.GET_FILMS
 import com.glushko.films.data.datasource.response.ResponseFilm
 import com.glushko.films.data.datasource.response.ResponseOnceFilm
-import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.data.database.FilmsDao
 import com.glushko.films.data.utils.LoggingHelper
 import com.glushko.films.data.utils.TYPE_FILM_LIST
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
@@ -48,7 +48,7 @@ class FilmsRepositoryImpl @Inject constructor(
                 )
                 Pair(dao.getRefreshTime(), list.isEmpty())
             }
-            .map { it ->
+            .map {
                 val currentTime = System.currentTimeMillis()
                 val isRefresh = (currentTime - it.first) >= FRESH_TIMEOUT
                 it.second or isRefresh

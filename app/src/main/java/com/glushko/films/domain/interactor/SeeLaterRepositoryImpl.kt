@@ -1,7 +1,7 @@
 package com.glushko.films.domain.interactor
 
 import com.glushko.films.domain.models.SeeLaterFilm
-import com.glushko.films.data.repository.FilmsDao
+import com.glushko.films.data.database.FilmsDao
 import io.reactivex.Single
 import javax.inject.Inject
 

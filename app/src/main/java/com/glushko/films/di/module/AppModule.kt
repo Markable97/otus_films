@@ -2,8 +2,8 @@ package com.glushko.films.di.module
 
 import android.app.Application
 import android.content.Context
-import com.glushko.films.data.repository.FilmsDao
-import com.glushko.films.data.repository.MainDatabase
+import com.glushko.films.data.database.FilmsDao
+import com.glushko.films.data.database.MainDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
